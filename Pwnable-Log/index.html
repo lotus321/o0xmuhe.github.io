@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Pwnable Log | o0xmuhe&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="下面这些是一份关于CTF中PWN类型题目的一点总结，个人精力有限，只做了这么一点。从接触这些来，两年了吧，所学到的东西都来自互联网、一些前辈的指点，所以想着把自己了解的做成一个list，简单的整合，方便其他人学习。不足之处还请见谅，欢迎补充。 Pwnable log by muhe@Syclover如果这个list有问题，请与我邮件联系o0xmuhe#gmail.com Pwnable log1.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pwnable Log">
+<meta property="og:url" content="http://o0xmuhe.me/Pwnable-Log/index.html">
+<meta property="og:site_name" content="o0xmuhe&#39;s blog">
+<meta property="og:description" content="下面这些是一份关于CTF中PWN类型题目的一点总结，个人精力有限，只做了这么一点。从接触这些来，两年了吧，所学到的东西都来自互联网、一些前辈的指点，所以想着把自己了解的做成一个list，简单的整合，方便其他人学习。不足之处还请见谅，欢迎补充。 Pwnable log by muhe@Syclover如果这个list有问题，请与我邮件联系o0xmuhe#gmail.com Pwnable log1.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2017-02-14T12:20:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pwnable Log">
+<meta name="twitter:description" content="下面这些是一份关于CTF中PWN类型题目的一点总结，个人精力有限，只做了这么一点。从接触这些来，两年了吧，所学到的东西都来自互联网、一些前辈的指点，所以想着把自己了解的做成一个list，简单的整合，方便其他人学习。不足之处还请见谅，欢迎补充。 Pwnable log by muhe@Syclover如果这个list有问题，请与我邮件联系o0xmuhe#gmail.com Pwnable log1.">
+  
+    <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: false,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">muhe</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">一个有情怀的二进制狗</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags">标签</a></li>
+                        
+                            <li><a href="/about">关于我</a></li>
+                        
+                            <li><a href="/Pwnable-Log">Pwnable</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Antlr/" style="font-size: 10px;">Antlr</a> <a href="/tags/C/" style="font-size: 11.67px;">C</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/CTF-Writeup/" style="font-size: 10px;">CTF Writeup</a> <a href="/tags/Compilers/" style="font-size: 10px;">Compilers</a> <a href="/tags/LLVM/" style="font-size: 10px;">LLVM</a> <a href="/tags/Linux/" style="font-size: 11.67px;">Linux</a> <a href="/tags/PANDA/" style="font-size: 10px;">PANDA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Study/" style="font-size: 16.67px;">Study</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angr/" style="font-size: 11.67px;">angr</a> <a href="/tags/compiler/" style="font-size: 10px;">compiler</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/ctf-writeup/" style="font-size: 20px;">ctf writeup</a> <a href="/tags/debug/" style="font-size: 10px;">debug</a> <a href="/tags/env-config/" style="font-size: 10px;">env config</a> <a href="/tags/exploit/" style="font-size: 16.67px;">exploit</a> <a href="/tags/fuzz/" style="font-size: 15px;">fuzz</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/glibc内存管理/" style="font-size: 10px;">glibc内存管理</a> <a href="/tags/life/" style="font-size: 11.67px;">life</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-kernel/" style="font-size: 13.33px;">linux kernel</a> <a href="/tags/mips/" style="font-size: 10px;">mips</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/peach/" style="font-size: 10px;">peach</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ret-2-dl-resolve/" style="font-size: 10px;">ret 2 dl-resolve</a> <a href="/tags/study/" style="font-size: 13.33px;">study</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/uaf/" style="font-size: 10px;">uaf</a> <a href="/tags/unicorn-engine/" style="font-size: 10px;">unicorn engine</a> <a href="/tags/vuln-analysis/" style="font-size: 10px;">vuln analysis</a> <a href="/tags/wargame/" style="font-size: 11.67px;">wargame</a> <a href="/tags/winafl/" style="font-size: 10px;">winafl</a> <a href="/tags/windows-kernel/" style="font-size: 13.33px;">windows kernel</a> <a href="/tags/writeup/" style="font-size: 10px;">writeup</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a> <a href="/tags/环境配置/" style="font-size: 10px;">环境配置</a> <a href="/tags/编译原理/" style="font-size: 11.67px;">编译原理</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://syclover.sinaapp.com/">Syclover Team</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://weibo.com/u/5376172367">最爱的高老师</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.Ox9A82.com">0x9A82学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://k1n9.me/">K1n9师傅</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3mon</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.xianyusec.com">咸鱼</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://rootclay.com">rootclay</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://v1ct0r.com/">V1ct0r</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://godot.win">Godot学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hebic.me/">Homaebic学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://iqwq.me">两米的sco4x0</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://zmy.im/">JimmyZhou</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://silic.top/">灭亡叔叔</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://dwx.io">Jason</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="	http://www.0aa.me/">Mosuan</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://whereisk0shl.top">k0sh1</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://winter3un.github.io">WinterSun</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://venenof.com">Venenof</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://r0p.me/">Icemakr</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://bestwing.me/">Swing</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hackersb.cn/">王松_Striker</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/7top/">7top</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bendawang.site">bendawang</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yixuankeer.win">前端joker大佬</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.lc4t.me">lc4t</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.inksec.cn/">Szrzvdny</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sixwha1e.github.io/">漂亮的sixwhale小姐姐</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://ctfrank.org">CTF Rank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://askook.me/">A酱</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">关注二进制安全. Member of Syclover. CTFer/INTJ.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">muhe</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">muhe</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">一个有情怀的二进制狗</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags">标签</a></li>
+                
+                    <li><a href="/about">关于我</a></li>
+                
+                    <li><a href="/Pwnable-Log">Pwnable</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/Pwnable-Log/index.html" class="article-date">
+      <time datetime="2017-01-30T13:08:42.000Z" itemprop="datePublished">2017-01-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Pwnable Log
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <style>
+    .article-meta {
+        display: none;
+    }
+    #container .article .article-title {
+        padding-right: 0;
+    }
+    .article-header {
+        padding: 0;
+        padding-top: 26px;
+        border-left: none;
+        text-align: center;
+    }
+    .article-header:hover {
+        border-left: none;
+    }
+    .article-title {
+        font-size: 1.6em
+    }
+    .article-meta {
+        display: none;
+    }
+    .article-entry hr {
+        margin: 0;
+    }
+    #container .article-info-post.article-info {
+      display: none;
+      }
+    #container .article .article-title {
+    padding: 0;
+    }
+</style>
+
+
+          
+        <pre><code>下面这些是一份关于CTF中PWN类型题目的一点总结，个人精力有限，只做了这么一点。从接触这些来，两年了吧，所学到的东西都来自互联网、一些前辈的指点，所以想着把自己了解的做成一个list，简单的整合，方便其他人学习。不足之处还请见谅，欢迎补充。
+</code></pre><p><code>Pwnable log by muhe@Syclover</code><br>如果这个list有问题，请与我邮件联系<code>o0xmuhe#gmail.com</code></p>
+<h1 id="Pwnable-log"><a href="#Pwnable-log" class="headerlink" title="Pwnable log"></a>Pwnable log</h1><h2 id="1-Stack-Vuln"><a href="#1-Stack-Vuln" class="headerlink" title="1. Stack Vuln"></a>1. Stack Vuln</h2><h4 id="1-1-Vuln"><a href="#1-1-Vuln" class="headerlink" title="1.1 Vuln"></a>1.1 Vuln</h4><h5 id="1-1-1-Stack-overflow"><a href="#1-1-1-Stack-overflow" class="headerlink" title="1.1.1 Stack overflow"></a>1.1.1 Stack overflow</h5><h5 id="1-1-2-Stack-Variables-uninitialized"><a href="#1-1-2-Stack-Variables-uninitialized" class="headerlink" title="1.1.2 Stack Variables uninitialized"></a>1.1.2 Stack Variables uninitialized</h5><h5 id="1-1-3-off-by-one"><a href="#1-1-3-off-by-one" class="headerlink" title="1.1.3 off by one"></a>1.1.3 off by one</h5><h4 id="1-2-Tech"><a href="#1-2-Tech" class="headerlink" title="1.2 Tech"></a>1.2 Tech</h4><h5 id="1-2-1-ROP"><a href="#1-2-1-ROP" class="headerlink" title="1.2.1 ROP"></a>1.2.1 ROP</h5><h6 id="1-Dynamic-Linking"><a href="#1-Dynamic-Linking" class="headerlink" title="[1] Dynamic Linking"></a>[1] Dynamic Linking</h6><h6 id="2-Static-Linking"><a href="#2-Static-Linking" class="headerlink" title="[2] Static Linking"></a>[2] Static Linking</h6><h6 id="3-x86-amp-amp-x64"><a href="#3-x86-amp-amp-x64" class="headerlink" title="[3] x86 &amp;&amp; x64"></a>[3] x86 &amp;&amp; x64</h6><h5 id="1-2-2-Frame-Fake"><a href="#1-2-2-Frame-Fake" class="headerlink" title="1.2.2 Frame Fake"></a>1.2.2 Frame Fake</h5><h2 id="2-Heap-Vuln"><a href="#2-Heap-Vuln" class="headerlink" title="2. Heap Vuln"></a>2. Heap Vuln</h2><h4 id="2-1-Vuln"><a href="#2-1-Vuln" class="headerlink" title="2.1 Vuln"></a>2.1 Vuln</h4><h5 id="2-1-1-unsafe-unlink-old-libc"><a href="#2-1-1-unsafe-unlink-old-libc" class="headerlink" title="2.1.1 unsafe unlink (old libc)"></a>2.1.1 unsafe unlink (old libc)</h5><h5 id="2-1-2-off-by-one"><a href="#2-1-2-off-by-one" class="headerlink" title="2.1.2 off by one"></a>2.1.2 off by one</h5><h5 id="2-1-3-double-free"><a href="#2-1-3-double-free" class="headerlink" title="2.1.3 double free"></a>2.1.3 double free</h5><h5 id="2-1-4-use-after-free"><a href="#2-1-4-use-after-free" class="headerlink" title="2.1.4 use after free"></a>2.1.4 use after free</h5><h4 id="2-2-Tech"><a href="#2-2-Tech" class="headerlink" title="2.2 Tech"></a>2.2 Tech</h4><h5 id="2-2-1-Malloc-Maleficarum"><a href="#2-2-1-Malloc-Maleficarum" class="headerlink" title="2.2.1 Malloc Maleficarum"></a>2.2.1 Malloc Maleficarum</h5><h6 id="1-The-House-of-Prime"><a href="#1-The-House-of-Prime" class="headerlink" title="[1] The House of Prime"></a>[1] The House of Prime</h6><h6 id="2-The-House-of-Mind"><a href="#2-The-House-of-Mind" class="headerlink" title="[2] The House of Mind"></a>[2] The House of Mind</h6><h6 id="3-The-House-of-Force"><a href="#3-The-House-of-Force" class="headerlink" title="[3] The House of Force"></a>[3] The House of Force</h6><h6 id="4-The-House-of-Lore"><a href="#4-The-House-of-Lore" class="headerlink" title="[4] The House of Lore"></a>[4] The House of Lore</h6><h6 id="5-The-House-of-Spirit"><a href="#5-The-House-of-Spirit" class="headerlink" title="[5] The House of Spirit"></a>[5] The House of Spirit</h6><h5 id="2-2-2-unsorted-bin-unlink-free-‘d’"><a href="#2-2-2-unsorted-bin-unlink-free-‘d’" class="headerlink" title="2.2.2 unsorted bin unlink(free ‘d’)"></a>2.2.2 unsorted bin unlink(free ‘d’)</h5><h5 id="2-2-3-small-large-bin-unlink-malloc’d"><a href="#2-2-3-small-large-bin-unlink-malloc’d" class="headerlink" title="2.2.3 small/large bin unlink(malloc’d)"></a>2.2.3 small/large bin unlink(malloc’d)</h5><h5 id="2-2-4-fastbin-dumlicate"><a href="#2-2-4-fastbin-dumlicate" class="headerlink" title="2.2.4 fastbin dumlicate"></a>2.2.4 fastbin dumlicate</h5><h5 id="2-2-5-hijack-function-pointer"><a href="#2-2-5-hijack-function-pointer" class="headerlink" title="2.2.5 hijack function pointer"></a>2.2.5 hijack function pointer</h5><h5 id="2-2-6-craft-overlapping-chunks"><a href="#2-2-6-craft-overlapping-chunks" class="headerlink" title="2.2.6 craft overlapping chunks"></a>2.2.6 craft overlapping chunks</h5><h5 id="2-2-7-heap-spray"><a href="#2-2-7-heap-spray" class="headerlink" title="2.2.7 heap spray"></a>2.2.7 heap spray</h5><h2 id="3-Format-String-Vuln"><a href="#3-Format-String-Vuln" class="headerlink" title="3. Format String Vuln"></a>3. Format String Vuln</h2><h4 id="3-1-Vuln"><a href="#3-1-Vuln" class="headerlink" title="3.1 Vuln"></a>3.1 Vuln</h4><h5 id="3-1-1-x86"><a href="#3-1-1-x86" class="headerlink" title="3.1.1 x86"></a>3.1.1 x86</h5><h5 id="3-1-2-x64"><a href="#3-1-2-x64" class="headerlink" title="3.1.2 x64"></a>3.1.2 x64</h5><h4 id="3-2-Tech"><a href="#3-2-Tech" class="headerlink" title="3.2 Tech"></a>3.2 Tech</h4><h6 id="3-2-1-leak-func-addr"><a href="#3-2-1-leak-func-addr" class="headerlink" title="3.2.1 leak func addr"></a>3.2.1 leak func addr</h6><h6 id="3-2-2-dump-bin-file-with-fmt"><a href="#3-2-2-dump-bin-file-with-fmt" class="headerlink" title="3.2.2 dump bin file with fmt"></a>3.2.2 dump bin file with fmt</h6><h2 id="4-Other-Vuln"><a href="#4-Other-Vuln" class="headerlink" title="4. Other Vuln"></a>4. Other Vuln</h2><h4 id="4-1-Vuln"><a href="#4-1-Vuln" class="headerlink" title="4.1 Vuln"></a>4.1 Vuln</h4><h5 id="4-1-1-Integer-overflow"><a href="#4-1-1-Integer-overflow" class="headerlink" title="4.1.1 Integer overflow"></a>4.1.1 Integer overflow</h5><h5 id="4-1-2-fsp-overflow"><a href="#4-1-2-fsp-overflow" class="headerlink" title="4.1.2 fsp overflow"></a>4.1.2 fsp overflow</h5><h4 id="4-2-Tech"><a href="#4-2-Tech" class="headerlink" title="4.2 Tech"></a>4.2 Tech</h4><h5 id="4-2-1-ssp-leak"><a href="#4-2-1-ssp-leak" class="headerlink" title="4.2.1 ssp leak"></a>4.2.1 ssp leak</h5><h2 id="5-Some-Tricks"><a href="#5-Some-Tricks" class="headerlink" title="5. Some Tricks"></a>5. Some Tricks</h2><h4 id="5-1-one-gadget-rce"><a href="#5-1-one-gadget-rce" class="headerlink" title="5.1 one gadget rce"></a>5.1 one gadget rce</h4><h4 id="5-2-canary-crack"><a href="#5-2-canary-crack" class="headerlink" title="5.2 canary crack"></a>5.2 canary crack</h4><h4 id="5-3-canary-leak"><a href="#5-3-canary-leak" class="headerlink" title="5.3 canary leak"></a>5.3 canary leak</h4><h4 id="5-4-bin-file-dump"><a href="#5-4-bin-file-dump" class="headerlink" title="5.4 bin file dump"></a>5.4 bin file dump</h4><h4 id="5-5-fast-confirm-libc’s-version"><a href="#5-5-fast-confirm-libc’s-version" class="headerlink" title="5.5 fast confirm libc’s version"></a>5.5 fast confirm libc’s version</h4><h2 id="6-Pwn-in-AD-mode"><a href="#6-Pwn-in-AD-mode" class="headerlink" title="6. Pwn in AD mode"></a>6. Pwn in AD mode</h2>
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+  
+</article>
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'o0xmuhe'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    
+
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 muhe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit">访客数量: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

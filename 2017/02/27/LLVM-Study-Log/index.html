@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>LLVM Study Log | o0xmuhe&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x0. 简述刚接触LLVM的时候的记录，算是笔记吧，想从代码混淆的思路学习，学习如何写Pass，以及把自己写的Pass应用到实际的程序中。学习笔记更新中…">
+<meta name="keywords" content="LLVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM Study Log">
+<meta property="og:url" content="http://o0xmuhe.me/2017/02/27/LLVM-Study-Log/index.html">
+<meta property="og:site_name" content="o0xmuhe&#39;s blog">
+<meta property="og:description" content="0x0. 简述刚接触LLVM的时候的记录，算是笔记吧，想从代码混淆的思路学习，学习如何写Pass，以及把自己写的Pass应用到实际的程序中。学习笔记更新中…">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2017-03-02T06:05:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LLVM Study Log">
+<meta name="twitter:description" content="0x0. 简述刚接触LLVM的时候的记录，算是笔记吧，想从代码混淆的思路学习，学习如何写Pass，以及把自己写的Pass应用到实际的程序中。学习笔记更新中…">
+  
+    <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">muhe</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">一个有情怀的二进制狗</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags">标签</a></li>
+                        
+                            <li><a href="/about">关于我</a></li>
+                        
+                            <li><a href="/Pwnable-Log">Pwnable</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Antlr/" style="font-size: 10px;">Antlr</a> <a href="/tags/C/" style="font-size: 11.67px;">C</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/CTF-Writeup/" style="font-size: 10px;">CTF Writeup</a> <a href="/tags/Compilers/" style="font-size: 10px;">Compilers</a> <a href="/tags/LLVM/" style="font-size: 10px;">LLVM</a> <a href="/tags/Linux/" style="font-size: 11.67px;">Linux</a> <a href="/tags/PANDA/" style="font-size: 10px;">PANDA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Study/" style="font-size: 16.67px;">Study</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angr/" style="font-size: 11.67px;">angr</a> <a href="/tags/compiler/" style="font-size: 10px;">compiler</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/ctf-writeup/" style="font-size: 20px;">ctf writeup</a> <a href="/tags/debug/" style="font-size: 10px;">debug</a> <a href="/tags/env-config/" style="font-size: 10px;">env config</a> <a href="/tags/exploit/" style="font-size: 16.67px;">exploit</a> <a href="/tags/fuzz/" style="font-size: 15px;">fuzz</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/glibc内存管理/" style="font-size: 10px;">glibc内存管理</a> <a href="/tags/life/" style="font-size: 11.67px;">life</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-kernel/" style="font-size: 13.33px;">linux kernel</a> <a href="/tags/mips/" style="font-size: 10px;">mips</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/peach/" style="font-size: 10px;">peach</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ret-2-dl-resolve/" style="font-size: 10px;">ret 2 dl-resolve</a> <a href="/tags/study/" style="font-size: 13.33px;">study</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/uaf/" style="font-size: 10px;">uaf</a> <a href="/tags/unicorn-engine/" style="font-size: 10px;">unicorn engine</a> <a href="/tags/vuln-analysis/" style="font-size: 10px;">vuln analysis</a> <a href="/tags/wargame/" style="font-size: 11.67px;">wargame</a> <a href="/tags/winafl/" style="font-size: 10px;">winafl</a> <a href="/tags/windows-kernel/" style="font-size: 13.33px;">windows kernel</a> <a href="/tags/writeup/" style="font-size: 10px;">writeup</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a> <a href="/tags/环境配置/" style="font-size: 10px;">环境配置</a> <a href="/tags/编译原理/" style="font-size: 11.67px;">编译原理</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://syclover.sinaapp.com/">Syclover Team</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://weibo.com/u/5376172367">最爱的高老师</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.Ox9A82.com">0x9A82学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://k1n9.me/">K1n9师傅</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3mon</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.xianyusec.com">咸鱼</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://rootclay.com">rootclay</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://v1ct0r.com/">V1ct0r</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://godot.win">Godot学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hebic.me/">Homaebic学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://iqwq.me">两米的sco4x0</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://zmy.im/">JimmyZhou</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://silic.top/">灭亡叔叔</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://dwx.io">Jason</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="	http://www.0aa.me/">Mosuan</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://whereisk0shl.top">k0sh1</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://winter3un.github.io">WinterSun</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://venenof.com">Venenof</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://r0p.me/">Icemakr</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://bestwing.me/">Swing</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hackersb.cn/">王松_Striker</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/7top/">7top</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bendawang.site">bendawang</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yixuankeer.win">前端joker大佬</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.lc4t.me">lc4t</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.inksec.cn/">Szrzvdny</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sixwha1e.github.io/">漂亮的sixwhale小姐姐</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://ctfrank.org">CTF Rank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://askook.me/">A酱</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">关注二进制安全. Member of Syclover. CTFer/INTJ.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">muhe</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">muhe</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">一个有情怀的二进制狗</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags">标签</a></li>
+                
+                    <li><a href="/about">关于我</a></li>
+                
+                    <li><a href="/Pwnable-Log">Pwnable</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-LLVM-Study-Log" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/27/LLVM-Study-Log/" class="article-date">
+      <time datetime="2017-02-27T12:03:24.000Z" itemprop="datePublished">2017-02-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      LLVM Study Log
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLVM/">LLVM</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4 id="0x0-简述"><a href="#0x0-简述" class="headerlink" title="0x0. 简述"></a>0x0. 简述</h4><p>刚接触LLVM的时候的记录，算是笔记吧，想从代码混淆的思路学习，学习如何写Pass，以及把自己写的Pass应用到实际的程序中。<br>学习笔记更新中…<br><a id="more"></a></p>
+<h4 id="0x1-LLVM"><a href="#0x1-LLVM" class="headerlink" title="0x1. LLVM"></a>0x1. LLVM</h4><h5 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h5><p>LLVM是一个编译器框架，LLVM框架提供的中间表示（IR），可以作为多种语言的后端，并且根据IR可以做语言无关的优化以及<br>生成对应各种构架（x86,amd64,arm等）的代码。</p>
+<p>主要分为三个部分：前端、Pass、后端</p>
+<ul>
+<li>前端： 获取源码，转成IR。</li>
+<li>Pass：做各种优化工作或者一些过程的变换工作。</li>
+<li>后端： 生成对应平台的机器码。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Source Code ----&gt; Frontend ----&gt; Optimizer ----&gt; Backend ----&gt; Machine Code</span><br><span class="line">                                    |</span><br><span class="line">                                Pass Work Here</span><br></pre></td></tr></table></figure>
+<p>更多细节直接看<a href="http://llvm.org" target="_blank" rel="noopener">官网</a></p>
+<h5 id="1-2-安装"><a href="#1-2-安装" class="headerlink" title="1.2 安装"></a>1.2 安装</h5><p>安装的话直接按照官方的文档去安装就可以了.</p>
+<p>下载源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd where-you-want-llvm-to-live</span><br><span class="line">$ svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm</span><br><span class="line">$ cd where-you-want-llvm-to-live</span><br></pre></td></tr></table></figure></p>
+<p>迁移出clang<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd llvm/tools</span><br><span class="line">$ svn co http://llvm.org/svn/llvm-project/cfe/trunk clang</span><br></pre></td></tr></table></figure></p>
+<p>运行库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd where-you-want-llvm-to-live</span><br><span class="line">$ cd llvm/projects</span><br><span class="line">$ svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt</span><br></pre></td></tr></table></figure></p>
+<p>编译<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ cmake -DCMAKE_BUILD_TYPE:String=Release ../llvm/</span><br><span class="line">$ make -j x</span><br></pre></td></tr></table></figure></p>
+<p>就是最后编译的时候，时间会比较久，<code>make -j x</code>，x给的大一点<br>会编译的快一点。</p>
+<h5 id="1-3-IR"><a href="#1-3-IR" class="headerlink" title="1.3 IR"></a>1.3 IR</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LLVM IR有三种形式，可读的文本形式(.ll)，硬盘上存储的二进制形式(.bc)，内存中的编译器检测和修改的形式。</span><br></pre></td></tr></table></figure>
+<p>下面编写测试代码，来看一下IR语言。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> c = <span class="number">0</span>;</span><br><span class="line">    c = test(<span class="number">4</span>,<span class="number">6</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"I got : %d \n"</span>,c);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译<code>clang -emit-llvm test.cpp -S -o test.ll</code><br>得到IR<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = &apos;test.cpp&apos;</span><br><span class="line">source_filename = &quot;test.cpp&quot;</span><br><span class="line">target datalayout = &quot;e-m:e-i64:64-f80:128-n8:16:32:64-S128&quot;</span><br><span class="line">target triple = &quot;x86_64-unknown-linux-gnu&quot;</span><br><span class="line"></span><br><span class="line">@.str = private unnamed_addr constant [13 x i8] c&quot;I got : %d \0A\00&quot;, align 1</span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline nounwind uwtable</span><br><span class="line">define i32 @_Z4testii(i32, i32) #0 &#123;</span><br><span class="line">  %3 = alloca i32, align 4</span><br><span class="line">  %4 = alloca i32, align 4</span><br><span class="line">  store i32 %0, i32* %3, align 4</span><br><span class="line">  store i32 %1, i32* %4, align 4</span><br><span class="line">  %5 = load i32, i32* %3, align 4</span><br><span class="line">  %6 = load i32, i32* %4, align 4</span><br><span class="line">  %7 = add nsw i32 %5, %6</span><br><span class="line">  ret i32 %7</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline norecurse uwtable</span><br><span class="line">define i32 @main(i32, i8**) #1 &#123;</span><br><span class="line">  %3 = alloca i32, align 4</span><br><span class="line">  %4 = alloca i32, align 4</span><br><span class="line">  %5 = alloca i8**, align 8</span><br><span class="line">  %6 = alloca i32, align 4</span><br><span class="line">  store i32 0, i32* %3, align 4</span><br><span class="line">  store i32 %0, i32* %4, align 4</span><br><span class="line">  store i8** %1, i8*** %5, align 8</span><br><span class="line">  store i32 0, i32* %6, align 4</span><br><span class="line">  %7 = call i32 @_Z4testii(i32 4, i32 6)</span><br><span class="line">  store i32 %7, i32* %6, align 4</span><br><span class="line">  %8 = load i32, i32* %6, align 4</span><br><span class="line">  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i32 0, i32 0), i32 %8)</span><br><span class="line">  ret i32 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">declare i32 @printf(i8*, ...) #2</span><br><span class="line"></span><br><span class="line">attributes #0 = &#123; noinline nounwind uwtable &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-frame-pointer-elim&quot;=&quot;true&quot; &quot;no-frame-pointer-elim-non-leaf&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line">attributes #1 = &#123; noinline norecurse uwtable &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-frame-pointer-elim&quot;=&quot;true&quot; &quot;no-frame-pointer-elim-non-leaf&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line">attributes #2 = &#123; &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-frame-pointer-elim&quot;=&quot;true&quot; &quot;no-frame-pointer-elim-non-leaf&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line"></span><br><span class="line">!llvm.ident = !&#123;!0&#125;</span><br><span class="line"></span><br><span class="line">!0 = !&#123;!&quot;clang version 4.0.0 (trunk 291212)&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>感觉配合着官网的文档，很容易就可以读懂，语法也很清晰明了。<br>比如test函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">define i32 @_Z4testii(i32, i32) #0 &#123; //@是全局标识符，%是局部标识符</span><br><span class="line">  %3 = alloca i32, align 4    //局部变量声明，并分配空间，4字节对齐</span><br><span class="line">  %4 = alloca i32, align 4    </span><br><span class="line">  store i32 %0, i32* %3, align 4 //刚才的变量存储在 0号寄存器的位置</span><br><span class="line">  store i32 %1, i32* %4, align 4 //..............1号寄存器的位置</span><br><span class="line">  %5 = load i32, i32* %3, align 4 </span><br><span class="line">  %6 = load i32, i32* %4, align 4 //分别载入到5号寄存器和6号寄存器的位置</span><br><span class="line">  %7 = add nsw i32 %5, %6    //然后相加，存到7号寄存器的位置</span><br><span class="line">  ret i32 %7    //返回结果（32位整数）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>弱弱的说一句…感觉好像JAVA字节码啊</p>
+<p>更多的内容，还是<a href="http://llvm.org/docs/LangRef.html" target="_blank" rel="noopener">官方文档</a></p>
+<h4 id="0x2-Pass"><a href="#0x2-Pass" class="headerlink" title="0x2. Pass"></a>0x2. Pass</h4><p>Pass 的主要分类有以下几种。</p>
+<ul>
+<li><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-immutablepass-class" target="_blank" rel="noopener">ImmutablePass</a><br>Immutable,字面意思一成不变，即这种pass不是普通的用来转换、分析的pass，他可以提供当前编译器配置的信息。这种pass不需要运行、也不改变状态、也不需要更新。</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-moudlepass-class" target="_blank" rel="noopener">MoudlePass</a><br>从ModulePass派生表示这个pass使用整个程序作为一个单元，不可预测的顺序引用函数体，或者添加、删除函数；这种pass对子类行为并不了解，所以无法对其做优化。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-callgraphsccpass-class" target="_blank" rel="noopener">CallGraphSCCPass</a><br>这种需要遍历自下而上的函数调用图。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-funcationpass-class" target="_blank" rel="noopener">FuncationPass</a><br>在每个函数上执行。这个pass再llvm的文档上有例子，那个hello world的例子。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-looppass-class" target="_blank" rel="noopener">LoopPass</a><br>这种再每个循环上执行，与函数中其他的循环无关；LoopPass使用嵌套顺序处理循环，外层最后处理。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-regionpass-class" target="_blank" rel="noopener">RegionPass</a><br>类似LoopPass，但是在函数执行中的每个单个条目的退出区域上执行。还是嵌套顺序处理区域，即最外部的区域最后被处理。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-basicblockpass-class" target="_blank" rel="noopener">BasicBlockPass</a><br>类似FunctionPass，但是必须一次限制它们对基本块的检查和修改范围，具体的限制见文档。</p>
+</li>
+<li><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-machinefunctionPass-class" target="_blank" rel="noopener">MachineFunctionPass</a><br>LLVM代码生成器的一部分，在程序中的每个LLVM函数的依赖于机器的表示上执行。</p>
+</li>
+</ul>
+<p>根据<a href="http://www.cs.cornell.edu/~asampson/blog/llvm.html" target="_blank" rel="noopener">LLVM for Grad Students</a>文章的方式去动态<br>使用pass。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Pass.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/Function.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Support/raw_ostream.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/LegacyPassManager.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Transforms/IPO/PassManagerBuilder.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> llvm;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">  <span class="keyword">struct</span> SkeletonPass : <span class="keyword">public</span> FunctionPass &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">char</span> ID;</span><br><span class="line">    SkeletonPass() : FunctionPass(ID) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">runOnFunction</span><span class="params">(Function &amp;F)</span> </span>&#123;</span><br><span class="line">      errs() &lt;&lt; <span class="string">"In a function called "</span> &lt;&lt; F.getName() &lt;&lt; <span class="string">"!\n"</span>; <span class="comment">//如果是函数，输出函数名字</span></span><br><span class="line"></span><br><span class="line">      errs() &lt;&lt; <span class="string">"Function body:\n"</span>;</span><br><span class="line">      F.dump();                     <span class="comment">//打印函数体</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;B : F) &#123;</span><br><span class="line">        errs() &lt;&lt; <span class="string">"Basic block:\n"</span>; <span class="comment">//是bb块就输出这行</span></span><br><span class="line">        B.dump();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;I : B) &#123;</span><br><span class="line">          errs() &lt;&lt; <span class="string">"Instruction: "</span>; <span class="comment">//指令的话就输出这行</span></span><br><span class="line">          I.dump();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> SkeletonPass::ID = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// Automatically enable the pass.</span></span><br><span class="line"><span class="comment">// http://adriansampson.net/blog/clangpass.html </span></span><br><span class="line"><span class="comment">// 注册Pass</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerSkeletonPass</span><span class="params">(<span class="keyword">const</span> PassManagerBuilder &amp;,</span></span></span><br><span class="line"><span class="function"><span class="params">                         legacy::PassManagerBase &amp;PM)</span> </span>&#123;</span><br><span class="line">  PM.add(<span class="keyword">new</span> SkeletonPass());</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> RegisterStandardPasses</span><br><span class="line">  RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,</span><br><span class="line">                 registerSkeletonPass);</span><br></pre></td></tr></table></figure>
+<p>CmakeList.txt文件<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">add_library(SkeletonPass MODULE</span><br><span class="line">    <span class="comment"># List your source files here.</span></span><br><span class="line">    Skeleton.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Use C++11 to compile our pass (i.e., supply -std=c++11).</span></span><br><span class="line">target_compile_features(SkeletonPass PRIVATE cxx_range_for cxx_auto_type)</span><br><span class="line"></span><br><span class="line"><span class="comment"># LLVM is (typically) built with no C++ RTTI. We need to match that;</span></span><br><span class="line"><span class="comment"># otherwise, we'll get linker errors about missing RTTI data.</span></span><br><span class="line">set_target_properties(SkeletonPass PROPERTIES</span><br><span class="line">    COMPILE_FLAGS "-fno-rtti"</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get proper shared-library behavior (where symbols are not necessarily</span></span><br><span class="line"><span class="comment"># resolved when the shared library is linked) on OS X.</span></span><br><span class="line">if(APPLE)</span><br><span class="line">    set_target_properties(SkeletonPass PROPERTIES</span><br><span class="line">        LINK_FLAGS "-undefined dynamic_lookup"</span><br><span class="line">    )</span><br><span class="line">endif(APPLE)</span><br></pre></td></tr></table></figure></p>
+<p>编译pass<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># muhe @ muhe-work in ~/Code/llvm-pass-skeleton/build on git:master x [17:10:02] </span><br><span class="line">$ make</span><br><span class="line">Scanning dependencies of target SkeletonPass</span><br><span class="line">[ 50%] Building CXX object skeleton/CMakeFiles/SkeletonPass.dir/Skeleton.cpp.o</span><br><span class="line">[100%] Linking CXX shared module libSkeletonPass.so</span><br><span class="line">[100%] Built target SkeletonPass</span><br></pre></td></tr></table></figure></p>
+<p>现在编写一个程序来测试这个Pass，我们的Pass可以标识出代码块和指令。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"I am a func\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>*argv[])</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"test time : %d\n"</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    func();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Done\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在运行这个Pass<br><code>clang -Xclang -load -Xclang build/skeleton/libSkeletonPass.so -c test.c</code></p>
+<p>得到的结果略长，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"># muhe @ muhe-work in ~/Code/llvm-pass-skeleton on git:master x [17:20:12] </span><br><span class="line">$ clang -Xclang -load -Xclang build/skeleton/libSkeletonPass.so -c test.c    </span><br><span class="line">In a function called func!</span><br><span class="line">Function body:</span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline nounwind uwtable</span><br><span class="line">define void @func() #0 &#123;</span><br><span class="line">  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i32 0, i32 0))</span><br><span class="line">  ret void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i32 0, i32 0))</span><br><span class="line">  ret void</span><br><span class="line"></span><br><span class="line">Instruction:   %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i32 0, i32 0))</span><br><span class="line">Instruction:   ret void</span><br><span class="line">In a function called main!</span><br><span class="line">Function body:</span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline nounwind uwtable</span><br><span class="line">define i32 @main(i32, i8**) #0 &#123;</span><br><span class="line">  %3 = alloca i32, align 4</span><br><span class="line">  %4 = alloca i32, align 4</span><br><span class="line">  %5 = alloca i8**, align 8</span><br><span class="line">  %6 = alloca i32, align 4</span><br><span class="line">  store i32 0, i32* %3, align 4</span><br><span class="line">  store i32 %0, i32* %4, align 4</span><br><span class="line">  store i8** %1, i8*** %5, align 8</span><br><span class="line">  store i32 0, i32* %6, align 4</span><br><span class="line">  br label %7</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:7:                                      ; preds = %13, %2</span><br><span class="line">  %8 = load i32, i32* %6, align 4</span><br><span class="line">  %9 = icmp slt i32 %8, 10</span><br><span class="line">  br i1 %9, label %10, label %16</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:10:                                     ; preds = %7</span><br><span class="line">  %11 = load i32, i32* %6, align 4</span><br><span class="line">  %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.1, i32 0, i32 0), i32 %11)</span><br><span class="line">  br label %13</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:13:                                     ; preds = %10</span><br><span class="line">  %14 = load i32, i32* %6, align 4</span><br><span class="line">  %15 = add nsw i32 %14, 1</span><br><span class="line">  store i32 %15, i32* %6, align 4</span><br><span class="line">  br label %7</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:16:                                     ; preds = %7</span><br><span class="line">  call void @func()</span><br><span class="line">  %17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.2, i32 0, i32 0))</span><br><span class="line">  ret i32 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">  %3 = alloca i32, align 4</span><br><span class="line">  %4 = alloca i32, align 4</span><br><span class="line">  %5 = alloca i8**, align 8</span><br><span class="line">  %6 = alloca i32, align 4</span><br><span class="line">  store i32 0, i32* %3, align 4</span><br><span class="line">  store i32 %0, i32* %4, align 4</span><br><span class="line">  store i8** %1, i8*** %5, align 8</span><br><span class="line">  store i32 0, i32* %6, align 4</span><br><span class="line">  br label %7</span><br><span class="line"></span><br><span class="line">Instruction:   %3 = alloca i32, align 4</span><br><span class="line">Instruction:   %4 = alloca i32, align 4</span><br><span class="line">Instruction:   %5 = alloca i8**, align 8</span><br><span class="line">Instruction:   %6 = alloca i32, align 4</span><br><span class="line">Instruction:   store i32 0, i32* %3, align 4</span><br><span class="line">Instruction:   store i32 %0, i32* %4, align 4</span><br><span class="line">Instruction:   store i8** %1, i8*** %5, align 8</span><br><span class="line">Instruction:   store i32 0, i32* %6, align 4</span><br><span class="line">Instruction:   br label %7</span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:7:                                      ; preds = %13, %2</span><br><span class="line">  %8 = load i32, i32* %6, align 4</span><br><span class="line">  %9 = icmp slt i32 %8, 10</span><br><span class="line">  br i1 %9, label %10, label %16</span><br><span class="line"></span><br><span class="line">Instruction:   %8 = load i32, i32* %6, align 4</span><br><span class="line">Instruction:   %9 = icmp slt i32 %8, 10</span><br><span class="line">Instruction:   br i1 %9, label %10, label %16</span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:10:                                     ; preds = %7</span><br><span class="line">  %11 = load i32, i32* %6, align 4</span><br><span class="line">  %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.1, i32 0, i32 0), i32 %11)</span><br><span class="line">  br label %13</span><br><span class="line"></span><br><span class="line">Instruction:   %11 = load i32, i32* %6, align 4</span><br><span class="line">Instruction:   %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.1, i32 0, i32 0), i32 %11)</span><br><span class="line">Instruction:   br label %13</span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:13:                                     ; preds = %10</span><br><span class="line">  %14 = load i32, i32* %6, align 4</span><br><span class="line">  %15 = add nsw i32 %14, 1</span><br><span class="line">  store i32 %15, i32* %6, align 4</span><br><span class="line">  br label %7</span><br><span class="line"></span><br><span class="line">Instruction:   %14 = load i32, i32* %6, align 4</span><br><span class="line">Instruction:   %15 = add nsw i32 %14, 1</span><br><span class="line">Instruction:   store i32 %15, i32* %6, align 4</span><br><span class="line">Instruction:   br label %7</span><br><span class="line">Basic block:</span><br><span class="line"></span><br><span class="line">; &lt;label&gt;:16:                                     ; preds = %7</span><br><span class="line">  call void @func()</span><br><span class="line">  %17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.2, i32 0, i32 0))</span><br><span class="line">  ret i32 0</span><br><span class="line"></span><br><span class="line">Instruction:   call void @func()</span><br><span class="line">Instruction:   %17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.2, i32 0, i32 0))</span><br><span class="line">Instruction:   ret i32 0</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>一些包含关系：<br><code>[Module [Function [BasicBlock [Instruction]]]]</code></li>
+</ul>
+<p>他这篇文章后面例子还有使用Pass替换一些指令，如把add换成了mul，感兴趣可以跟着他的文章写一下。</p>
+<h4 id="0x3-使用LLVM来做混淆"><a href="#0x3-使用LLVM来做混淆" class="headerlink" title="0x3. 使用LLVM来做混淆"></a>0x3. 使用LLVM来做混淆</h4><p>add替换成sub指令，即<code>add a,b</code>换成了<code>sub a,-b</code><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/Function.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Pass.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Support/raw_ostream.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/Intrinsics.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/Instructions.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/LegacyPassManager.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Transforms/IPO/PassManagerBuilder.h"</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> llvm;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">    <span class="keyword">struct</span> SimplePass : <span class="keyword">public</span> FunctionPass &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">char</span> ID; <span class="comment">// Pass identification, replacement for typeid</span></span><br><span class="line">         </span><br><span class="line">        SimplePass() : FunctionPass(ID) &#123;&#125;</span><br><span class="line">4 </span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">runOnFunction</span><span class="params">(Function &amp;F)</span> override </span>&#123;</span><br><span class="line">            Function *tmp = &amp;F;</span><br><span class="line">            <span class="comment">// 遍历函数中的所有基本块</span></span><br><span class="line">            <span class="keyword">for</span> (Function::iterator bb = tmp-&gt;begin(); bb != tmp-&gt;end(); ++bb) &#123;</span><br><span class="line">                <span class="comment">// 遍历基本块中的每条指令</span></span><br><span class="line">                <span class="keyword">for</span> (BasicBlock::iterator inst = bb-&gt;begin(); inst != bb-&gt;end(); ++inst) &#123;</span><br><span class="line">                    <span class="comment">// 是否是add指令</span></span><br><span class="line">                    <span class="keyword">if</span> (inst-&gt;isBinaryOp()) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (inst-&gt;getOpcode() == Instruction::Add) &#123;</span><br><span class="line">                            <span class="keyword">return</span> ob_add(cast&lt;BinaryOperator&gt;(inst));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">             </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">         </span><br><span class="line">        <span class="comment">// a+b === a-(-b)</span></span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">ob_add</span><span class="params">(BinaryOperator *bo)</span> </span>&#123;</span><br><span class="line">            BinaryOperator *op = <span class="literal">NULL</span>;</span><br><span class="line">             </span><br><span class="line">            <span class="keyword">if</span> (bo-&gt;getOpcode() == Instruction::Add) &#123;</span><br><span class="line">                <span class="comment">// 生成 (－b)</span></span><br><span class="line">                op = BinaryOperator::CreateNeg(bo-&gt;getOperand(<span class="number">1</span>), <span class="string">""</span>, bo);</span><br><span class="line">                <span class="comment">// 生成 a-(-b)</span></span><br><span class="line">                op = BinaryOperator::Create(Instruction::Sub, bo-&gt;getOperand(<span class="number">0</span>), op, <span class="string">""</span>, bo);</span><br><span class="line">                 </span><br><span class="line">                op-&gt;setHasNoSignedWrap(bo-&gt;hasNoSignedWrap());</span><br><span class="line">                op-&gt;setHasNoUnsignedWrap(bo-&gt;hasNoUnsignedWrap());</span><br><span class="line">                <span class="comment">// 替换所有出现该指令的地方</span></span><br><span class="line">                bo-&gt;replaceAllUsesWith(op);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> SimplePass::ID = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Automatically enable the pass.</span></span><br><span class="line"><span class="comment">// http://adriansampson.net/blog/clangpass.html</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerSimplePass</span><span class="params">(<span class="keyword">const</span> PassManagerBuilder &amp;,</span></span></span><br><span class="line"><span class="function"><span class="params">                         legacy::PassManagerBase &amp;PM)</span> </span>&#123;</span><br><span class="line">  PM.add(<span class="keyword">new</span> SimplePass());</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> RegisterStandardPasses</span><br><span class="line">  RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,</span><br><span class="line">                 registerSimplePass);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">add_library(SimplePass MODULE</span><br><span class="line">    <span class="comment"># List your source files here.</span></span><br><span class="line">    SimplePass.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Use C++11 to compile our pass (i.e., supply -std=c++11).</span></span><br><span class="line">target_compile_features(SimplePass PRIVATE cxx_range_for cxx_auto_type)</span><br><span class="line"></span><br><span class="line"><span class="comment"># LLVM is (typically) built with no C++ RTTI. We need to match that.</span></span><br><span class="line">set_target_properties(SimplePass PROPERTIES</span><br><span class="line">    COMPILE_FLAGS "-fno-rtti"</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get proper shared-library behavior (where symbols are not necessarily</span></span><br><span class="line"><span class="comment"># resolved when the shared library is linked) on OS X.</span></span><br><span class="line">if(APPLE)</span><br><span class="line">    set_target_properties(SimplePass PROPERTIES</span><br><span class="line">        LINK_FLAGS "-undefined dynamic_lookup"</span><br><span class="line">    )</span><br><span class="line">endif(APPLE)</span><br></pre></td></tr></table></figure>
+<p>我的测试代码如下<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat example.c </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> num;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%i"</span>, &amp;num);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%i\n"</span>, num + <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>先编译正常的程序<br><code>clang example.c -o before</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ file before </span><br><span class="line">before: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped</span><br></pre></td></tr></table></figure>
+<p>看一下main的逻辑：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">objdump -M intel -d  before </span><br><span class="line"></span><br><span class="line">. . . </span><br><span class="line"></span><br><span class="line">0000000000400580 &lt;main&gt;:</span><br><span class="line">  400580:	55                   	push   rbp</span><br><span class="line">  400581:	48 89 e5             	mov    rbp,rsp</span><br><span class="line">  400584:	48 83 ec 20          	sub    rsp,0x20</span><br><span class="line">  400588:	48 b8 64 06 40 00 00 	movabs rax,0x400664</span><br><span class="line">  40058f:	00 00 00 </span><br><span class="line">  400592:	48 8d 4d ec          	lea    rcx,[rbp-0x14]</span><br><span class="line">  400596:	c7 45 fc 00 00 00 00 	mov    DWORD PTR [rbp-0x4],0x0</span><br><span class="line">  40059d:	89 7d f8             	mov    DWORD PTR [rbp-0x8],edi</span><br><span class="line">  4005a0:	48 89 75 f0          	mov    QWORD PTR [rbp-0x10],rsi</span><br><span class="line">  4005a4:	48 89 c7             	mov    rdi,rax</span><br><span class="line">  4005a7:	48 89 ce             	mov    rsi,rcx</span><br><span class="line">  4005aa:	b0 00                	mov    al,0x0</span><br><span class="line">  4005ac:	e8 af fe ff ff       	call   400460 &lt;__isoc99_scanf@plt&gt;</span><br><span class="line">  4005b1:	48 bf 67 06 40 00 00 	movabs rdi,0x400667</span><br><span class="line">  4005b8:	00 00 00 </span><br><span class="line">  4005bb:	8b 55 ec             	mov    edx,DWORD PTR [rbp-0x14]</span><br><span class="line">  4005be:	83 c2 02             	add    edx,0x2  //num + 2 语句</span><br><span class="line">  4005c1:	89 d6                	mov    esi,edx</span><br><span class="line">  4005c3:	89 45 e8             	mov    DWORD PTR [rbp-0x18],eax</span><br><span class="line">  4005c6:	b0 00                	mov    al,0x0</span><br><span class="line">  4005c8:	e8 73 fe ff ff       	call   400440 &lt;printf@plt&gt;</span><br><span class="line">  4005cd:	31 d2                	xor    edx,edx</span><br><span class="line">  4005cf:	89 45 e4             	mov    DWORD PTR [rbp-0x1c],eax</span><br><span class="line">  4005d2:	89 d0                	mov    eax,edx</span><br><span class="line">  4005d4:	48 83 c4 20          	add    rsp,0x20</span><br><span class="line">  4005d8:	5d                   	pop    rbp</span><br><span class="line">  4005d9:	c3                   	ret    </span><br><span class="line">  4005da:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]</span><br><span class="line"></span><br><span class="line">. . .</span><br></pre></td></tr></table></figure></p>
+<p>现在编译一个混淆过的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir build_1</span><br><span class="line">cd build_1</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+<p>然后<br><code>clang -Xclang -load -Xclang build_1/simple/libSimplePass.so -c example.c</code><br>得到<code>example.o</code>文件，这个还没链接，我们使用clang再链接一下就好了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ clang example.o -o example </span><br><span class="line">$ file example</span><br><span class="line">example: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped</span><br></pre></td></tr></table></figure></p>
+<p>反汇编看一下main的逻辑：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">0000000000400580 &lt;main&gt;:</span><br><span class="line">  400580:	55                   	push   rbp</span><br><span class="line">  400581:	48 89 e5             	mov    rbp,rsp</span><br><span class="line">  400584:	48 83 ec 20          	sub    rsp,0x20</span><br><span class="line">  400588:	48 b8 74 06 40 00 00 	movabs rax,0x400674</span><br><span class="line">  40058f:	00 00 00 </span><br><span class="line">  400592:	48 8d 4d ec          	lea    rcx,[rbp-0x14]</span><br><span class="line">  400596:	c7 45 fc 00 00 00 00 	mov    DWORD PTR [rbp-0x4],0x0</span><br><span class="line">  40059d:	89 7d f8             	mov    DWORD PTR [rbp-0x8],edi</span><br><span class="line">  4005a0:	48 89 75 f0          	mov    QWORD PTR [rbp-0x10],rsi</span><br><span class="line">  4005a4:	48 89 c7             	mov    rdi,rax</span><br><span class="line">  4005a7:	48 89 ce             	mov    rsi,rcx</span><br><span class="line">  4005aa:	b0 00                	mov    al,0x0</span><br><span class="line">  4005ac:	e8 af fe ff ff       	call   400460 &lt;__isoc99_scanf@plt&gt;</span><br><span class="line">  4005b1:	48 bf 77 06 40 00 00 	movabs rdi,0x400677</span><br><span class="line">  4005b8:	00 00 00 </span><br><span class="line">  4005bb:	31 d2                	xor    edx,edx</span><br><span class="line">  4005bd:	44 8b 45 ec          	mov    r8d,DWORD PTR [rbp-0x14]</span><br><span class="line">  4005c1:	83 ea 02             	sub    edx,0x2</span><br><span class="line">  4005c4:	41 29 d0             	sub    r8d,edx //已经被替换了</span><br><span class="line">  4005c7:	44 89 c6             	mov    esi,r8d</span><br><span class="line">  4005ca:	89 45 e8             	mov    DWORD PTR [rbp-0x18],eax</span><br><span class="line">  4005cd:	b0 00                	mov    al,0x0</span><br><span class="line">  4005cf:	e8 6c fe ff ff       	call   400440 &lt;printf@plt&gt;</span><br><span class="line">  4005d4:	31 d2                	xor    edx,edx</span><br><span class="line">  4005d6:	89 45 e4             	mov    DWORD PTR [rbp-0x1c],eax</span><br><span class="line">  4005d9:	89 d0                	mov    eax,edx</span><br><span class="line">  4005db:	48 83 c4 20          	add    rsp,0x20</span><br><span class="line">  4005df:	5d                   	pop    rbp</span><br><span class="line">  4005e0:	c3                   	ret    </span><br><span class="line">  4005e1:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]</span><br><span class="line">  4005e8:	00 00 00 </span><br><span class="line">  4005eb:	0f 1f 44 00 00       	nop    DWORD PTR [rax+rax*1+0x0]</span><br></pre></td></tr></table></figure></p>
+<p>这个只是demo而已，几乎没什么强度。</p>
+<h4 id="0x4-参考和引用"><a href="#0x4-参考和引用" class="headerlink" title="0x4. 参考和引用"></a>0x4. 参考和引用</h4><p><a href="http://llvm.org/" target="_blank" rel="noopener">llvm</a><br><a href="http://zke1ev3n.me/2016/01/18/%E5%9F%BA%E4%BA%8ELLVM%E7%9A%84%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="noopener">基于LLVM的代码混淆</a><br><a href="http://www.cs.cornell.edu/~asampson/blog/llvm.html" target="_blank" rel="noopener">LLVM for Grad Students</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/02/27/LLVM-Study-Log/">LLVM Study Log</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
+        <p><span>发布时间:</span>2017年02月27日 - 20时03分</p>
+        <p><span>最后更新:</span>2017年03月02日 - 14时05分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/02/27/LLVM-Study-Log/" title="LLVM Study Log">http://o0xmuhe.me/2017/02/27/LLVM-Study-Log/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/02/27/LLVM-Study-Log/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target="_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/03/04/codegate2017-angrybird/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          codegate2017-angrybird
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/16/ichunqiu-CTF-2017-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ichunqiu-CTF-2017-2</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x0-简述"><span class="toc-number">1.</span> <span class="toc-text">0x0. 简述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x1-LLVM"><span class="toc-number">2.</span> <span class="toc-text">0x1. LLVM</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-简介"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 简介</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-安装"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-3-IR"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 IR</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x2-Pass"><span class="toc-number">3.</span> <span class="toc-text">0x2. Pass</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x3-使用LLVM来做混淆"><span class="toc-number">4.</span> <span class="toc-text">0x3. 使用LLVM来做混淆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x4-参考和引用"><span class="toc-number">5.</span> <span class="toc-text">0x4. 参考和引用</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'o0xmuhe'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/03/04/codegate2017-angrybird/" title="上一篇: codegate2017-angrybird">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/02/16/ichunqiu-CTF-2017-2/" title="下一篇: ichunqiu-CTF-2017-2">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/11/08/Hello-PANDA/">Hello PANDA</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/07/UAF-analysis-using-pykd/">UAF analysis : using pykd</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/05/代码审计培养计划/">代码审计培养计划</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/飞扬历险记/">飞扬历险记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/linux-code-inject/">linux code inject</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/比赛运维杂记/">比赛运维杂记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/">论文阅读<ifuzzer: an="" evolutionary="" interpreter="" fuzzer="" using="" genetic="" programming=""></ifuzzer:></a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/03/遗传算法初窥/">遗传算法初窥</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/29/Antlr4初体验/">Antlr4初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/mips程序调试环境折腾/">mips程序调试环境折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/14/拯救macOS-High-sierra的硬盘空间/">拯救macOS High sierra的硬盘空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/16/Symbolic-Execution学习/">Symbolic Execution学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/11/LL-LR-SLR-LALR傻傻分不清/">LL LR SLR LALR傻傻分不清</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/20/compiler学习/">compiler学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/15/Unicorn-Engine初体验/">Unicorn Engine初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/06/flex-bison读书笔记/">flex_bison读书笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/30/Python指定概率获取随机元素/">Python指定概率获取随机元素</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/01/Hello-World升级版/">Hello World升级版</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/babydriver-writeup/">babydriver writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/05/OpenGrok搭建/">OpenGrok搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/30/编译原理学习/">编译原理学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/28/TrendMicro-CTF-2017-Reverse300/">TrendMicro CTF 2017 Reverse300</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/19/Final/">Final</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/">pwnhub杯CUIT第十三届校赛pwn出题及运维心得</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/08/SSCTF-2017部分Writeup/">SSCTF-2017部分Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/22/360春秋CTF-pwn/">360春秋CTF--pwn</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/06/Linux-Kernel-Exploit-4-beginners/">Linux Kernel Exploit 4 beginners</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/NJCTF-2017部分wp/">NJCTF-2017部分wp</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/SECCON-2016-jmper/">SECCON-2016 jmper</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/04/codegate2017-angrybird/">codegate2017-angrybird</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/27/LLVM-Study-Log/">LLVM Study Log</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/ichunqiu-CTF-2017-2/">ichunqiu-CTF-2017-2</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/08/Adding-your-own-syscall-in-linux-kernel/">Adding your own syscall in linux kernel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/Windows-Kernel-Exploit-Study-3/">Windows-Kernel-Exploit-Study(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/Linux socket进程间通信及应用/">Linux socket进程间通信及应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/28/一点碎碎念/">一点碎碎念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/Have-fun-with-Blind-ROP/">Have fun with Blind ROP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/Windows-Kernel-Exploit-Study-2/">Windows Kernel Exploit Study(2)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/Windows-Kernel-Exploit-Study-1/">Windows Kernel Exploit Study(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/what-DynELF-does-basically/">what DynELF does basically</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/17/fuzzing-with-peach-Just-a-toy/">fuzzing with peach(Just a toy)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/PlaidCTF-2016-butterfly/">PlaidCTF 2016 butterfly</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Have-fun-with-glibc内存管理/">Have fun with glibc内存管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux-下起shell失败的分析/">linux 下起shell失败的分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/Baiudu杯-pwn专场记录/">Baiudu杯 pwn专场记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/how-to-compile-WinAFL/">how to compile WinAFL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/25/yocto-writeup/">yocto writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/HITCON-2016-Quals-SecretHolder/">HITCON-2016-Quals-SecretHolder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/BCTF-cloud/">BCTF--cloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/24/一些环境配置遇到的坑-持续更新/">一些环境配置遇到的坑(持续更新)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/16/Malloc-Maleficarum-复盘/">Malloc-Maleficarum-复盘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/26/初试winafl/">初试winafl</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/14/pwnable-kr-alloca/">pwnable.kr -- alloca</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/01/简单的尝试angr/">简单的尝试angr</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/第一个android-cm调试分析/">第一个android cm调试分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/install-gef/">install gef</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/30/cctf-pwn350/">cctf pwn350</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/15/heap-vuln-unlink/">heap vuln -- unlink</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/02/format-string-with-stack-frame/">format string with stack frame</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/16/RCTF-PWN200/">RCTF -- PWN200</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/05/dragon/">dragon</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 muhe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit">访客数量: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>pwnhub杯CUIT第十三届校赛pwn出题及运维心得 | o0xmuhe&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00: 前言​    这次应该是我参与的第三次校赛了，第一次大一的时候是参赛者，和柠檬、K1n9还有管理小姐姐组队；后面两次都是以出题者身份参与，在出题中学习到了很多。第一次出题的时候太naive…也没参与运维，都是学长在做配置、维护，这次自己上阵，虽然准备了不少，但是还是有很多问题暴露出来。 ​    这次文章涉及出题心得，出题中的一些思考、反思；运维中的一些问题，以及对问题的解决和以后的预">
+<meta name="keywords" content="ctf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwnhub杯CUIT第十三届校赛pwn出题及运维心得">
+<meta property="og:url" content="http://o0xmuhe.me/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/index.html">
+<meta property="og:site_name" content="o0xmuhe&#39;s blog">
+<meta property="og:description" content="0x00: 前言​    这次应该是我参与的第三次校赛了，第一次大一的时候是参赛者，和柠檬、K1n9还有管理小姐姐组队；后面两次都是以出题者身份参与，在出题中学习到了很多。第一次出题的时候太naive…也没参与运维，都是学长在做配置、维护，这次自己上阵，虽然准备了不少，但是还是有很多问题暴露出来。 ​    这次文章涉及出题心得，出题中的一些思考、反思；运维中的一些问题，以及对问题的解决和以后的预">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2017-05-29T08:34:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pwnhub杯CUIT第十三届校赛pwn出题及运维心得">
+<meta name="twitter:description" content="0x00: 前言​    这次应该是我参与的第三次校赛了，第一次大一的时候是参赛者，和柠檬、K1n9还有管理小姐姐组队；后面两次都是以出题者身份参与，在出题中学习到了很多。第一次出题的时候太naive…也没参与运维，都是学长在做配置、维护，这次自己上阵，虽然准备了不少，但是还是有很多问题暴露出来。 ​    这次文章涉及出题心得，出题中的一些思考、反思；运维中的一些问题，以及对问题的解决和以后的预">
+  
+    <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">muhe</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">一个有情怀的二进制狗</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags">标签</a></li>
+                        
+                            <li><a href="/about">关于我</a></li>
+                        
+                            <li><a href="/Pwnable-Log">Pwnable</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Antlr/" style="font-size: 10px;">Antlr</a> <a href="/tags/C/" style="font-size: 11.67px;">C</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/CTF-Writeup/" style="font-size: 10px;">CTF Writeup</a> <a href="/tags/Compilers/" style="font-size: 10px;">Compilers</a> <a href="/tags/LLVM/" style="font-size: 10px;">LLVM</a> <a href="/tags/Linux/" style="font-size: 11.67px;">Linux</a> <a href="/tags/PANDA/" style="font-size: 10px;">PANDA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Study/" style="font-size: 16.67px;">Study</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angr/" style="font-size: 11.67px;">angr</a> <a href="/tags/compiler/" style="font-size: 10px;">compiler</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/ctf-writeup/" style="font-size: 20px;">ctf writeup</a> <a href="/tags/debug/" style="font-size: 10px;">debug</a> <a href="/tags/env-config/" style="font-size: 10px;">env config</a> <a href="/tags/exploit/" style="font-size: 16.67px;">exploit</a> <a href="/tags/fuzz/" style="font-size: 15px;">fuzz</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/glibc内存管理/" style="font-size: 10px;">glibc内存管理</a> <a href="/tags/life/" style="font-size: 11.67px;">life</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-kernel/" style="font-size: 13.33px;">linux kernel</a> <a href="/tags/mips/" style="font-size: 10px;">mips</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/peach/" style="font-size: 10px;">peach</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/ret-2-dl-resolve/" style="font-size: 10px;">ret 2 dl-resolve</a> <a href="/tags/study/" style="font-size: 13.33px;">study</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/uaf/" style="font-size: 10px;">uaf</a> <a href="/tags/unicorn-engine/" style="font-size: 10px;">unicorn engine</a> <a href="/tags/vuln-analysis/" style="font-size: 10px;">vuln analysis</a> <a href="/tags/wargame/" style="font-size: 11.67px;">wargame</a> <a href="/tags/winafl/" style="font-size: 10px;">winafl</a> <a href="/tags/windows-kernel/" style="font-size: 13.33px;">windows kernel</a> <a href="/tags/writeup/" style="font-size: 10px;">writeup</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a> <a href="/tags/环境配置/" style="font-size: 10px;">环境配置</a> <a href="/tags/编译原理/" style="font-size: 11.67px;">编译原理</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://syclover.sinaapp.com/">Syclover Team</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://weibo.com/u/5376172367">最爱的高老师</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.Ox9A82.com">0x9A82学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://k1n9.me/">K1n9师傅</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3mon</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.xianyusec.com">咸鱼</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://rootclay.com">rootclay</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://v1ct0r.com/">V1ct0r</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://godot.win">Godot学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hebic.me/">Homaebic学弟</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://iqwq.me">两米的sco4x0</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://zmy.im/">JimmyZhou</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://silic.top/">灭亡叔叔</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://dwx.io">Jason</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="	http://www.0aa.me/">Mosuan</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://whereisk0shl.top">k0sh1</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://winter3un.github.io">WinterSun</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://venenof.com">Venenof</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://r0p.me/">Icemakr</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://bestwing.me/">Swing</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hackersb.cn/">王松_Striker</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/7top/">7top</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bendawang.site">bendawang</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yixuankeer.win">前端joker大佬</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.lc4t.me">lc4t</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.inksec.cn/">Szrzvdny</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sixwha1e.github.io/">漂亮的sixwhale小姐姐</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://ctfrank.org">CTF Rank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://askook.me/">A酱</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">关注二进制安全. Member of Syclover. CTFer/INTJ.</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">muhe</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">muhe</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">一个有情怀的二进制狗</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags">标签</a></li>
+                
+                    <li><a href="/about">关于我</a></li>
+                
+                    <li><a href="/Pwnable-Log">Pwnable</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/o0xmuhe" title="github">github</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/2070174943/" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/0xmuhe" title="twitter">twitter</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-pwnhub杯CUIT第十三届校赛pwn出题及运维心得" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/" class="article-date">
+      <time datetime="2017-05-29T06:47:39.000Z" itemprop="datePublished">2017-05-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pwnhub杯CUIT第十三届校赛pwn出题及运维心得
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00: 前言"></a>0x00: 前言</h4><p>​    这次应该是我参与的第三次校赛了，第一次大一的时候是参赛者，和柠檬、K1n9还有管理小姐姐组队；后面两次都是以出题者身份参与，在出题中学习到了很多。第一次出题的时候太naive…也没参与运维，都是学长在做配置、维护，这次自己上阵，虽然准备了不少，但是还是有很多问题暴露出来。</p>
+<p>​    这次文章涉及出题心得，出题中的一些思考、反思；运维中的一些问题，以及对问题的解决和以后的预防方案。</p>
+<a id="more"></a>
+<h4 id="0x01-出题心得"><a href="#0x01-出题心得" class="headerlink" title="0x01:出题心得"></a>0x01:出题心得</h4><h5 id="1-pwn50-python-jail"><a href="#1-pwn50-python-jail" class="headerlink" title="1. pwn50 python jail"></a>1. pwn50 python jail</h5><p>​    这是一个python jail，题目是根据一个以前的ctf改的，我过滤了一些函数、字符，熟悉一点python的同学就能容易绕过，使用getattr去做函数调用。算是一个送分题吧 233333。</p>
+<h5 id="2-pwn100-lemon-water"><a href="#2-pwn100-lemon-water" class="headerlink" title="2. pwn100 lemon water"></a>2. pwn100 lemon water</h5><p>​    本来pwn100是学弟的…后面出了点问题，他甩锅了TAT。 我就想着随便出一个吧，就放了这么一个format string的盲打。</p>
+<p>​    这种题目的思路也很简单，先用%p，确定arch，然后再确定输入在stack的位置，这次这个题目是%6$，后面的就很简单了，dump出来bin file，然后确定got表，有了fmt这种任意地址读的，构造leak就可以拿system地址了，后面直接hijacking printf got，输入一个/bin/sh，就拿shell啦~</p>
+<p>​    但是这种题目以后最好不要出，一是没什么意思，二是对服务器的资源消耗很严重，很容易gg。这是自己的问题，背锅背锅…这个题目出的不好TAT  不过顺手黑了一波lemon同学 233333</p>
+<h5 id="3-pwn200-file-share"><a href="#3-pwn200-file-share" class="headerlink" title="3. pwn200 file share"></a>3. pwn200 file share</h5><p>​    先说下这个题目的想法吧。开始是基友byg0ne写的一个file share，我拿来修改的，他那个程序是解析http的，有点类似server上运行一个python -m EasyHTTPServer 这种，wget去获取文件。</p>
+<p>​     对于这样的一个程序怎么塞进去两个洞呢？我首先想到ngnix那个BROP，解析http的时候栈溢出，嗯…我可以写进去一个login功能，然后有这个漏洞。另外需要一个泄露，怎么做呢？之前看了长亭杨博士的三个漏洞搞定路由器，提到了snprintf的滥用导致heap info leak，我也加了进去。所以原本的题目是这样的…但是后来测试的时候发现，信息泄露可以正常玩，泄露了堆信息，然后根据offset 和一些泄露出来的信息，能确定libc base addr，提供libc.so，就能拿到需要的信息了。但是问题出在栈溢出部分，想增加一个crack canary，然后再让他dup改标准输入输出，然后ROP拿shell…死在crack canary了，一些不可显字符接收有问题-。- 就gg了</p>
+<p>​    deadline逼近，我就改了题目…一下子改简单了，我背锅…还造成多解情况。</p>
+<p>​    修改后题目的原本设想：fmt 泄露程序加载地址，确定get flag函数地址，crack canary，然后覆盖返回地值拿到flag。但是socket这种！fork server的啊，不重启加载地址一样的啊，可以无限fmt leak的啊TAT</p>
+<p>结果就是…一个fmt就可以撸了。。泄露完了直接fmt 日返回地值</p>
+<p>​    这个题目如果按照原本思路可能更好一点。或者这个题目去掉get flag函数，给libc，可以让泄露完了之后通过offset拿到dup，改标准输入输出，然后ROP拿shell。</p>
+<h5 id="4-pwn300-notebook"><a href="#4-pwn300-notebook" class="headerlink" title="4. pwn300 notebook"></a>4. pwn300 notebook</h5><p>​    常规的heap题目，很简单。塞进去了堆溢出、UAF、释放后的heap未清空。</p>
+<p>​    利用的话，利用fastbin的去leak info，然后堆溢出hijacking 函数指针，UAF 调用释放后的块中的方法get shell。很常规的一道题目吧，感觉也没啥难度….师傅们秒的贼快。</p>
+<h5 id="5-pwn400-amp-amp-pwn500"><a href="#5-pwn400-amp-amp-pwn500" class="headerlink" title="5. pwn400 &amp;&amp; pwn500"></a>5. pwn400 &amp;&amp; pwn500</h5><p>ox9a82学弟的题目，关注<a href="http://www.cnblogs.com/Ox9A82/" target="_blank" rel="noopener">他的博客</a>就好啦~他会写的很详细。</p>
+<p>题目出的很有质量，heap玩出了花，但是代码量挺大的，可能有些地方没测试到，出漏了也是有可能的 23333</p>
+<p>膜一发9a82大佬 XD</p>
+<h4 id="0x02-运维"><a href="#0x02-运维" class="headerlink" title="0x02:运维"></a>0x02:运维</h4><p>不运维不知道辛苦啊…配服务器的时候觉得自己简直是个智障一样。</p>
+<ol>
+<li>选择使用socat还是xinetd</li>
+</ol>
+<p>纠结再三使用了socat，其实都差不多，socat更简单一点。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup socat TCP-LISTEN:50004,fork,reuseaddr EXEC:<span class="string">'/home/pwn400/pwn400'</span> &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>大概这样的吧，具体的其他需求可以看socat文档去修改。</p>
+<ol>
+<li>权限问题</li>
+</ol>
+<p>啥也别说了所有写权限都ban掉，命令也做好权限，最好只留下ls cd cat这三个。</p>
+<p>还有就是，我开始忘记给.bashrc去掉w权限了，被joker师傅写了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> :p ;<span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+<p>我服务都没起来…一脸懵逼的问了他，后面改了改…师傅又给我上了一课TAT</p>
+<p>还有就是pwn 服务相关文件最好加上chattr +a一下…</p>
+<ol>
+<li>其他</li>
+</ol>
+<p>fork bomb这个真是没想到…结果被joker师傅pwn50打进来，fork bomb搞崩了好几次…后面改了配置文件，限制用户启的进程数目，重启之后好了一点。但是这样有个问题就是，当socat 启动的进程到一定数目之后，到了设置的max值，就起不来进程啦，就要重启服务了，很麻烦。最好的办法是，题目里都写上alarm，但是问题是像pwn100那种，没法这么干…比较尴尬，写个crontab自动重启好了</p>
+<ol>
+<li>流量</li>
+</ol>
+<p>抓流量就是为了反作弊，事实证明这次抓流量帮了大忙。呵呵， 现在CTF风气这样，我能怎么办，我也很绝望，我就是要怼。</p>
+<p>部署了tcpdump，写了crontab去抓流量，以小时为单位。</p>
+<p>当然了，这种方案不是很好，而且这次题目没token，导致我后面分析流量类死了，一个包一个包的看。以后的话可以参考杭电explore师傅的黑域，流量抓的更全，直接存数据库里，方便check。</p>
+<ol>
+<li>自动化啊自动化</li>
+</ol>
+<p>一定要做好自动化，比如服务重启(比如那个pwn100)，写crontab自动重启，要不然好累啊，觉都睡不好。</p>
+<h4 id="0x03-随便瞎bb"><a href="#0x03-随便瞎bb" class="headerlink" title="0x03: 随便瞎bb"></a>0x03: 随便瞎bb</h4><p>CTF风气慢慢变得很差，拿这次pwn50我抓到的流量来说，有这几种情况：</p>
+<ol>
+<li>payload 几乎一样的</li>
+<li>没有任何尝试直接使用关键函数去命令执行的</li>
+<li>只是随便交互的，一点意义都没，但是那个ip又提交了flag，可能是学校原因吧出口ip一样。</li>
+<li>那些提交时间间隔不到1min、3min的。</li>
+</ol>
+<p>爱怎么搞怎么搞吧。</p>
+<p>我不懂，那是个python的jail啊，你不尝试我过滤了哪些字符，哪些函数，怎么确定用getattr的？</p>
+<p>去买彩票吧同学，中了大奖记得分我 233333</p>
+<h4 id="0x04-结束语"><a href="#0x04-结束语" class="headerlink" title="0x04: 结束语"></a>0x04: 结束语</h4><p>​    比赛还是办的没啥大的问题，也学到很多东西，知道自己很多不足，以后多学习。感谢师傅们的支持、包容和理解。比赛时间比较尴尬，对不住大家了，导致很多师傅没来玩，比较遗憾，我们的锅TAT</p>
+<p>​    还有就是通过比赛又认识了一波师傅，比如nonick这位，非常强~以后多交流学习 -。-  又可以进步啦~</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/">pwnhub杯CUIT第十三届校赛pwn出题及运维心得</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
+        <p><span>发布时间:</span>2017年05月29日 - 14时47分</p>
+        <p><span>最后更新:</span>2017年05月29日 - 16时34分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/" title="pwnhub杯CUIT第十三届校赛pwn出题及运维心得">http://o0xmuhe.me/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target="_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/06/19/Final/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Final
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/08/SSCTF-2017部分Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SSCTF-2017部分Writeup</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00: 前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-出题心得"><span class="toc-number">2.</span> <span class="toc-text">0x01:出题心得</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-pwn50-python-jail"><span class="toc-number">2.1.</span> <span class="toc-text">1. pwn50 python jail</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-pwn100-lemon-water"><span class="toc-number">2.2.</span> <span class="toc-text">2. pwn100 lemon water</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-pwn200-file-share"><span class="toc-number">2.3.</span> <span class="toc-text">3. pwn200 file share</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-pwn300-notebook"><span class="toc-number">2.4.</span> <span class="toc-text">4. pwn300 notebook</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-pwn400-amp-amp-pwn500"><span class="toc-number">2.5.</span> <span class="toc-text">5. pwn400 &amp;&amp; pwn500</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-运维"><span class="toc-number">3.</span> <span class="toc-text">0x02:运维</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-随便瞎bb"><span class="toc-number">4.</span> <span class="toc-text">0x03: 随便瞎bb</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x04-结束语"><span class="toc-number">5.</span> <span class="toc-text">0x04: 结束语</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'o0xmuhe'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/06/19/Final/" title="上一篇: Final">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/05/08/SSCTF-2017部分Writeup/" title="下一篇: SSCTF-2017部分Writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/11/08/Hello-PANDA/">Hello PANDA</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/07/UAF-analysis-using-pykd/">UAF analysis : using pykd</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/05/代码审计培养计划/">代码审计培养计划</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/飞扬历险记/">飞扬历险记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/linux-code-inject/">linux code inject</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/16/比赛运维杂记/">比赛运维杂记</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/">论文阅读<ifuzzer: an="" evolutionary="" interpreter="" fuzzer="" using="" genetic="" programming=""></ifuzzer:></a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/03/遗传算法初窥/">遗传算法初窥</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/29/Antlr4初体验/">Antlr4初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/mips程序调试环境折腾/">mips程序调试环境折腾</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/14/拯救macOS-High-sierra的硬盘空间/">拯救macOS High sierra的硬盘空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/16/Symbolic-Execution学习/">Symbolic Execution学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/11/LL-LR-SLR-LALR傻傻分不清/">LL LR SLR LALR傻傻分不清</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/20/compiler学习/">compiler学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/15/Unicorn-Engine初体验/">Unicorn Engine初体验</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/06/flex-bison读书笔记/">flex_bison读书笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/30/Python指定概率获取随机元素/">Python指定概率获取随机元素</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/01/Hello-World升级版/">Hello World升级版</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/babydriver-writeup/">babydriver writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/05/OpenGrok搭建/">OpenGrok搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/30/编译原理学习/">编译原理学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/28/TrendMicro-CTF-2017-Reverse300/">TrendMicro CTF 2017 Reverse300</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/19/Final/">Final</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/29/pwnhub杯CUIT第十三届校赛pwn出题及运维心得/">pwnhub杯CUIT第十三届校赛pwn出题及运维心得</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/08/SSCTF-2017部分Writeup/">SSCTF-2017部分Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/22/360春秋CTF-pwn/">360春秋CTF--pwn</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/06/Linux-Kernel-Exploit-4-beginners/">Linux Kernel Exploit 4 beginners</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/NJCTF-2017部分wp/">NJCTF-2017部分wp</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/SECCON-2016-jmper/">SECCON-2016 jmper</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/04/codegate2017-angrybird/">codegate2017-angrybird</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/27/LLVM-Study-Log/">LLVM Study Log</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/ichunqiu-CTF-2017-2/">ichunqiu-CTF-2017-2</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/08/Adding-your-own-syscall-in-linux-kernel/">Adding your own syscall in linux kernel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/Windows-Kernel-Exploit-Study-3/">Windows-Kernel-Exploit-Study(3)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/Linux socket进程间通信及应用/">Linux socket进程间通信及应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/28/一点碎碎念/">一点碎碎念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/Have-fun-with-Blind-ROP/">Have fun with Blind ROP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/Windows-Kernel-Exploit-Study-2/">Windows Kernel Exploit Study(2)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/Windows-Kernel-Exploit-Study-1/">Windows Kernel Exploit Study(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/what-DynELF-does-basically/">what DynELF does basically</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/17/fuzzing-with-peach-Just-a-toy/">fuzzing with peach(Just a toy)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/PlaidCTF-2016-butterfly/">PlaidCTF 2016 butterfly</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Have-fun-with-glibc内存管理/">Have fun with glibc内存管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux-下起shell失败的分析/">linux 下起shell失败的分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/Baiudu杯-pwn专场记录/">Baiudu杯 pwn专场记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/how-to-compile-WinAFL/">how to compile WinAFL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/25/yocto-writeup/">yocto writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/HITCON-2016-Quals-SecretHolder/">HITCON-2016-Quals-SecretHolder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/BCTF-cloud/">BCTF--cloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/24/一些环境配置遇到的坑-持续更新/">一些环境配置遇到的坑(持续更新)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/16/Malloc-Maleficarum-复盘/">Malloc-Maleficarum-复盘</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/26/初试winafl/">初试winafl</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/14/pwnable-kr-alloca/">pwnable.kr -- alloca</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/01/简单的尝试angr/">简单的尝试angr</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/第一个android-cm调试分析/">第一个android cm调试分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/install-gef/">install gef</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/30/cctf-pwn350/">cctf pwn350</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/15/heap-vuln-unlink/">heap vuln -- unlink</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/02/format-string-with-stack-frame/">format string with stack frame</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/16/RCTF-PWN200/">RCTF -- PWN200</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/05/dragon/">dragon</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 muhe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit">访客数量: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
