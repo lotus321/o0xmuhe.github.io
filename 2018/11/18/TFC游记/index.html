@@ -3,20 +3,22 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt; | o0xmuhe&#39;s blog</title>
+  <title>TFC游记 | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00:关于最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。这篇论文是IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming。主要是介绍IFuzzer的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。">
-<meta name="keywords" content="fuzz,study,paper">
+  <meta name="description" content="0x00 ：前言很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。">
+<meta name="keywords" content="感想">
 <meta property="og:type" content="article">
-<meta property="og:title" content="论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;">
-<meta property="og:url" content="http://o0xmuhe.me/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/index.html">
+<meta property="og:title" content="TFC游记">
+<meta property="og:url" content="http://o0xmuhe.me/2018/11/18/TFC游记/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00:关于最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。这篇论文是IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming。主要是介绍IFuzzer的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。">
+<meta property="og:description" content="0x00 ：前言很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-09T03:45:27.553Z">
+<meta property="og:image" content="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/TFC/faker.jpg">
+<meta property="og:updated_time" content="2018-11-18T15:17:22.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;">
-<meta name="twitter:description" content="0x00:关于最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。这篇论文是IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming。主要是介绍IFuzzer的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。">
+<meta name="twitter:title" content="TFC游记">
+<meta name="twitter:description" content="0x00 ：前言很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。">
+<meta name="twitter:image" content="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/TFC/faker.jpg">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -284,11 +286,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-TFC游记" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/" class="article-date">
-      <time datetime="2018-06-08T16:29:42.000Z" itemprop="datePublished">2018-06-09</time>
+      <a href="/2018/11/18/TFC游记/" class="article-date">
+      <time datetime="2018-11-18T14:02:04.000Z" itemprop="datePublished">2018-11-18</time>
 </a>
     </div>
   
@@ -301,7 +303,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;
+      TFC游记
     </h1>
   
 
@@ -312,7 +314,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fuzz/">fuzz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/paper/">paper</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/">study</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感想/">感想</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -322,21 +324,31 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00-关于"><a href="#0x00-关于" class="headerlink" title="0x00:关于"></a>0x00:关于</h4><p>最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。<br>这篇论文是<code>IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming</code>。<br>主要是介绍<a href="https://github.com/vspandan/IFuzzer" target="_blank" rel="noopener">IFuzzer</a>的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。<br><a id="more"></a></p>
-<h4 id="0x01-论文阅读"><a href="#0x01-论文阅读" class="headerlink" title="0x01:论文阅读"></a>0x01:论文阅读</h4><p>该论文主要是针对脚本引擎的fuzz，只是文中使用了js engine作为目标。</p>
-<p>核心思想就是：收集大量的测试代码，使用antlr4编写好的语法解析器解析出<code>非终结符片段</code>，把输入解析成AST后，在AST上进行变异。</p>
-<p>变异的方式主要是利用收集的“片段”去替换解析树中相同非终结符，由于采用了遗传算法，通过对每个个体的评估，筛选优秀的个体进行“杂交”产生新的个体进入下一轮fuzz，“杂交”的方法是交换两个个体中相同的非终结符节点，产生两棵新的输。</p>
-<p>采用遗传算法必须面对膨胀控制的问题。这里论文作者对每个个体评估时，采用了如下的公式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fb(x) = score_structure + score_feedback</span><br><span class="line">ffinal(x) = fb(x) − c ∗ (l(x))</span><br></pre></td></tr></table></figure>
-<p>即：</p>
-<p>基础得分=结构得分+(解释器)回馈得分<br>最终得分=基础的分-膨胀控制</p>
-<p>这样的话的确有效的控制了遗传算法在迭代中的膨胀问题。</p>
-<p>论文中测试部分没仔细看，我只关注了核心的算法和一些问题的解决，剩下的工作就是去阅读IFuzzer代码去体会了。</p>
-<h4 id="0x02-个人想法"><a href="#0x02-个人想法" class="headerlink" title="0x02:个人想法"></a>0x02:个人想法</h4><p>首先感觉这个东西没那么完善，或者说没放全。</p>
-<p>变异的策略其实可以更多的，这种替换的方式感觉还是有局限性，其实就是类似于用一大堆积木，去组合，是从现有的东西生成一些组合性的东西；如果可以加入创造性的东西就好了，比如积木的形状、材质改变，然后去创造新的组合。</p>
-<p>记得几个月前看过韩国一个大佬（BoB计划的导师）的slide，他做的类似的事情，但是不一样的是：他把收集的测试代码、poc解析后到AST然后到IR，直接在IR上操作，之后从IR再生成js代码，效果也不错，但是那个没放出源码所以也不好与IFuzzer比较。</p>
-<p>从身边的大佬的说法来看，IFuzzer很有限，需要改进的地方很多- 。- 不过我个人认为，这样的思路值得借鉴，虽然很好想，但是难做啊。。去年就想这么搞了，然而一些基础知识跟不上，现如今可以试一试啦～</p>
-<h4 id="0x03-引用"><a href="#0x03-引用" class="headerlink" title="0x03:引用"></a>0x03:引用</h4><p><a href="https://link.springer.com/chapter/10.1007/978-3-319-45744-4_29" target="_blank" rel="noopener">IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming</a></p>
+        <h4 id="0x00-：前言"><a href="#0x00-：前言" class="headerlink" title="0x00 ：前言"></a>0x00 ：前言</h4><p>很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。</p>
+<a id="more"></a>
+<h4 id="0x01-：赶赴成都"><a href="#0x01-：赶赴成都" class="headerlink" title="0x01 ：赶赴成都"></a>0x01 ：赶赴成都</h4><p>11月15日跟随大部队乘坐早上7:45的飞机从北京赶往成都，正好前一天北京雾霾严重，可以说是去蓉城躲一躲了 23333。</p>
+<p>作为一个菜鸟，跟着大佬们就对了，到了成都之后，吃完午饭大家就快速赶往了赛场做前期准备工作，比如环境的查看工作。  不得不说，会场真的太太太太太太太太大了，酒店距离会场真的太远了，16km简直是噩梦，太不方便了。</p>
+<p>晚上回到酒店后，在古先生的带领下大家去吃了跷脚牛肉，在北京待得时间长了，大家都吃不了太辣。 我还是个愣头青，我觉得我才从成都过去几个月，我应该可以，结果晚上睡觉的时候，胃里热辣辣的感觉告诉我，too young啊少年。</p>
+<h4 id="0x02-：-比赛日-day1"><a href="#0x02-：-比赛日-day1" class="headerlink" title="0x02 ： 比赛日 day1"></a>0x02 ： 比赛日 day1</h4><p>因为是破解大赛，大家都是揣着0day(s)来到会场的，古先生再三提醒，千万看好自己的包、电脑，互相帮忙看住。那段时间感觉警惕性达到顶峰，一个声称自己是360市场部的同事来坐到我们桌子这边时候，我第一反应是怀疑他到底是不是真的，有啥目的😢。</p>
+<p>早上9:30开始的是重头戏，抽签。老早就听说，这种比赛最重要的就是抽签，签序能影响很多，但是前提是：你必须有足够的储备，你必须有足够的储备，你必须有足够的储备。</p>
+<p>因为策略，男哥、我、团队，我们报了三个PDF项目，没想到似乎是微博抽奖的锦鲤属性，我PDF抽到第一个，团队的是第二个（这个时候感觉自己在做梦…这也太棒了吧！)。不得不说，day1真的是我们的幸运日，几乎所有大项都抽到了第一个，只有龚神的一个小米8排到了最后 :( </p>
+<p>我们团队从edge开始打，毫无悬念的一次通；然后是龚神的Chrome，一次就成，太强了；之后我跟着男哥去打了PDF，从杨博士双击1.pdf那个文件开始，呼吸加速，默默祈求着calc你快出来，reader卡了几秒之后，calc直接弹出，破解成功！之后就是和厂商、内场裁判一起review了，确定你的漏洞真实有效。这个过程有点漫长，adobe来的那个老哥貌似不是做技术的，验证了好久 :( 。 </p>
+<p>之后团队的PDF也成功打下，龙哥的Safari也顺利拿下…后面肖伟哥和天文的VirtualBox、VMware顺利搞定。</p>
+<p>男哥的PDF在day2，他紧急回酒店忙相关的事情。后面因为没我什么事我就先去和李专家(L3m0n)以及学弟吃晚饭了，火锅接近尾声的时候，男哥那边有些情况，我就直接打车回了酒店找他，希望可以帮上一些忙。 不得不说这次被出租车师傅坑了，不打表直接开价不说，中间还加了一次价格，我想看副驾上有啥信息，车牌、电话啥的，想投诉的时候缺发现啥也没有，遂放弃，还是赶紧回去找男哥汇合，别耽误正事。</p>
+<h4 id="0x03-：-比赛日-day2"><a href="#0x03-：-比赛日-day2" class="headerlink" title="0x03 ： 比赛日 day2"></a>0x03 ： 比赛日 day2</h4><p>因为第一天奠定的巨大优势，没必要再浪费漏洞，就放弃了一些项目。就只有大宝师傅的Safari和iPhone x rjb。</p>
+<p>大宝师傅打完之后，后面就没什么看的了，涅槃团队的Safari+穿sandbox，因为Safari撞洞，所以只有穿sandbox的分数，很可惜吧。</p>
+<p>后面颁奖没啥好说的了，大宝师傅的优秀个人，天文的最牛技术，实至名归，都很厉害，都是我学习的榜样。 </p>
+<h4 id="0x04-：一些感想"><a href="#0x04-：一些感想" class="headerlink" title="0x04 ：一些感想"></a>0x04 ：一些感想</h4><p>首先是陈少公开夸奖大宝。 这种无公司界限的纯技术上的赞赏，真的让人有种“英雄惜英雄”的感觉，虽然这句话不是很正确，但是总就感觉很棒。 我一直觉得，大宝师傅算是同龄人里的一个标杆，在安全研究上的工作，以及他的想法、态度，都值得我去学习。</p>
+<p>我们小组流传着一句：寻找大师，追随大师，成为大师，超越大师，以及tk教主很早以前说的，在同龄人里找一个标杆，行业前辈中再找一个标杆（大概这样的意思吧），我认为综合起来，现在都找到了。希望在安全的道路上，可以早点看到前辈们的车尾灯，希望可以早点追赶上他们。</p>
+<p>比赛结束就结束了，结束之后和男哥沟通了很多，不得不感叹工作后遇到男哥这样的导师真的是太幸运了，男哥真的是我的贵人。 后续的工作也有一个大概的规划了，以及对以后一个发展方向有了更清楚的认识，前辈们思考问题的维度、深度的确是高了几个层次，这些还需要慢慢学习。男哥说，安全这条路，你就算有天赋也要堆时间。这话很对，更何况我这样没有天赋的凡人，需要的不仅仅是时间，还有努力努力再努力 :) </p>
+<p>至于赛场外的一些事，我觉得没什么好说的，团队里的大佬也没说什么，可能大家见得多了，已经很佛系了。</p>
+<p>在我还在学校的时候，pwn2own还能参加的时候，从来没有听说过、看到过，360这边因为签序、撞洞的事各种diss，像是受了天大的委屈。签序只是运气问题，撞洞就是储备问题了，与他人无关。</p>
+<p>至于你们说报名多队伍，第一，这完全在规则允许的范围之内，而且我们也没撞洞啥的；第二，这招谁开始玩的溜呢？ :)</p>
+<p>这几天其实蛮精彩的，不过作为小菜鸟也不敢多说什么，只是发现，高级别的大佬之间，格局的差距原来可以这么大。</p>
+<p>翻篇了翻篇了，该开始新的工作了，努力创造更多的价值，希望后面自己可以产出更多0day，更多exploit。</p>
+<p><code>Live long and pwn</code></p>
+<p>最后，放个图</p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/TFC/faker.jpg" alt="faker"></p>
 
       
     </div>
@@ -345,13 +357,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/">论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;</a></p>
+        <p><span>本文标题:</span><a href="/2018/11/18/TFC游记/">TFC游记</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2018年06月09日 - 00时29分</p>
-        <p><span>最后更新:</span>2018年06月09日 - 11时45分</p>
+        <p><span>发布时间:</span>2018年11月18日 - 22时02分</p>
+        <p><span>最后更新:</span>2018年11月18日 - 23时17分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/" title="论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;">http://o0xmuhe.me/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/18/TFC游记/" title="TFC游记">http://o0xmuhe.me/2018/11/18/TFC游记/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2018/11/18/TFC游记/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -364,18 +376,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2018/06/16/比赛运维杂记/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          比赛运维杂记
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/03/遗传算法初窥/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">遗传算法初窥</div>
+    <a href="/2018/11/08/Hello-PANDA/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello PANDA</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -386,7 +389,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00-关于"><span class="toc-number">1.</span> <span class="toc-text">0x00:关于</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-论文阅读"><span class="toc-number">2.</span> <span class="toc-text">0x01:论文阅读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-个人想法"><span class="toc-number">3.</span> <span class="toc-text">0x02:个人想法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-引用"><span class="toc-number">4.</span> <span class="toc-text">0x03:引用</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00-：前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 ：前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-：赶赴成都"><span class="toc-number">2.</span> <span class="toc-text">0x01 ：赶赴成都</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-：-比赛日-day1"><span class="toc-number">3.</span> <span class="toc-text">0x02 ： 比赛日 day1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-：-比赛日-day2"><span class="toc-number">4.</span> <span class="toc-text">0x03 ： 比赛日 day2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x04-：一些感想"><span class="toc-number">5.</span> <span class="toc-text">0x04 ：一些感想</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -453,13 +456,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/06/16/比赛运维杂记/" title="上一篇: 比赛运维杂记">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2018/06/03/遗传算法初窥/" title="下一篇: 遗传算法初窥">
+            <a href="/2018/11/08/Hello-PANDA/" title="下一篇: Hello PANDA">
                 <i class="fa fa-angle-right"></i>
             </a>
         

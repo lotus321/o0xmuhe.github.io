@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2018-11-08T04:33:19.015Z</updated>
+  <updated>2018-11-18T15:17:22.531Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,51 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TFC游记</title>
+    <link href="http://o0xmuhe.me/2018/11/18/TFC%E6%B8%B8%E8%AE%B0/"/>
+    <id>http://o0xmuhe.me/2018/11/18/TFC游记/</id>
+    <published>2018-11-18T14:02:04.000Z</published>
+    <updated>2018-11-18T15:17:22.531Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="0x00-：前言"><a href="#0x00-：前言" class="headerlink" title="0x00 ：前言"></a>0x00 ：前言</h4><p>很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。</p>
+<a id="more"></a>
+<h4 id="0x01-：赶赴成都"><a href="#0x01-：赶赴成都" class="headerlink" title="0x01 ：赶赴成都"></a>0x01 ：赶赴成都</h4><p>11月15日跟随大部队乘坐早上7:45的飞机从北京赶往成都，正好前一天北京雾霾严重，可以说是去蓉城躲一躲了 23333。</p>
+<p>作为一个菜鸟，跟着大佬们就对了，到了成都之后，吃完午饭大家就快速赶往了赛场做前期准备工作，比如环境的查看工作。  不得不说，会场真的太太太太太太太太大了，酒店距离会场真的太远了，16km简直是噩梦，太不方便了。</p>
+<p>晚上回到酒店后，在古先生的带领下大家去吃了跷脚牛肉，在北京待得时间长了，大家都吃不了太辣。 我还是个愣头青，我觉得我才从成都过去几个月，我应该可以，结果晚上睡觉的时候，胃里热辣辣的感觉告诉我，too young啊少年。</p>
+<h4 id="0x02-：-比赛日-day1"><a href="#0x02-：-比赛日-day1" class="headerlink" title="0x02 ： 比赛日 day1"></a>0x02 ： 比赛日 day1</h4><p>因为是破解大赛，大家都是揣着0day(s)来到会场的，古先生再三提醒，千万看好自己的包、电脑，互相帮忙看住。那段时间感觉警惕性达到顶峰，一个声称自己是360市场部的同事来坐到我们桌子这边时候，我第一反应是怀疑他到底是不是真的，有啥目的😢。</p>
+<p>早上9:30开始的是重头戏，抽签。老早就听说，这种比赛最重要的就是抽签，签序能影响很多，但是前提是：你必须有足够的储备，你必须有足够的储备，你必须有足够的储备。</p>
+<p>因为策略，男哥、我、团队，我们报了三个PDF项目，没想到似乎是微博抽奖的锦鲤属性，我PDF抽到第一个，团队的是第二个（这个时候感觉自己在做梦…这也太棒了吧！)。不得不说，day1真的是我们的幸运日，几乎所有大项都抽到了第一个，只有龚神的一个小米8排到了最后 :( </p>
+<p>我们团队从edge开始打，毫无悬念的一次通；然后是龚神的Chrome，一次就成，太强了；之后我跟着男哥去打了PDF，从杨博士双击1.pdf那个文件开始，呼吸加速，默默祈求着calc你快出来，reader卡了几秒之后，calc直接弹出，破解成功！之后就是和厂商、内场裁判一起review了，确定你的漏洞真实有效。这个过程有点漫长，adobe来的那个老哥貌似不是做技术的，验证了好久 :( 。 </p>
+<p>之后团队的PDF也成功打下，龙哥的Safari也顺利拿下…后面肖伟哥和天文的VirtualBox、VMware顺利搞定。</p>
+<p>男哥的PDF在day2，他紧急回酒店忙相关的事情。后面因为没我什么事我就先去和李专家(L3m0n)以及学弟吃晚饭了，火锅接近尾声的时候，男哥那边有些情况，我就直接打车回了酒店找他，希望可以帮上一些忙。 不得不说这次被出租车师傅坑了，不打表直接开价不说，中间还加了一次价格，我想看副驾上有啥信息，车牌、电话啥的，想投诉的时候缺发现啥也没有，遂放弃，还是赶紧回去找男哥汇合，别耽误正事。</p>
+<h4 id="0x03-：-比赛日-day2"><a href="#0x03-：-比赛日-day2" class="headerlink" title="0x03 ： 比赛日 day2"></a>0x03 ： 比赛日 day2</h4><p>因为第一天奠定的巨大优势，没必要再浪费漏洞，就放弃了一些项目。就只有大宝师傅的Safari和iPhone x rjb。</p>
+<p>大宝师傅打完之后，后面就没什么看的了，涅槃团队的Safari+穿sandbox，因为Safari撞洞，所以只有穿sandbox的分数，很可惜吧。</p>
+<p>后面颁奖没啥好说的了，大宝师傅的优秀个人，天文的最牛技术，实至名归，都很厉害，都是我学习的榜样。 </p>
+<h4 id="0x04-：一些感想"><a href="#0x04-：一些感想" class="headerlink" title="0x04 ：一些感想"></a>0x04 ：一些感想</h4><p>首先是陈少公开夸奖大宝。 这种无公司界限的纯技术上的赞赏，真的让人有种“英雄惜英雄”的感觉，虽然这句话不是很正确，但是总就感觉很棒。 我一直觉得，大宝师傅算是同龄人里的一个标杆，在安全研究上的工作，以及他的想法、态度，都值得我去学习。</p>
+<p>我们小组流传着一句：寻找大师，追随大师，成为大师，超越大师，以及tk教主很早以前说的，在同龄人里找一个标杆，行业前辈中再找一个标杆（大概这样的意思吧），我认为综合起来，现在都找到了。希望在安全的道路上，可以早点看到前辈们的车尾灯，希望可以早点追赶上他们。</p>
+<p>比赛结束就结束了，结束之后和男哥沟通了很多，不得不感叹工作后遇到男哥这样的导师真的是太幸运了，男哥真的是我的贵人。 后续的工作也有一个大概的规划了，以及对以后一个发展方向有了更清楚的认识，前辈们思考问题的维度、深度的确是高了几个层次，这些还需要慢慢学习。男哥说，安全这条路，你就算有天赋也要堆时间。这话很对，更何况我这样没有天赋的凡人，需要的不仅仅是时间，还有努力努力再努力 :) </p>
+<p>至于赛场外的一些事，我觉得没什么好说的，团队里的大佬也没说什么，可能大家见得多了，已经很佛系了。</p>
+<p>在我还在学校的时候，pwn2own还能参加的时候，从来没有听说过、看到过，360这边因为签序、撞洞的事各种diss，像是受了天大的委屈。签序只是运气问题，撞洞就是储备问题了，与他人无关。</p>
+<p>至于你们说报名多队伍，第一，这完全在规则允许的范围之内，而且我们也没撞洞啥的；第二，这招谁开始玩的溜呢？ :)</p>
+<p>这几天其实蛮精彩的，不过作为小菜鸟也不敢多说什么，只是发现，高级别的大佬之间，格局的差距原来可以这么大。</p>
+<p>翻篇了翻篇了，该开始新的工作了，努力创造更多的价值，希望后面自己可以产出更多0day，更多exploit。</p>
+<p><code>Live long and pwn</code></p>
+<p>最后，放个图</p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/TFC/faker.jpg" alt="faker"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;0x00-：前言&quot;&gt;&lt;a href=&quot;#0x00-：前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 ：前言&quot;&gt;&lt;/a&gt;0x00 ：前言&lt;/h4&gt;&lt;p&gt;很幸运能随团队一起参加中国版pwn2own–天府杯国际破解大赛。对于我这样一个刚毕业几个月的菜鸟来说，真的是见了大世面，也从这个经历、随行的同事身上学到了很多东西，对于自己而言，我认为这次经历是加速自身成长的神奇药剂。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="感想" scheme="http://o0xmuhe.me/tags/%E6%84%9F%E6%83%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>Hello PANDA</title>
@@ -847,85 +892,11 @@
     </summary>
     
     
+      <category term="ctf" scheme="http://o0xmuhe.me/tags/ctf/"/>
+    
       <category term="linux kernel" scheme="http://o0xmuhe.me/tags/linux-kernel/"/>
     
       <category term="ctf writeup" scheme="http://o0xmuhe.me/tags/ctf-writeup/"/>
-    
-      <category term="ctf" scheme="http://o0xmuhe.me/tags/ctf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>OpenGrok搭建</title>
-    <link href="http://o0xmuhe.me/2017/07/05/OpenGrok%E6%90%AD%E5%BB%BA/"/>
-    <id>http://o0xmuhe.me/2017/07/05/OpenGrok搭建/</id>
-    <published>2017-07-05T04:11:51.000Z</published>
-    <updated>2017-07-05T04:43:16.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00-起因"><a href="#0x00-起因" class="headerlink" title="0x00: 起因"></a>0x00: 起因</h4><p>工作环境换到了mac之后很多东西都不一样了。最近在看Linux kernel几个漏洞，需要阅读Linux源码，然而在windows上使用习惯了source insight后，macOS上一脸懵逼，不知道啥工具好使。了解到OpenGrok之后，决定搭建一个，主要是添加源码方便，也方便实用，感觉还不错。</p>
-<p>其实vim或者subl这类编辑器看源码也可以，只是我还没习惯。所以就先OpenGrok啦～</p>
-<a id="more"></a>
-<h4 id="0x01-准备工作"><a href="#0x01-准备工作" class="headerlink" title="0x01: 准备工作"></a>0x01: 准备工作</h4><p>根据github上项目的wiki可知，需要的准备工作如下：</p>
-<ul>
-<li>JDK 1.8 or higher</li>
-<li>{OpenGrok binaries from <a href="https://github.com/OpenGrok/OpenGrok/releases" target="_blank" rel="noopener">https://github.com/OpenGrok/OpenGrok/releases</a> (either the package for Solaris, or .tar.gz with binaries, NOT the src !)</li>
-<li>Exuberant Ctags for analysis (<a href="https://github.com/universal-ctags" target="_blank" rel="noopener">https://github.com/universal-ctags</a> is recommended)</li>
-<li>A servlet container like GlassFish or Tomcat (8.x or later) also running with java at least 1.8</li>
-<li>If history is needed, appropriate binary (in some cases also cvs/svn repository) must be present on the system (e.g. Subversion or Mercurial or SCCS or … )</li>
-<li>2GB of memory for indexing process using OpenGrok script (can use less, this is scaled for bigger deployments)</li>
-<li>a recent browser for clients - IE, Firefox, recent Chrome or Safari<br>sufficient ULIMIT settings (refer to README)</li>
-</ul>
-<p>我在自己服务器上搭建的，系统是ubuntu，在安装了jdk8之后，去下载了tomcat和opengrok的包。<br>这里说个题外话，使用apt-get方式安装的tomcat8很奇怪，服务起来了，但是curl访问本地8080的时候，没回应，所以我最后去官网下载了一个tomcat的包。</p>
-<h4 id="0x02：过程"><a href="#0x02：过程" class="headerlink" title="0x02：过程"></a>0x02：过程</h4><pre><code>如果是很多人用，推荐专门创建一个用户，做好权限的隔离，个人使用的话无所谓了。
-</code></pre><h6 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h6><ul>
-<li>找一个目录，把下载来的tomcat和opengrok解压了。</li>
-<li>启动tomcat，然后访问<code>http://127.0.0.1:8080</code>，确定tomcat正常工作。</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-64-163-ubuntu:~$ ./apache-tomcat-8.5.16/bin/startup.sh</span><br></pre></td></tr></table></figure>
-<ul>
-<li>为项目创建目录，拿我自己的举例子：</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path/to/your/opengrok_projects/prj1</span><br></pre></td></tr></table></figure>
-<p>目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">path/to/your/opengrok_projects/prj1</span><br><span class="line">                        |-----/prj2</span><br><span class="line">                        |-----/prj3</span><br></pre></td></tr></table></figure>
-<h6 id="部署opengrok"><a href="#部署opengrok" class="headerlink" title="部署opengrok"></a>部署opengrok</h6><ul>
-<li>部署</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENGROK_TOMCAT_BASE=path/to/apache-tomcat path/to/opengrok/bin/OpenGrok deploy</span><br></pre></td></tr></table></figure>
-<ul>
-<li>创建索引</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENGROK_VERBOSE=<span class="literal">true</span> OPENGROK_INSTANCE_BASE=./opengrok_data ./opengrok-1.1-rc5/bin/OpenGrok  index ./opengrok_projects</span><br></pre></td></tr></table></figure>
-<p>创建索引时，会创建三个目录，一个data目录来存放索引信息，一个etc目录创建配置信息和一个log目录。</p>
-<ul>
-<li>修改配置文件</li>
-</ul>
-<p>在<code>path/to/apache-tomcat/webapps/source/WEB-INF</code>目录下的<code>web.xml</code>文件</p>
-<p>把</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>CONFIGURATION<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/var/opengrok/etc/configuration.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Full path to the configuration file where OpenGrok can read it's configuration<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>中的<code>/var/opengrok/etc/configuration.xml</code><br>修改成对应的opengrok的<code>path/to/opengrok/data/etc/configuration.xml</code></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>Full path to the configuration file where OpenGrok can read its configuration<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>CONFIGURATION<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/home/ubuntu/opengrok_data/etc/configuration.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>我这里是这个样子的。</p>
-<ul>
-<li>把源码放进project目录</li>
-</ul>
-<p>我这里放的是linux-3.18.1的源码。以后如果想更新的话，直接放进去，然后重新生成索引就好了。</p>
-<h4 id="0x03-效果"><a href="#0x03-效果" class="headerlink" title="0x03:效果"></a>0x03:效果</h4><p><img src="http://blogimg-10065924.cossh.myqcloud.com/opengrok_build/QQ20170705-123540%402x.png" alt=""></p>
-<h4 id="0x04-参考"><a href="#0x04-参考" class="headerlink" title="0x04:参考"></a>0x04:参考</h4><p><a href="https://github.com/OpenGrok/OpenGrok/wiki/How-to-install-OpenGrok" target="_blank" rel="noopener">wiki</a></p>
-<p><a href="https://github.com/crazygit/temp/blob/master/setup_opengrok.md" target="_blank" rel="noopener">OpenGrok安装使用指南</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00-起因&quot;&gt;&lt;a href=&quot;#0x00-起因&quot; class=&quot;headerlink&quot; title=&quot;0x00: 起因&quot;&gt;&lt;/a&gt;0x00: 起因&lt;/h4&gt;&lt;p&gt;工作环境换到了mac之后很多东西都不一样了。最近在看Linux kernel几个漏洞，需要阅读Linux源码，然而在windows上使用习惯了source insight后，macOS上一脸懵逼，不知道啥工具好使。了解到OpenGrok之后，决定搭建一个，主要是添加源码方便，也方便实用，感觉还不错。&lt;/p&gt;
-&lt;p&gt;其实vim或者subl这类编辑器看源码也可以，只是我还没习惯。所以就先OpenGrok啦～&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="环境配置" scheme="http://o0xmuhe.me/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
-    
-      <category term="工具" scheme="http://o0xmuhe.me/tags/%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   
