@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>o0xmuhe&#39;s blog</title>
-  <subtitle>一个有情怀的二进制狗</subtitle>
+  <subtitle>寻找大师，追随大师，成为大师，超越大师</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
@@ -614,9 +614,9 @@
     </summary>
     
     
-      <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
-    
       <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
     
   </entry>
   
