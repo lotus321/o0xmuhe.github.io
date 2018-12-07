@@ -614,9 +614,9 @@
     </summary>
     
     
-      <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
+    
+      <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -892,9 +892,9 @@
     </summary>
     
     
-      <category term="linux kernel" scheme="http://o0xmuhe.me/tags/linux-kernel/"/>
-    
       <category term="ctf" scheme="http://o0xmuhe.me/tags/ctf/"/>
+    
+      <category term="linux kernel" scheme="http://o0xmuhe.me/tags/linux-kernel/"/>
     
       <category term="ctf writeup" scheme="http://o0xmuhe.me/tags/ctf-writeup/"/>
     
