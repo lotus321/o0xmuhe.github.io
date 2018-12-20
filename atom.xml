@@ -570,9 +570,9 @@
     <link href="http://o0xmuhe.me/2018/02/16/Symbolic-Execution%E5%AD%A6%E4%B9%A0/"/>
     <id>http://o0xmuhe.me/2018/02/16/Symbolic-Execution学习/</id>
     <published>2018-02-16T09:36:48.000Z</published>
-    <updated>2018-04-25T14:50:02.974Z</updated>
+    <updated>2018-12-20T06:08:17.530Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00: 前言"></a>0x00: 前言</h4><p>学习的时候做个记录，看过什么，踩过什么坑之类的(更新中…)</p>
+    <content type="html"><![CDATA[<h4 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00: 前言"></a>0x00: 前言</h4><p>学习的时候做个记录，看过什么，踩过什么坑之类的。</p>
 <a id="more"></a>
 <h4 id="0x01-资料"><a href="#0x01-资料" class="headerlink" title="0x01: 资料"></a>0x01: 资料</h4><h5 id="1-paper-amp-amp-不错的文章"><a href="#1-paper-amp-amp-不错的文章" class="headerlink" title="1. paper &amp;&amp; 不错的文章"></a>1. paper &amp;&amp; 不错的文章</h5><p>《All You Ever Wanted to Know about Dynamic Taint Analysis and Forward Symbolic Execution (but Might Have Been Afraid to Ask)》</p>
 <p>《Symbolic execution for software testing: three decades later》</p>
@@ -604,7 +604,7 @@
     
     <summary type="html">
     
-      &lt;h4 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00: 前言&quot;&gt;&lt;/a&gt;0x00: 前言&lt;/h4&gt;&lt;p&gt;学习的时候做个记录，看过什么，踩过什么坑之类的(更新中…)&lt;/p&gt;
+      &lt;h4 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00: 前言&quot;&gt;&lt;/a&gt;0x00: 前言&lt;/h4&gt;&lt;p&gt;学习的时候做个记录，看过什么，踩过什么坑之类的。&lt;/p&gt;
     
     </summary>
     
