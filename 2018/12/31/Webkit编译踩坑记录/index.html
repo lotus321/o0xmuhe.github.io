@@ -3,20 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Python指定概率获取随机元素 | o0xmuhe&#39;s blog</title>
+  <title>Webkit编译踩坑记录 | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00:最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。">
-<meta name="keywords" content="Python">
+  <meta name="description" content="0x00 : 环境及工具MacOS MoJave 10.14.2 Xcode 10.1">
+<meta name="keywords" content="Webkit">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python指定概率获取随机元素">
-<meta property="og:url" content="http://o0xmuhe.me/2017/12/30/Python指定概率获取随机元素/index.html">
+<meta property="og:title" content="Webkit编译踩坑记录">
+<meta property="og:url" content="http://o0xmuhe.me/2018/12/31/Webkit编译踩坑记录/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00:最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。">
+<meta property="og:description" content="0x00 : 环境及工具MacOS MoJave 10.14.2 Xcode 10.1">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2017-12-30T09:27:56.053Z">
+<meta property="og:updated_time" content="2018-12-31T16:29:34.292Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python指定概率获取随机元素">
-<meta name="twitter:description" content="0x00:最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。">
+<meta name="twitter:title" content="Webkit编译踩坑记录">
+<meta name="twitter:description" content="0x00 : 环境及工具MacOS MoJave 10.14.2 Xcode 10.1">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -290,11 +290,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-Python指定概率获取随机元素" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Webkit编译踩坑记录" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/12/30/Python指定概率获取随机元素/" class="article-date">
-      <time datetime="2017-12-30T09:17:01.000Z" itemprop="datePublished">2017-12-30</time>
+      <a href="/2018/12/31/Webkit编译踩坑记录/" class="article-date">
+      <time datetime="2018-12-31T15:56:43.000Z" itemprop="datePublished">2018-12-31</time>
 </a>
     </div>
   
@@ -307,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Python指定概率获取随机元素
+      Webkit编译踩坑记录
     </h1>
   
 
@@ -318,7 +318,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webkit/">Webkit</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -328,13 +328,28 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。</p>
+        <h4 id="0x00-环境及工具"><a href="#0x00-环境及工具" class="headerlink" title="0x00 : 环境及工具"></a>0x00 : 环境及工具</h4><p>MacOS MoJave 10.14.2</p>
+<p>Xcode 10.1</p>
 <a id="more"></a>
-<h4 id="0x01"><a href="#0x01" class="headerlink" title="0x01:"></a>0x01:</h4><h5 id="第一种，给定概率"><a href="#第一种，给定概率" class="headerlink" title="第一种，给定概率"></a>第一种，给定概率</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_pick</span><span class="params">(some_list,probabilities)</span>:</span></span><br><span class="line">    x = random.uniform(<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">    cumulative_probability=<span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> item,item_probability <span class="keyword">in</span> zip(some_list,probabilities):</span><br><span class="line">        cumulative_probability+=item_probability</span><br><span class="line">        <span class="keyword">if</span> x &lt; cumulative_probability:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
-<p>两个参数，第一个是参数列表，第二个是概率的列表，概率列表里元素相加和必须等于1<br>比如这么调用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">random_pick([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>],[<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">0.4</span>])</span><br></pre></td></tr></table></figure></p>
-<p>写代码大概测了下，在大量(&gt;10w)的测试下，比较稳定，按照指定概率产生元素，比如x等于0.1就返回1。<br>但是不太适合较多参数的情况，需要一个一个指定概率啥的，还要计算好概率和为1…蛋疼。</p>
-<h5 id="第二种，给权重"><a href="#第二种，给权重" class="headerlink" title="第二种，给权重"></a>第二种，给权重</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_picks</span><span class="params">(sequence,relative_odds)</span>:</span></span><br><span class="line">　　table=[z <span class="keyword">for</span> x,y <span class="keyword">in</span> zip(sequence,relative_odds) <span class="keyword">for</span> z <span class="keyword">in</span> [x]*y]</span><br><span class="line">　　<span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">　　　　<span class="keyword">yield</span> random.choice(table)</span><br><span class="line"></span><br><span class="line">x=random_picks(<span class="string">'ciao'</span>,[<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>])</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span>.join(itertools.islice(x,<span class="number">8</span>))</span><br></pre></td></tr></table></figure>
-<p>第二种根据权重来返回，只要求权重是非负整数，比较容易使用，虽然还是要一个一个给权重，但是总比还要去计算个概率和，好很多。</p>
+<h4 id="0x01-编译过程"><a href="#0x01-编译过程" class="headerlink" title="0x01 : 编译过程"></a>0x01 : 编译过程</h4><ol>
+<li>下载源码 </li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/WebKit/webkit</span><br></pre></td></tr></table></figure>
+<p>官网那个太不稳定了，一直挂着代理还容易断，github这个镜像更稳定。</p>
+<ol>
+<li>编译</li>
+</ol>
+<p>使用Xcode打开项目，依次打开 <code>File--&gt;Workspace Settings--&gt;</code>，选择<code>Advanced</code>，然后选择<code>Custom</code>，并且在<code>Products</code>和<code>Intermediates</code>中填写<code>WebkitBuild</code>，设置完毕。</p>
+<p>其他设置默认就可以了，然后Xcode的菜单栏<code>Procduct--&gt;Build</code>，慢慢等它编译吧，大概不到10分钟的样子就可以编译好。</p>
+<p>最后得到:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line">ANGLE.build             JavaScriptCore.build    PAL.build               TestWebKitAPI.build     WebInspectorUI.build    WebKitTestRunner.build  libwebrtc.build</span><br><span class="line">Debug                   MiniBrowser.build       PrecompiledHeaders      WTF.build               WebKit.build            bmalloc.build</span><br><span class="line">DumpRenderTree.build    MobileMiniBrowser.build Release                 WebCore.build           WebKitLegacy.build      gtest.build</span><br></pre></td></tr></table></figure>
+<h4 id="0x02-踩坑-dyld-Symbol-not-found"><a href="#0x02-踩坑-dyld-Symbol-not-found" class="headerlink" title="0x02 : 踩坑(dyld: Symbol not found)"></a>0x02 : 踩坑(dyld: Symbol not found)</h4><p>在运行编译完的binary的时候，我遇到了报错信息:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./Debug/jsc</span><br><span class="line">dyld: Symbol not found: __ZN3JSC10DisallowGC19s_scopeReentryCountE</span><br><span class="line">  Referenced from: /Users/muhe/Code/webkit/WebKitBuild/./Debug/jsc</span><br><span class="line">  Expected <span class="keyword">in</span>: /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/JavaScriptCore</span><br><span class="line"> <span class="keyword">in</span> /Users/muhe/Code/webkit/WebKitBuild/./Debug/jsc</span><br><span class="line">[1]    64039 abort      ./Debug/jsc</span><br></pre></td></tr></table></figure>
+<p>搜了很多都无果(可能关键词问题)，问了0x9k师傅之后得到了解决方案，原来官网就有解答 囧</p>
+<p>解决方法是：设置<code>DYLD_FRAMEWORK_PATH</code>环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> DYLD_FRAMEWORK_PATH=/Users/muhe/Code/webkit/WebKitBuild/Debug</span><br></pre></td></tr></table></figure>
+<p>之后就可以正常运行了:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./Debug/jsc</span><br><span class="line">&gt;&gt;&gt; var <span class="built_in">test</span> = <span class="string">"Hello jsc"</span>;</span><br><span class="line">undefined</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">test</span></span><br><span class="line">Hello jsc</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -343,13 +358,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/12/30/Python指定概率获取随机元素/">Python指定概率获取随机元素</a></p>
+        <p><span>本文标题:</span><a href="/2018/12/31/Webkit编译踩坑记录/">Webkit编译踩坑记录</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2017年12月30日 - 17时17分</p>
-        <p><span>最后更新:</span>2017年12月30日 - 17时27分</p>
+        <p><span>发布时间:</span>2018年12月31日 - 23时56分</p>
+        <p><span>最后更新:</span>2019年01月01日 - 00时29分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/12/30/Python指定概率获取随机元素/" title="Python指定概率获取随机元素">http://o0xmuhe.me/2017/12/30/Python指定概率获取随机元素/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/12/30/Python指定概率获取随机元素/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/12/31/Webkit编译踩坑记录/" title="Webkit编译踩坑记录">http://o0xmuhe.me/2018/12/31/Webkit编译踩坑记录/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2018/12/31/Webkit编译踩坑记录/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -362,18 +377,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2018/01/06/flex-bison读书笔记/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          flex_bison读书笔记
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/01/Hello-World升级版/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World升级版</div>
+    <a href="/2018/12/25/逆向协作之IDA插件IDArling/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">逆向协作之IDA插件IDArling</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -384,7 +390,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00"><span class="toc-number">1.</span> <span class="toc-text">0x00:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01"><span class="toc-number">2.</span> <span class="toc-text">0x01:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一种，给定概率"><span class="toc-number">2.1.</span> <span class="toc-text">第一种，给定概率</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二种，给权重"><span class="toc-number">2.2.</span> <span class="toc-text">第二种，给权重</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00-环境及工具"><span class="toc-number">1.</span> <span class="toc-text">0x00 : 环境及工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-编译过程"><span class="toc-number">2.</span> <span class="toc-text">0x01 : 编译过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-踩坑-dyld-Symbol-not-found"><span class="toc-number">3.</span> <span class="toc-text">0x02 : 踩坑(dyld: Symbol not found)</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -451,13 +457,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/06/flex-bison读书笔记/" title="上一篇: flex_bison读书笔记">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/10/01/Hello-World升级版/" title="下一篇: Hello World升级版">
+            <a href="/2018/12/25/逆向协作之IDA插件IDArling/" title="下一篇: 逆向协作之IDA插件IDArling">
                 <i class="fa fa-angle-right"></i>
             </a>
         

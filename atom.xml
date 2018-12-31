@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2018-12-25T11:48:58.456Z</updated>
+  <updated>2018-12-31T16:29:34.292Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,49 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Webkit编译踩坑记录</title>
+    <link href="http://o0xmuhe.me/2018/12/31/Webkit%E7%BC%96%E8%AF%91%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"/>
+    <id>http://o0xmuhe.me/2018/12/31/Webkit编译踩坑记录/</id>
+    <published>2018-12-31T15:56:43.000Z</published>
+    <updated>2018-12-31T16:29:34.292Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="0x00-环境及工具"><a href="#0x00-环境及工具" class="headerlink" title="0x00 : 环境及工具"></a>0x00 : 环境及工具</h4><p>MacOS MoJave 10.14.2</p>
+<p>Xcode 10.1</p>
+<a id="more"></a>
+<h4 id="0x01-编译过程"><a href="#0x01-编译过程" class="headerlink" title="0x01 : 编译过程"></a>0x01 : 编译过程</h4><ol>
+<li>下载源码 </li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/WebKit/webkit</span><br></pre></td></tr></table></figure>
+<p>官网那个太不稳定了，一直挂着代理还容易断，github这个镜像更稳定。</p>
+<ol>
+<li>编译</li>
+</ol>
+<p>使用Xcode打开项目，依次打开 <code>File--&gt;Workspace Settings--&gt;</code>，选择<code>Advanced</code>，然后选择<code>Custom</code>，并且在<code>Products</code>和<code>Intermediates</code>中填写<code>WebkitBuild</code>，设置完毕。</p>
+<p>其他设置默认就可以了，然后Xcode的菜单栏<code>Procduct--&gt;Build</code>，慢慢等它编译吧，大概不到10分钟的样子就可以编译好。</p>
+<p>最后得到:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line">ANGLE.build             JavaScriptCore.build    PAL.build               TestWebKitAPI.build     WebInspectorUI.build    WebKitTestRunner.build  libwebrtc.build</span><br><span class="line">Debug                   MiniBrowser.build       PrecompiledHeaders      WTF.build               WebKit.build            bmalloc.build</span><br><span class="line">DumpRenderTree.build    MobileMiniBrowser.build Release                 WebCore.build           WebKitLegacy.build      gtest.build</span><br></pre></td></tr></table></figure>
+<h4 id="0x02-踩坑-dyld-Symbol-not-found"><a href="#0x02-踩坑-dyld-Symbol-not-found" class="headerlink" title="0x02 : 踩坑(dyld: Symbol not found)"></a>0x02 : 踩坑(dyld: Symbol not found)</h4><p>在运行编译完的binary的时候，我遇到了报错信息:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./Debug/jsc</span><br><span class="line">dyld: Symbol not found: __ZN3JSC10DisallowGC19s_scopeReentryCountE</span><br><span class="line">  Referenced from: /Users/muhe/Code/webkit/WebKitBuild/./Debug/jsc</span><br><span class="line">  Expected <span class="keyword">in</span>: /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/JavaScriptCore</span><br><span class="line"> <span class="keyword">in</span> /Users/muhe/Code/webkit/WebKitBuild/./Debug/jsc</span><br><span class="line">[1]    64039 abort      ./Debug/jsc</span><br></pre></td></tr></table></figure>
+<p>搜了很多都无果(可能关键词问题)，问了0x9k师傅之后得到了解决方案，原来官网就有解答 囧</p>
+<p>解决方法是：设置<code>DYLD_FRAMEWORK_PATH</code>环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> DYLD_FRAMEWORK_PATH=/Users/muhe/Code/webkit/WebKitBuild/Debug</span><br></pre></td></tr></table></figure>
+<p>之后就可以正常运行了:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./Debug/jsc</span><br><span class="line">&gt;&gt;&gt; var <span class="built_in">test</span> = <span class="string">"Hello jsc"</span>;</span><br><span class="line">undefined</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">test</span></span><br><span class="line">Hello jsc</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;0x00-环境及工具&quot;&gt;&lt;a href=&quot;#0x00-环境及工具&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 环境及工具&quot;&gt;&lt;/a&gt;0x00 : 环境及工具&lt;/h4&gt;&lt;p&gt;MacOS MoJave 10.14.2&lt;/p&gt;
+&lt;p&gt;Xcode 10.1&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Webkit" scheme="http://o0xmuhe.me/tags/Webkit/"/>
+    
+  </entry>
   
   <entry>
     <title>逆向协作之IDA插件IDArling</title>
@@ -700,9 +743,9 @@
     </summary>
     
     
-      <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
+    
+      <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -888,33 +931,6 @@
     
     
       <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python指定概率获取随机元素</title>
-    <link href="http://o0xmuhe.me/2017/12/30/Python%E6%8C%87%E5%AE%9A%E6%A6%82%E7%8E%87%E8%8E%B7%E5%8F%96%E9%9A%8F%E6%9C%BA%E5%85%83%E7%B4%A0/"/>
-    <id>http://o0xmuhe.me/2017/12/30/Python指定概率获取随机元素/</id>
-    <published>2017-12-30T09:17:01.000Z</published>
-    <updated>2017-12-30T09:27:56.053Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。</p>
-<a id="more"></a>
-<h4 id="0x01"><a href="#0x01" class="headerlink" title="0x01:"></a>0x01:</h4><h5 id="第一种，给定概率"><a href="#第一种，给定概率" class="headerlink" title="第一种，给定概率"></a>第一种，给定概率</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_pick</span><span class="params">(some_list,probabilities)</span>:</span></span><br><span class="line">    x = random.uniform(<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">    cumulative_probability=<span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> item,item_probability <span class="keyword">in</span> zip(some_list,probabilities):</span><br><span class="line">        cumulative_probability+=item_probability</span><br><span class="line">        <span class="keyword">if</span> x &lt; cumulative_probability:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
-<p>两个参数，第一个是参数列表，第二个是概率的列表，概率列表里元素相加和必须等于1<br>比如这么调用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">random_pick([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>],[<span class="number">0.1</span>,<span class="number">0.2</span>,<span class="number">0.3</span>,<span class="number">0.4</span>])</span><br></pre></td></tr></table></figure></p>
-<p>写代码大概测了下，在大量(&gt;10w)的测试下，比较稳定，按照指定概率产生元素，比如x等于0.1就返回1。<br>但是不太适合较多参数的情况，需要一个一个指定概率啥的，还要计算好概率和为1…蛋疼。</p>
-<h5 id="第二种，给权重"><a href="#第二种，给权重" class="headerlink" title="第二种，给权重"></a>第二种，给权重</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_picks</span><span class="params">(sequence,relative_odds)</span>:</span></span><br><span class="line">　　table=[z <span class="keyword">for</span> x,y <span class="keyword">in</span> zip(sequence,relative_odds) <span class="keyword">for</span> z <span class="keyword">in</span> [x]*y]</span><br><span class="line">　　<span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">　　　　<span class="keyword">yield</span> random.choice(table)</span><br><span class="line"></span><br><span class="line">x=random_picks(<span class="string">'ciao'</span>,[<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>])</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span>.join(itertools.islice(x,<span class="number">8</span>))</span><br></pre></td></tr></table></figure>
-<p>第二种根据权重来返回，只要求权重是非负整数，比较容易使用，虽然还是要一个一个给权重，但是总比还要去计算个概率和，好很多。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00&quot;&gt;&lt;a href=&quot;#0x00&quot; class=&quot;headerlink&quot; title=&quot;0x00:&quot;&gt;&lt;/a&gt;0x00:&lt;/h4&gt;&lt;p&gt;最近写fuzzer遇到了这样的一个需求，生成样本的时候，有些元素需要尽可能的多出现，而有些需要少一点，这就涉及到概率的问题了。然而直接使用random是不行的，暴力的在lib_list上做文章也不行，反而效率更低。看到了python cookbook的两个例子。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Python" scheme="http://o0xmuhe.me/tags/Python/"/>
     
   </entry>
   
