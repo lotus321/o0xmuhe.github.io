@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-01-04T13:08:54.667Z</updated>
+  <updated>2019-01-04T13:11:19.389Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://o0xmuhe.me/2019/01/04/%E4%BD%BF%E7%94%A8Frida%E8%BE%85%E5%8A%A9%E9%80%86%E5%90%91/"/>
     <id>http://o0xmuhe.me/2019/01/04/使用Frida辅助逆向/</id>
     <published>2019-01-04T07:31:47.000Z</published>
-    <updated>2019-01-04T13:08:54.667Z</updated>
+    <updated>2019-01-04T13:11:19.389Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="0x00-关于使用Frida"><a href="#0x00-关于使用Frida" class="headerlink" title="0x00 : 关于使用Frida"></a>0x00 : 关于使用Frida</h4><p><code>Frida</code>是一个跨平台的、多平台的hook框架，使用起来十分方便，而且文档全面，可以很好的辅助逆向工程。在需要使用一些hook的时候，可以很快地完成；如果还是用c/c++的话..写dll，找个injector，而且很麻烦不灵活。</p>
+    <content type="html"><![CDATA[<h4 id="0x00-关于使用Frida"><a href="#0x00-关于使用Frida" class="headerlink" title="0x00 : 关于使用Frida"></a>0x00 : 关于使用Frida</h4><p><code>Frida</code>是一个跨平台的、多平台的hook框架，使用起来十分方便，而且文档全面，可以很好的辅助逆向工程。在需要使用一些hook的时候，可以很快地完成；如果还是用c/c++的话..写dll，还要想办法dll注入，而且很麻烦不灵活，修改代码很麻烦。</p>
 <a id="more"></a>
 <p>最近的工作中，我做了很多逆向的工作，虽然有部分工作暂时看不到什么收益，算是白折腾浪费了两周，但是这段时间熟悉了<code>pykd</code>，<code>windbg script</code>，<code>frida</code>，<code>IDA Python</code>的编写…也搞了一些方便日后修改使用的模板，算是有一点点收获吧，不过浪费了时间还是很难过。</p>
 <h4 id="0x01-HOOK需求"><a href="#0x01-HOOK需求" class="headerlink" title="0x01 : HOOK需求"></a>0x01 : HOOK需求</h4><p>我需要去追一些内存分配、有些可能还需要操作一下，方便我的逆向工作顺利进行。</p>
@@ -40,7 +40,7 @@
     
     <summary type="html">
     
-      &lt;h4 id=&quot;0x00-关于使用Frida&quot;&gt;&lt;a href=&quot;#0x00-关于使用Frida&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 关于使用Frida&quot;&gt;&lt;/a&gt;0x00 : 关于使用Frida&lt;/h4&gt;&lt;p&gt;&lt;code&gt;Frida&lt;/code&gt;是一个跨平台的、多平台的hook框架，使用起来十分方便，而且文档全面，可以很好的辅助逆向工程。在需要使用一些hook的时候，可以很快地完成；如果还是用c/c++的话..写dll，找个injector，而且很麻烦不灵活。&lt;/p&gt;
+      &lt;h4 id=&quot;0x00-关于使用Frida&quot;&gt;&lt;a href=&quot;#0x00-关于使用Frida&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 关于使用Frida&quot;&gt;&lt;/a&gt;0x00 : 关于使用Frida&lt;/h4&gt;&lt;p&gt;&lt;code&gt;Frida&lt;/code&gt;是一个跨平台的、多平台的hook框架，使用起来十分方便，而且文档全面，可以很好的辅助逆向工程。在需要使用一些hook的时候，可以很快地完成；如果还是用c/c++的话..写dll，还要想办法dll注入，而且很麻烦不灵活，修改代码很麻烦。&lt;/p&gt;
     
     </summary>
     
