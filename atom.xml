@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-03-25T02:07:47.604Z</updated>
+  <updated>2019-03-25T02:12:44.247Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://o0xmuhe.me/2019/03/24/CVE-2017-2536-analysis/"/>
     <id>http://o0xmuhe.me/2019/03/24/CVE-2017-2536-analysis/</id>
     <published>2019-03-24T09:27:12.000Z</published>
-    <updated>2019-03-25T02:07:47.604Z</updated>
+    <updated>2019-03-25T02:12:44.247Z</updated>
     
     <content type="html"><![CDATA[<h2 id="0x00-前置知识"><a href="#0x00-前置知识" class="headerlink" title="0x00 : 前置知识"></a>0x00 : 前置知识</h2><ol>
 <li>interpreter<br>解释器 (LLint)</li>
@@ -42,10 +42,10 @@
 <p>所以poc按照以上代码逻辑之行的话，会分配一个size是0的array，但是却拷贝了 <code>2147483647 * 2 + 2</code> 即 <code>0x7fffffff * 2 + 2</code> 个数据进去，导致堆溢出。</p>
 <h3 id="看commit"><a href="#看commit" class="headerlink" title="看commit"></a>看commit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> -g --grep=<span class="string">"169780"</span></span><br></pre></td></tr></table></figure>
 <p>或者直接sourcetree搜索</p>
-<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/CVE-2017-2536%20analysis/Screen%20Shot%202019-03-23%20at%2011.28.56%20PM.png?q-sign-algorithm=sha1&amp;q-ak=AKIDBlWFxrvsb1qoVdkOwRllQMLN1DT66U7Q&amp;q-sign-time=1553420031;1553421831&amp;q-key-time=1553420031;1553421831&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=359c350f4eaa736e9dc4b40482bfd0c69f5dd9ce&amp;x-cos-security-token=0754cfcde730af1443ac8000799c3e94822fcc7110001" alt=""></p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/CVE-2017-2536%20analysis/Screen%20Shot%202019-03-23%20at%2011.28.56%20PM.png" alt=""></p>
 <p>这个洞在三个jit阶段都有体现，所以补了多个地方：<br><code>LLint, DFG JIT, FTL JIT</code></p>
 <p>基本上都是，计算新array的length从简单粗暴的计算，改成增加了length check的计算。</p>
-<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/CVE-2017-2536%20analysis/Screen%20Shot%202019-03-23%20at%2011.30.08%20PM.png?q-sign-algorithm=sha1&amp;q-ak=AKIDo7TBzdSmDcB7W6yEHka14fBEl7HrTARL&amp;q-sign-time=1553420049;1553421849&amp;q-key-time=1553420049;1553421849&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=0a1099c3dc868142d7c2db82c071fb2034f8fb25&amp;x-cos-security-token=2a87b68b002a7122fa74ed307996b325d8a1ef9d10001" alt=""></p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/CVE-2017-2536%20analysis/Screen%20Shot%202019-03-23%20at%2011.30.08%20PM.png" alt=""></p>
 <h2 id="0x03-利用"><a href="#0x03-利用" class="headerlink" title="0x03 : 利用"></a>0x03 : 利用</h2><p> TODO</p>
 <h2 id="0x04-参考"><a href="#0x04-参考" class="headerlink" title="0x04 : 参考"></a>0x04 : 参考</h2><p><a href="https://phoenhex.re/2017-06-02/arrayspread" target="_blank" rel="noopener">Exploiting an integer overflow with array spreading (WebKit)</a></p>
 <p><a href="https://ming1016.github.io/2017/10/11/deeply-analyse-webkit/" target="_blank" rel="noopener">深入剖析 WebKit</a></p>
