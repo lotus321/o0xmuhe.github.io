@@ -385,7 +385,7 @@
       
           
               <h2 id="0x00-前置知识"><a href="#0x00-前置知识" class="headerlink" title="0x00 : 前置知识"></a>0x00 : 前置知识</h2><ol>
-<li>interpreter<br>解释器</li>
+<li>interpreter<br>解释器 (LLint)</li>
 <li>DFG JIT<br>全称 data flow graph JIT 数据流图 JIT。是一种推测优化的技术。会开始对一个类型做出一个能够对性能好的假设，先编译一个版本，如果后面发现假设不对就会跳转回原先代码，称为 Speculation failure。DFG 是并发编译器，DFG pipeline 的每个部分都是同时运行的，包括字节码解析和分析。</li>
 <li>FLT JIT<br>新的一层 FTL 实际上是 DFG Backend 的替换。会先在 DFG 的 JavaScript 函数表示转换为静态单一指派（SSA） 格式上做些 JavaScript 特性的优化。接着把 DFG IR 转换成 FTL 里用到的 B3 的 IR。最后生成机器码。</li>
 </ol>
