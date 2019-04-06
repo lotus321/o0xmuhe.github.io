@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-03-25T02:12:44.247Z</updated>
+  <updated>2019-04-06T13:31:14.446Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CVE-2016-4622  analysis</title>
+    <link href="http://o0xmuhe.me/2019/04/06/CVE-2016-4622-analysis/"/>
+    <id>http://o0xmuhe.me/2019/04/06/CVE-2016-4622-analysis/</id>
+    <published>2019-04-06T13:14:28.000Z</published>
+    <updated>2019-04-06T13:31:14.446Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="0x00-Vuln-info"><a href="#0x00-Vuln-info" class="headerlink" title="0x00 : Vuln info"></a>0x00 : Vuln info</h2><p>Vuln : <code>Out-Of-Bound Read</code><br>Webkit Version : <code>320b1fc</code><br>Source Code : <code>ArrayPrototype.cpp</code>  的slice部分逻辑</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b CVE-2016-4662 320b1<span class="built_in">fc</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="0x01-PoC"><a href="#0x01-PoC" class="headerlink" title="0x01 : PoC"></a>0x01 : PoC</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++)</span><br><span class="line">    a.push(i + <span class="number">0.123</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = a.slice(<span class="number">0</span>, &#123;<span class="attr">valueOf</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; a.length = <span class="number">0</span>; <span class="keyword">return</span> <span class="number">10</span>; &#125;&#125;);</span><br><span class="line"><span class="comment">// b = [0.123,1.123,2.12199579146e-313,0,0,0,0,0,0,0]</span></span><br></pre></td></tr></table></figure>
+<h2 id="0x02-Analysis"><a href="#0x02-Analysis" class="headerlink" title="0x02 : Analysis"></a>0x02 : Analysis</h2><h3 id="PoC-分析"><a href="#PoC-分析" class="headerlink" title="PoC 分析"></a>PoC 分析</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++)</span><br><span class="line">    a.push(i + <span class="number">0.123</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = a.slice(<span class="number">0</span>, &#123;<span class="attr">valueOf</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; a.length = <span class="number">0</span>; <span class="keyword">return</span> <span class="number">10</span>; &#125;&#125;);</span><br><span class="line"><span class="comment">// b = [0.123,1.123,2.12199579146e-313,0,0,0,0,0,0,0]</span></span><br></pre></td></tr></table></figure>
+<p>原本想要做的是：从<code>a array</code>中取前十个元素，放入<code>b array</code>中。</p>
+<h3 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h3><p><code>slice</code>对应分片操作，这里<code>b数组</code>的值是取的<code>a数组</code>的前十个元素，但是这里取的时候，<code>valueOf</code>这个回调修改掉了<code>a数组</code>的长度；然而，在发生拷贝操作的时候，<code>slice</code>的实现函数并没有检查长度，就直接拷贝了数据，这就导致<code>b数组</code>取的时候访问到了<code>a数组</code>以外的内存，所以可以看到<code>b数组</code>的内容是：<code>[0.123,1.123,2.12199579146e-313,0,0,0,0,0,0,0]</code><br>从<code>0.123</code>之后都是其他数据，此时已经发生了越界读。</p>
+<p><code>root cause</code> : 拷贝前未做长度检查</p>
+<p>未patch的代码如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">EncodedJSValue JSC_HOST_CALL <span class="title">arrayProtoFuncSlice</span><span class="params">(ExecState* exec)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    JSObject* thisObj = exec-&gt;thisValue()</span><br><span class="line">    .toThis(exec, StrictMode)</span><br><span class="line">    .toObject(exec);</span><br><span class="line">    <span class="keyword">if</span> (!thisObj)</span><br><span class="line">        <span class="keyword">return</span> JSValue::encode(JSValue());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> length = getLength(exec, thisObj);</span><br><span class="line">    <span class="keyword">if</span> (exec-&gt;hadException())</span><br><span class="line">        <span class="keyword">return</span> JSValue::encode(jsUndefined());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> begin = argumentClampedIndexFromStartOrEnd(exec, <span class="number">0</span>, length);</span><br><span class="line">    <span class="keyword">unsigned</span> end =</span><br><span class="line">    argumentClampedIndexFromStartOrEnd(exec, <span class="number">1</span>, length, length);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::pair&lt;SpeciesConstructResult, JSObject*&gt; speciesResult =</span><br><span class="line">    speciesConstructArray(exec, thisObj, end - begin);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (UNLIKELY(speciesResult.first ==</span><br><span class="line">                 SpeciesConstructResult::Exception))</span><br><span class="line">        <span class="keyword">return</span> JSValue::encode(jsUndefined());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行切片操作，但是没有任何检查</span></span><br><span class="line">    <span class="keyword">if</span> (LIKELY(speciesResult.first == SpeciesConstructResult::FastPath &amp;&amp;</span><br><span class="line">               isJSArray(thisObj))) &#123;</span><br><span class="line">        <span class="keyword">if</span> (JSArray* result =</span><br><span class="line">            asArray(thisObj)-&gt;fastSlice(*exec, begin, end - begin))</span><br><span class="line">            <span class="keyword">return</span> JSValue::encode(result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    JSObject* result;</span><br><span class="line">    <span class="keyword">if</span> (speciesResult.first == SpeciesConstructResult::CreatedObject)</span><br><span class="line">        result = speciesResult.second;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        result = constructEmptyArray(exec, <span class="literal">nullptr</span>, end - begin);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> k = begin; k &lt; end; k++, n++) &#123;</span><br><span class="line">        JSValue v = getProperty(exec, thisObj, k);</span><br><span class="line">        <span class="keyword">if</span> (exec-&gt;hadException())</span><br><span class="line">            <span class="keyword">return</span> JSValue::encode(jsUndefined());</span><br><span class="line">        <span class="keyword">if</span> (v)</span><br><span class="line">            result-&gt;putDirectIndex(exec, n, v);</span><br><span class="line">    &#125;</span><br><span class="line">    setLength(exec, result, n);</span><br><span class="line">    <span class="keyword">return</span> JSValue::encode(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x03-Exploit"><a href="#0x03-Exploit" class="headerlink" title="0x03 : Exploit"></a>0x03 : Exploit</h2><p>这里不再赘述，原文作者写的很详细，我也是跟着他的文章调试学习的。 </p>
+<h3 id="利用思路："><a href="#利用思路：" class="headerlink" title="利用思路："></a>利用思路：</h3><ol>
+<li>信息泄漏</li>
+<li>伪造对象(Fload64Array)</li>
+<li>任意地址读写</li>
+<li>读取一个function obj的地址，触发JIT生成RWX的代码</li>
+<li>利用任意地址读写写入shellcode</li>
+<li>执行function</li>
+</ol>
+<h2 id="0x04-后续"><a href="#0x04-后续" class="headerlink" title="0x04: 后续"></a>0x04: 后续</h2><h3 id="1-how-to-find-this-bug？"><a href="#1-how-to-find-this-bug？" class="headerlink" title="1. how to find this bug？"></a>1. how to find this bug？</h3><p>​    代码审计就不说了，主要是关注在一些敏感函数前后的check情况，比如复制操作，拼接操作等。</p>
+<p>​        Fuzz的话，生成式和变异式都很容易覆盖到这个case，并没有很难，只是这个洞是一种模式的问题，所以在写fuzz的规则或者模版的时候要多注意。所以在看洞的时候要思考，这是一个模式的问题，还是个例。</p>
+<h3 id="2-其他类似的bug"><a href="#2-其他类似的bug" class="headerlink" title="2. 其他类似的bug"></a>2. 其他类似的bug</h3><p>​    runtime中利用slide-effect来修改一些对象类型、长度等信息，来触发一些类型混淆、越界的情况很多，不仅仅在jsc引擎，但是这些基本已经成为历史了。 这种类型的漏洞，在2016年keen lab 在poc的议题中提到了很多，其中也有类似4622这个洞的一些其他漏洞。</p>
+<h3 id="3-关于调试这个洞"><a href="#3-关于调试这个洞" class="headerlink" title="3. 关于调试这个洞"></a>3. 关于调试这个洞</h3><p>新版本的macos上编译有点麻烦，需要老版sdk，不想折腾的，直接装老版本的macOS虚拟机就行，这是最简单的办法；如果你选择自己编译，慢慢修错误吧。。问题太多了。</p>
+<p>如果调洞，Linux也可以，直接<code>build-jsc-only</code>就好了。</p>
+<p>lldb调试的话，推荐Voltron插件，同时推荐我写的<a href="https://github.com/o0xmuhe/RockLeePrj/blob/master/Tools/voltron_debug.sh" target="_blank" rel="noopener">tmux脚本</a>。</p>
+<h2 id="0x05-引用"><a href="#0x05-引用" class="headerlink" title="0x05:引用"></a>0x05:引用</h2><p><a href="https://paper.seebug.org/207/" target="_blank" rel="noopener">攻击JavaScript引擎：一个JavaScriptCore的学习案例(CVE-2016-4622 (2016-10-27))</a></p>
+<p><a href="http://www.phrack.org/papers/attacking_javascript_engines.html" target="_blank" rel="noopener">attacking_javascript_engines</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;0x00-Vuln-info&quot;&gt;&lt;a href=&quot;#0x00-Vuln-info&quot; class=&quot;headerlink&quot; title=&quot;0x00 : Vuln info&quot;&gt;&lt;/a&gt;0x00 : Vuln info&lt;/h2&gt;&lt;p&gt;Vuln : &lt;code&gt;Out-Of-Bound Read&lt;/code&gt;&lt;br&gt;Webkit Version : &lt;code&gt;320b1fc&lt;/code&gt;&lt;br&gt;Source Code : &lt;code&gt;ArrayPrototype.cpp&lt;/code&gt;  的slice部分逻辑&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;git checkout -b CVE-2016-4662 320b1&lt;span class=&quot;built_in&quot;&gt;fc&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
+    
+  </entry>
   
   <entry>
     <title>CVE-2017-2536 analysis</title>
@@ -581,9 +630,9 @@
     </summary>
     
     
-      <category term="study" scheme="http://o0xmuhe.me/tags/study/"/>
-    
       <category term="fuzz" scheme="http://o0xmuhe.me/tags/fuzz/"/>
+    
+      <category term="study" scheme="http://o0xmuhe.me/tags/study/"/>
     
       <category term="paper" scheme="http://o0xmuhe.me/tags/paper/"/>
     
@@ -818,57 +867,6 @@
       <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
     
       <category term="Symbolic Execution" scheme="http://o0xmuhe.me/tags/Symbolic-Execution/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>LL LR SLR LALR傻傻分不清</title>
-    <link href="http://o0xmuhe.me/2018/02/11/LL-LR-SLR-LALR%E5%82%BB%E5%82%BB%E5%88%86%E4%B8%8D%E6%B8%85/"/>
-    <id>http://o0xmuhe.me/2018/02/11/LL-LR-SLR-LALR傻傻分不清/</id>
-    <published>2018-02-11T08:33:54.000Z</published>
-    <updated>2018-02-11T09:03:49.000Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>撸公开课的时候被这几个文法绕晕了。搜了很多东西，合并整理方便后续查看。
-</code></pre><a id="more"></a>
-<h4 id="0x01-概念"><a href="#0x01-概念" class="headerlink" title="0x01: 概念"></a>0x01: 概念</h4><p>  首先，LL文法是自顶向下，用的是推导；LR、SLR、LALR是自底向上，用的是规约。</p>
-<h5 id="1-LL-1"><a href="#1-LL-1" class="headerlink" title="1. LL(1)"></a>1. LL(1)</h5><p>第一个L代表从左向右扫描输入符号串，第二个L代表产生最左推导，1代表在分析过程中执行每一步推导都要向前查看一个输入符号——当前正在处理的输入符号。<br>龙书上的判断规则是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">形如 A-&gt;a|β 这样的文法，满 足</span><br><span class="line">        ①FIRST(α)∩ FIRST (β ) =Φ</span><br><span class="line">        ②若ε∈ FIRST( α)， 要满足 FIRST(β) ∩FOLLOW(A)=Φ</span><br></pre></td></tr></table></figure>
-<h5 id="2-LR-0"><a href="#2-LR-0" class="headerlink" title="2. LR(0)"></a>2. LR(0)</h5><p>如果某一文法能够构造一张分析表，使得表中每一个元素至多只有一种明确动作，则该文法称为LR文法。</p>
-<p>具体来说：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、构造它的LR(0)项目集合的DFA（即识别该文法全部活前缀的DFA）；</span><br><span class="line">2、根据该DFA画出该文法的LR(0)分析表；</span><br><span class="line">3、在分析表中，每格要么只有一个内容，要么没有内容，（即无冲突）则为LR(0)文法。</span><br></pre></td></tr></table></figure>
-<p>概括一下就是：见到First集就移进，见到终态就归约</p>
-<h5 id="3-SLR-1"><a href="#3-SLR-1" class="headerlink" title="3. SLR(1)"></a>3. SLR(1)</h5><p>满足下面两个条件的文法是SLR(1)文法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.对于在s中的任何项目 A→α.Xβ,当X是一个终结符，且X在Follow(B)中时，s中没有完整的项目B→r.</span><br><span class="line"></span><br><span class="line">b.对于在s中的任何两个完整项目A→α.和 B→β.,Follow(A)∩Follow(B)为空。</span><br></pre></td></tr></table></figure>
-<p>概括就是：见到First集就移进，见到终态先看Follow集，与Follow集对应的项目归约，其它报错。</p>
-<h5 id="4-LALR-1"><a href="#4-LALR-1" class="headerlink" title="4. LALR(1)"></a>4. LALR(1)</h5><p>LALR即“Look-Ahead LR”。其中，Look-Ahead为“向前看”，L代表对输入进行从左到右的检查，R代表反向构造出最右推导序列。</p>
-<h5 id="5-LR-1"><a href="#5-LR-1" class="headerlink" title="5. LR(1)"></a>5. LR(1)</h5><p>和LR(0)一致，只是构造自动机的时候多向前查看一个字符。</p>
-<h4 id="0x02-关系与对比"><a href="#0x02-关系与对比" class="headerlink" title="0x02: 关系与对比"></a>0x02: 关系与对比</h4><h5 id="1-SLR-1-与LR-0-的关系："><a href="#1-SLR-1-与LR-0-的关系：" class="headerlink" title="1. SLR(1)与LR(0)的关系："></a>1. SLR(1)与LR(0)的关系：</h5><p>SLR(1)与LR(0)：简单的LR语法分析技术（即SLR（1）分析技术）的中心思想是根据文法构造出LR（0）自动机。</p>
-<ul>
-<li><p>LR(0):见到First集就移进，见到终态就归约</p>
-</li>
-<li><p>SLR(1)见到First集就移进，见到终态先看Follow集，与Follow集对应的项目归约，其它报错。</p>
-</li>
-</ul>
-<h5 id="2-LR-1-与LR-0-的关系："><a href="#2-LR-1-与LR-0-的关系：" class="headerlink" title="2.  LR(1)与LR(0)的关系："></a>2.  LR(1)与LR(0)的关系：</h5><p>规范LR（1）语法分析技术的中心思想是根据文法构造出LR（1）自动机 ，而规范LR（1）自动机构造方法和LR（0）自动机的构造方法相同，只是多增加了向前搜索符号。</p>
-<h5 id="3-规范LR-1-与LALR-1-的关系："><a href="#3-规范LR-1-与LALR-1-的关系：" class="headerlink" title="3. 规范LR(1)与LALR(1)的关系："></a>3. 规范LR(1)与LALR(1)的关系：</h5><p>LALR(1)是对LR(1)项集族I中具有同心项的项集进行合并得到I’，然后根据I’进行分析的方法。</p>
-<h5 id="4-各种文法能力的对比"><a href="#4-各种文法能力的对比" class="headerlink" title="4. 各种文法能力的对比"></a>4. 各种文法能力的对比</h5><p><img src="http://blogimg-10065924.cossh.myqcloud.com/compilers/111.png" alt="cmp"></p>
-<h4 id="0x03-引用"><a href="#0x03-引用" class="headerlink" title="0x03: 引用"></a>0x03: 引用</h4><p><a href="https://www.cnblogs.com/yongzhewudi/p/6048301.html" target="_blank" rel="noopener">LL LR SLR LALR 傻傻分不清</a></p>
-<p><a href="http://blog.csdn.net/linraise/article/details/9237195" target="_blank" rel="noopener">编译原理:LL(1),LR(0),SLR(1),LALR(1),LR(1)对比</a></p>
-<p><a href="http://blog.csdn.net/carino_ly/article/details/24097889" target="_blank" rel="noopener">如何判断文法是LL(1)SLR(1)LR(1)LALR(1)的？</a></p>
-<p><a href="https://zh.wikipedia.org/wiki/LALR%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8" target="_blank" rel="noopener">维基百科</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;pre&gt;&lt;code&gt;撸公开课的时候被这几个文法绕晕了。搜了很多东西，合并整理方便后续查看。
-&lt;/code&gt;&lt;/pre&gt;
-    
-    </summary>
-    
-    
-      <category term="编译原理" scheme="http://o0xmuhe.me/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
     
   </entry>
   
