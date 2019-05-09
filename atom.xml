@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-04-20T08:41:55.195Z</updated>
+  <updated>2019-05-09T16:22:20.629Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>macOS on ESXi</title>
+    <link href="http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/"/>
+    <id>http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/</id>
+    <published>2019-05-09T16:11:34.000Z</published>
+    <updated>2019-05-09T16:22:20.629Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="VMWare-ESXI-配置macOS虚拟机"><a href="#VMWare-ESXI-配置macOS虚拟机" class="headerlink" title="VMWare ESXI 配置macOS虚拟机"></a>VMWare ESXI 配置macOS虚拟机</h1><p>[TOC]</p>
+<h2 id="需要的工具-ISO"><a href="#需要的工具-ISO" class="headerlink" title="需要的工具/ISO"></a>需要的工具/ISO</h2><p><a href="https://github.com/DrDonk/esxi-unlocker" target="_blank" rel="noopener">unlocker3.0</a></p>
+<p>或者 <a href="https://github.com/o0xmuhe/macOS_on_ESXi" target="_blank" rel="noopener">unlocker</a></p>
+<p>macOS的ISO自行下载</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="给esxi打补丁"><a href="#给esxi打补丁" class="headerlink" title="给esxi打补丁"></a>给esxi打补丁</h3><h4 id="1-unlocker3-0"><a href="#1-unlocker3-0" class="headerlink" title="1. unlocker3.0"></a>1. unlocker3.0</h4><ul>
+<li><p>登陆网页端esxi管理，打开服务器的ssh服务。</p>
+</li>
+<li><p>在macOS的系统上构建好unlocker</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python esxi-build.py</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ssh登陆进去，把上个步骤得到的所有东西上传到服务器。</li>
+<li>打补丁</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf esxi-unlocker-300.tgz</span><br><span class="line">chmod a+x *.sh</span><br><span class="line">./esxi-install.sh</span><br><span class="line"><span class="comment"># then reboot your server</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<h4 id="2-其他版本unlocker"><a href="#2-其他版本unlocker" class="headerlink" title="2.  其他版本unlocker"></a>2.  其他版本unlocker</h4><p>直接复制到服务器，然后执行<code>esxi-install.sh</code>，随后重启服务器。</p>
+<h3 id="安装vm"><a href="#安装vm" class="headerlink" title="安装vm"></a><del>安装vm</del></h3><p>这里esxi的版本是6.7，按理说兼容6.5。</p>
+<p>直接把镜像上传到服务器上，然后直接新建vm。</p>
+<p>但是这里得到报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smc read error k0 esxi xxxxx</span><br></pre></td></tr></table></figure>
+<p>无法解决。</p>
+<h3 id="导入ovf"><a href="#导入ovf" class="headerlink" title="导入ovf"></a><del>导入ovf</del></h3><p>使用低版本vm workstation(12)，选择兼容性esxi 6.5，建立一个macos的虚拟机，然后导出ovf，然后部署到服务器上。</p>
+<p>这里注意：<strong>导出前移除光驱加载的镜像</strong>，否则部署会失败。</p>
+<p>这种方式，能部署上去，但是无限重启，内核无法加载起来。</p>
+<h3 id="安装vm-plan-B"><a href="#安装vm-plan-B" class="headerlink" title="安装vm plan B"></a>安装vm plan B</h3><p>更换了<a href="https://github.com/o0xmuhe/macOS_on_ESXi" target="_blank" rel="noopener">unlocker</a>的补丁，就能正常安装了。</p>
+<p>这里看起来应该是unlocker补丁的问题 - -。 玄学</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;VMWare-ESXI-配置macOS虚拟机&quot;&gt;&lt;a href=&quot;#VMWare-ESXI-配置macOS虚拟机&quot; class=&quot;headerlink&quot; title=&quot;VMWare ESXI 配置macOS虚拟机&quot;&gt;&lt;/a&gt;VMWare ESXI 配置macOS虚
+    
+    </summary>
+    
+    
+      <category term="环境配置" scheme="http://o0xmuhe.me/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+      <category term="macOS" scheme="http://o0xmuhe.me/tags/macOS/"/>
+    
+      <category term="ESXi" scheme="http://o0xmuhe.me/tags/ESXi/"/>
+    
+  </entry>
   
   <entry>
     <title>CVE-2017-2547 分析</title>
@@ -57,9 +108,9 @@
     </summary>
     
     
-      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
-    
       <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
     
   </entry>
   
@@ -207,9 +258,9 @@
     </summary>
     
     
-      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
-    
       <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
     
   </entry>
   
@@ -260,9 +311,9 @@
     </summary>
     
     
-      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
-    
       <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    
+      <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
     
   </entry>
   
@@ -784,57 +835,6 @@
       <category term="study" scheme="http://o0xmuhe.me/tags/study/"/>
     
       <category term="paper" scheme="http://o0xmuhe.me/tags/paper/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>遗传算法初窥</title>
-    <link href="http://o0xmuhe.me/2018/06/03/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E5%88%9D%E7%AA%A5/"/>
-    <id>http://o0xmuhe.me/2018/06/03/遗传算法初窥/</id>
-    <published>2018-06-02T17:13:32.000Z</published>
-    <updated>2018-06-04T13:13:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>读Fuzzing相关的paper的时候遇到了关于遗传算法的问题，其实AFL晒样本也是用了遗传算法，个人的话一直没去探究，正好读paper遇到了，就搜了一下，找到了一篇好文 <a href="https://blog.sicara.com/getting-started-genetic-algorithms-python-tutorial-81ffa1dd72f9" target="_blank" rel="noopener">getting-started-genetic-algorithms-python-tutorial</a>，看完之后一下子明了，并且大呼过瘾 (好文章啊!)</p>
-<a id="more"></a>
-<h4 id="0x01-达尔文进化论"><a href="#0x01-达尔文进化论" class="headerlink" title="0x01 : 达尔文进化论"></a>0x01 : 达尔文进化论</h4><p><code>达尔文认为，生物之间存在着生存争斗，适应者生存下来，不适者则被淘汰，这就是自然的选择。生物正是通过遗传、变异和自然选择，从低级到高级，从简单到复杂，种类由少到多地进化着、发展着。</code></p>
-<h4 id="0x02-遗传算法简述"><a href="#0x02-遗传算法简述" class="headerlink" title="0x02 : 遗传算法简述"></a>0x02 : 遗传算法简述</h4><p>这个算法的核心理念很简单：<code>如果一个种群想持续发展下去，就必须不断的提高自身，去适应环境，在使用过程中会个体会产生变异，适应环境的变异会保留下来，遗传给后代，这么一代一代的筛选下来，留下来的都是最适应环境的个体。</code></p>
-<p>我们拿Fuzz举例，每一个样本进去所触发的路径、执行时间都有差异，那么如何去筛选出有效的样本，从而从这些样本再次迭代出新一代样本，从而让我们的Fuzz更加有效呢？</p>
-<p>这时候我们需要一个评分规则（类比环境适应能力），评分越高，那么适应能力就越好，在这次样本变异中变异的部分（特性）会被保留下来，遗传给下一代。</p>
-<p>参考AFL，它使用了路径等信息计算一个评分，评分高的样本保留（触发路径多），那么从这些样本中迭代，就容易产生更“优秀”的样本文件。</p>
-<p>下图遗传算法的简单描述:</p>
-<p><img src="http://blogimg-10065924.cossh.myqcloud.com/genetic_algorithm/GP.png" alt="GP"></p>
-<h4 id="0x03-举个栗子"><a href="#0x03-举个栗子" class="headerlink" title="0x03 : 举个栗子"></a>0x03 : 举个栗子</h4><p>例子来自<a href="https://blog.sicara.com/getting-started-genetic-algorithms-python-tutorial-81ffa1dd72f9" target="_blank" rel="noopener">getting-started-genetic-algorithms-python-tutorial</a></p>
-<h5 id="1-demo简述"><a href="#1-demo简述" class="headerlink" title="1. demo简述"></a>1. demo简述</h5><p>这里创建一个已知长度的密码破解程序 -。- （这不就是暴力破解吗，是的没错，但是思维方式要换一换啦）</p>
-<p>我们针对没错输入的字符串（个体）进行评估，得到一个评分（适应环境性），这个评分指示着和正确密码的接近程度。算法如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fitness score = (number of char correct) / (total number of char)</span><br></pre></td></tr></table></figure>
-<p>随后对输入的串进行变异（进化，进化，进化…），然后对于新一代的群体，进行评分，挑选合适的个体作为第二代，然后从第二代中迭代产生新的个体。</p>
-<p>产生下一代的方式也很简单，比如我们有两个个体叫做Tom和Jerry，他们的后代名字的字母就从两者名字字母中取就好了。</p>
-<p>经历上述的过程，一代一代的进化，最终一定会得到正确的密码。</p>
-<h5 id="2-一点问题"><a href="#2-一点问题" class="headerlink" title="2. 一点问题"></a>2. 一点问题</h5><p>但是问题来了！这也是今天我在看论文时发现的一个问题-。- </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Bloating: </span><br><span class="line">Bloating [16] is a phenomenon that adversely affects input generation in evolutionary computing. </span><br><span class="line">There are two types of bloating: structural and functional bloating.</span><br></pre></td></tr></table></figure>
-<p>主要分为两类：Structural Bloating和Functional Bloating。</p>
-<p>第一种主要是经过多代的迭代后，经过xx代，个体的平均规模不受控制的增长从而导致代码效率下降，后续的增长也无异于提高适应度（适应度，就是例子中的fitness）。</p>
-<p>第二种是指在进化过程中，如果只挑选好的样本（高评分），那么你得到的样本会快速收敛在一个范围内，也就是说，你的样本的特征就趋于一个方向。对于我们这个密码破解程序，当然ok啦，但是对于Fuzz的话显然是不行的，我们需要多种多样的样本而不是趋近于某一种类型的样本。</p>
-<h5 id="3-代码"><a href="#3-代码" class="headerlink" title="3. 代码"></a>3. 代码</h5><p>原文作者的代码在这里：<br><a href="https://gist.github.com/NicolleLouis/d4f88d5bd566298d4279bcb69934f51d" target="_blank" rel="noopener">getting-started-genetic-algorithms-python-tutorial_source_code</a></p>
-<p>运行结果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ python3 passwordTuto.py</span><br><span class="line">solution: <span class="string">"banana"</span> de fitness: 100.0</span><br><span class="line">18.69589400291443</span><br></pre></td></tr></table></figure>
-<p><img src="http://blogimg-10065924.cossh.myqcloud.com/genetic_algorithm/image_GP.png" alt="result"></p>
-<h4 id="0x04-一点个人看法"><a href="#0x04-一点个人看法" class="headerlink" title="0x04 : 一点个人看法"></a>0x04 : 一点个人看法</h4><p>我觉得这个算法对于漏洞挖掘，无疑是增强型buff，通过合理的使用，能够有效的提升样本质量，从而提高fuzz的效率。但是文中提到的<code>Bloating</code>的问题，无疑也是需要去考虑然后加以干预的。</p>
-<h4 id="0x05-参考及引用"><a href="#0x05-参考及引用" class="headerlink" title="0x05 : 参考及引用"></a>0x05 : 参考及引用</h4><ol>
-<li><a href="https://blog.sicara.com/getting-started-genetic-algorithms-python-tutorial-81ffa1dd72f9" target="_blank" rel="noopener">getting-started-genetic-algorithms-python-tutorial</a></li>
-<li><a href="https://gist.github.com/NicolleLouis/d4f88d5bd566298d4279bcb69934f51d" target="_blank" rel="noopener">getting-started-genetic-algorithms-python-tutorial_source_code</a></li>
-<li>IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00&quot;&gt;&lt;a href=&quot;#0x00&quot; class=&quot;headerlink&quot; title=&quot;0x00:&quot;&gt;&lt;/a&gt;0x00:&lt;/h4&gt;&lt;p&gt;读Fuzzing相关的paper的时候遇到了关于遗传算法的问题，其实AFL晒样本也是用了遗传算法，个人的话一直没去探究，正好读paper遇到了，就搜了一下，找到了一篇好文 &lt;a href=&quot;https://blog.sicara.com/getting-started-genetic-algorithms-python-tutorial-81ffa1dd72f9&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;getting-started-genetic-algorithms-python-tutorial&lt;/a&gt;，看完之后一下子明了，并且大呼过瘾 (好文章啊!)&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Study" scheme="http://o0xmuhe.me/tags/Study/"/>
     
   </entry>
   

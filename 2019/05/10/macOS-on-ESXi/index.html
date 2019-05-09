@@ -3,20 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Hello World升级版 | o0xmuhe&#39;s blog</title>
+  <title>macOS on ESXi | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00:偶然在知乎上看到一个问题，特殊的方式输出hello world，后来知道这是cnss的招新题目，感觉还挺有意思的，做了下记录下来。">
-<meta name="keywords" content="C">
+  <meta name="description" content="VMWare ESXI 配置macOS虚拟机[TOC] 需要的工具/ISOunlocker3.0 或者 unlocker macOS的ISO自行下载 过程给esxi打补丁1. unlocker3.0 登陆网页端esxi管理，打开服务器的ssh服务。  在macOS的系统上构建好unlocker   1python esxi-build.py  ssh登陆进去，把上个步骤得到的所有东西上传到服务器。">
+<meta name="keywords" content="环境配置,macOS,ESXi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World升级版">
-<meta property="og:url" content="http://o0xmuhe.me/2017/10/01/Hello-World升级版/index.html">
+<meta property="og:title" content="macOS on ESXi">
+<meta property="og:url" content="http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00:偶然在知乎上看到一个问题，特殊的方式输出hello world，后来知道这是cnss的招新题目，感觉还挺有意思的，做了下记录下来。">
+<meta property="og:description" content="VMWare ESXI 配置macOS虚拟机[TOC] 需要的工具/ISOunlocker3.0 或者 unlocker macOS的ISO自行下载 过程给esxi打补丁1. unlocker3.0 登陆网页端esxi管理，打开服务器的ssh服务。  在macOS的系统上构建好unlocker   1python esxi-build.py  ssh登陆进去，把上个步骤得到的所有东西上传到服务器。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2017-10-01T10:30:46.000Z">
+<meta property="og:updated_time" content="2019-05-09T16:22:20.629Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World升级版">
-<meta name="twitter:description" content="0x00:偶然在知乎上看到一个问题，特殊的方式输出hello world，后来知道这是cnss的招新题目，感觉还挺有意思的，做了下记录下来。">
+<meta name="twitter:title" content="macOS on ESXi">
+<meta name="twitter:description" content="VMWare ESXI 配置macOS虚拟机[TOC] 需要的工具/ISOunlocker3.0 或者 unlocker macOS的ISO自行下载 过程给esxi打补丁1. unlocker3.0 登陆网页端esxi管理，打开服务器的ssh服务。  在macOS的系统上构建好unlocker   1python esxi-build.py  ssh登陆进去，把上个步骤得到的所有东西上传到服务器。">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -290,11 +290,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-Hello-World升级版" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-macOS-on-ESXi" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/10/01/Hello-World升级版/" class="article-date">
-      <time datetime="2017-10-01T10:02:25.000Z" itemprop="datePublished">2017-10-01</time>
+      <a href="/2019/05/10/macOS-on-ESXi/" class="article-date">
+      <time datetime="2019-05-09T16:11:34.000Z" itemprop="datePublished">2019-05-10</time>
 </a>
     </div>
   
@@ -307,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World升级版
+      macOS on ESXi
     </h1>
   
 
@@ -318,7 +318,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ESXi/">ESXi</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/环境配置/">环境配置</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -328,19 +328,33 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>偶然在知乎上看到一个问题，特殊的方式输出hello world，后来知道这是cnss的招新题目，感觉还挺有意思的，做了下记录下来。</p>
-<a id="more"></a>
-<p>题目要求</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.不用 “ ”  输出Hello World</span><br><span class="line">2.不用 ;  输出Hello World</span><br><span class="line">3.不用#  输出Hello World</span><br><span class="line">4.不用括号输出Hello World (包括各种括号()，&lt;&gt;，｛｝，［］都不能用 )</span><br></pre></td></tr></table></figure>
-<h4 id="0x01-level-1"><a href="#0x01-level-1" class="headerlink" title="0x01: level 1"></a>0x01: level 1</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">72</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">108</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">108</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">111</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">32</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">119</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">111</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">114</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">108</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># muhe @ muheMacBookPro in /tmp [18:10:11]</span></span><br><span class="line">$ ./<span class="built_in">test</span></span><br><span class="line">Hello world</span><br></pre></td></tr></table></figure>
-<h4 id="0x02-level-2"><a href="#0x02-level-2" class="headerlink" title="0x02: level 2"></a>0x02: level 2</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.c</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">72</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">101</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">108</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">108</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">111</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">32</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">119</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">114</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">108</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">100</span>)) &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">putchar</span>(<span class="number">10</span>)) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># muhe @ muheMacBookPro in /tmp [18:15:10]</span></span><br><span class="line">$ clang test.c -o <span class="built_in">test</span></span><br><span class="line">test.c:3:8: warning: implicit declaration of <span class="keyword">function</span> <span class="string">'putchar'</span> is invalid <span class="keyword">in</span> C99</span><br><span class="line">      [-Wimplicit-function-declaration]</span><br><span class="line">    <span class="keyword">if</span>(putchar(72)) &#123;&#125;</span><br><span class="line">       ^</span><br><span class="line">1 warning generated.</span><br><span class="line"></span><br><span class="line"><span class="comment"># muhe @ muheMacBookPro in /tmp [18:15:15]</span></span><br><span class="line">$ ./<span class="built_in">test</span></span><br><span class="line">Hello wrld</span><br></pre></td></tr></table></figure>
-<h4 id="0x03-level-3"><a href="#0x03-level-3" class="headerlink" title="0x03: level 3"></a>0x03: level 3</h4><p>主要是#符号的替代。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.c</span><br><span class="line">%:include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main(void)&#123;</span><br><span class="line">    if(putchar(72)) &#123;&#125;</span><br><span class="line">    if(putchar(101)) &#123;&#125;</span><br><span class="line">    if(putchar(108)) &#123;&#125;</span><br><span class="line">    if(putchar(108)) &#123;&#125;</span><br><span class="line">    if(putchar(111)) &#123;&#125;</span><br><span class="line">    if(putchar(32)) &#123;&#125;</span><br><span class="line">    if(putchar(119)) &#123;&#125;</span><br><span class="line">    if(putchar(114)) &#123;&#125;</span><br><span class="line">    if(putchar(108)) &#123;&#125;</span><br><span class="line">    if(putchar(100)) &#123;&#125;</span><br><span class="line">    if(putchar(10)) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># muhe @ muheMacBookPro in /tmp [18:18:03]</span></span><br><span class="line">$ clang test.c -o <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># muhe @ muheMacBookPro in /tmp [18:18:05]</span></span><br><span class="line">$ ./<span class="built_in">test</span></span><br><span class="line">Hello wrld</span><br></pre></td></tr></table></figure>
-<h4 id="0x04-level-4"><a href="#0x04-level-4" class="headerlink" title="0x04: level 4"></a>0x04: level 4</h4><p>这个好难想…shellcode行么我想说…<br>msfvenom直接生成一个…<br>那么问题来了，sc也要执行啊，咋规避括号，难道要手写一个PE/ELF文件么。</p>
-<h4 id="0x05-结语"><a href="#0x05-结语" class="headerlink" title="0x05: 结语"></a>0x05: 结语</h4><p>挺有意思的问题，这个东西仁者见仁，智者见智，知乎上见到太多方式了，毕竟putchar很丑陋，轮子哥那个代码还是挺好看的。至于level 4，有人提到了hack c，很可惜UB…</p>
+        <h1 id="VMWare-ESXI-配置macOS虚拟机"><a href="#VMWare-ESXI-配置macOS虚拟机" class="headerlink" title="VMWare ESXI 配置macOS虚拟机"></a>VMWare ESXI 配置macOS虚拟机</h1><p>[TOC]</p>
+<h2 id="需要的工具-ISO"><a href="#需要的工具-ISO" class="headerlink" title="需要的工具/ISO"></a>需要的工具/ISO</h2><p><a href="https://github.com/DrDonk/esxi-unlocker" target="_blank" rel="noopener">unlocker3.0</a></p>
+<p>或者 <a href="https://github.com/o0xmuhe/macOS_on_ESXi" target="_blank" rel="noopener">unlocker</a></p>
+<p>macOS的ISO自行下载</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="给esxi打补丁"><a href="#给esxi打补丁" class="headerlink" title="给esxi打补丁"></a>给esxi打补丁</h3><h4 id="1-unlocker3-0"><a href="#1-unlocker3-0" class="headerlink" title="1. unlocker3.0"></a>1. unlocker3.0</h4><ul>
+<li><p>登陆网页端esxi管理，打开服务器的ssh服务。</p>
+</li>
+<li><p>在macOS的系统上构建好unlocker</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python esxi-build.py</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ssh登陆进去，把上个步骤得到的所有东西上传到服务器。</li>
+<li>打补丁</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf esxi-unlocker-300.tgz</span><br><span class="line">chmod a+x *.sh</span><br><span class="line">./esxi-install.sh</span><br><span class="line"><span class="comment"># then reboot your server</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<h4 id="2-其他版本unlocker"><a href="#2-其他版本unlocker" class="headerlink" title="2.  其他版本unlocker"></a>2.  其他版本unlocker</h4><p>直接复制到服务器，然后执行<code>esxi-install.sh</code>，随后重启服务器。</p>
+<h3 id="安装vm"><a href="#安装vm" class="headerlink" title="安装vm"></a><del>安装vm</del></h3><p>这里esxi的版本是6.7，按理说兼容6.5。</p>
+<p>直接把镜像上传到服务器上，然后直接新建vm。</p>
+<p>但是这里得到报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smc read error k0 esxi xxxxx</span><br></pre></td></tr></table></figure>
+<p>无法解决。</p>
+<h3 id="导入ovf"><a href="#导入ovf" class="headerlink" title="导入ovf"></a><del>导入ovf</del></h3><p>使用低版本vm workstation(12)，选择兼容性esxi 6.5，建立一个macos的虚拟机，然后导出ovf，然后部署到服务器上。</p>
+<p>这里注意：<strong>导出前移除光驱加载的镜像</strong>，否则部署会失败。</p>
+<p>这种方式，能部署上去，但是无限重启，内核无法加载起来。</p>
+<h3 id="安装vm-plan-B"><a href="#安装vm-plan-B" class="headerlink" title="安装vm plan B"></a>安装vm plan B</h3><p>更换了<a href="https://github.com/o0xmuhe/macOS_on_ESXi" target="_blank" rel="noopener">unlocker</a>的补丁，就能正常安装了。</p>
+<p>这里看起来应该是unlocker补丁的问题 - -。 玄学</p>
 
       
     </div>
@@ -349,13 +363,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/10/01/Hello-World升级版/">Hello World升级版</a></p>
+        <p><span>本文标题:</span><a href="/2019/05/10/macOS-on-ESXi/">macOS on ESXi</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2017年10月01日 - 18时02分</p>
-        <p><span>最后更新:</span>2017年10月01日 - 18时30分</p>
+        <p><span>发布时间:</span>2019年05月10日 - 00时11分</p>
+        <p><span>最后更新:</span>2019年05月10日 - 00时22分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/10/01/Hello-World升级版/" title="Hello World升级版">http://o0xmuhe.me/2017/10/01/Hello-World升级版/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2017/10/01/Hello-World升级版/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/05/10/macOS-on-ESXi/" title="macOS on ESXi">http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -368,18 +382,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2017/12/30/Python指定概率获取随机元素/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Python指定概率获取随机元素
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/07/13/babydriver-writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">babydriver writeup</div>
+    <a href="/2019/04/20/CVE-2017-2547-分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CVE-2017-2547 分析</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -390,7 +395,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00"><span class="toc-number">1.</span> <span class="toc-text">0x00:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-level-1"><span class="toc-number">2.</span> <span class="toc-text">0x01: level 1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-level-2"><span class="toc-number">3.</span> <span class="toc-text">0x02: level 2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-level-3"><span class="toc-number">4.</span> <span class="toc-text">0x03: level 3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x04-level-4"><span class="toc-number">5.</span> <span class="toc-text">0x04: level 4</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x05-结语"><span class="toc-number">6.</span> <span class="toc-text">0x05: 结语</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VMWare-ESXI-配置macOS虚拟机"><span class="toc-number">1.</span> <span class="toc-text">VMWare ESXI 配置macOS虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#需要的工具-ISO"><span class="toc-number">1.1.</span> <span class="toc-text">需要的工具/ISO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-number">1.2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#给esxi打补丁"><span class="toc-number">1.2.1.</span> <span class="toc-text">给esxi打补丁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-unlocker3-0"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">1. unlocker3.0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-其他版本unlocker"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">2.  其他版本unlocker</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装vm"><span class="toc-number">1.2.2.</span> <span class="toc-text">安装vm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导入ovf"><span class="toc-number">1.2.3.</span> <span class="toc-text">导入ovf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装vm-plan-B"><span class="toc-number">1.2.4.</span> <span class="toc-text">安装vm plan B</span></a></li></ol></li></ol></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -457,13 +462,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/12/30/Python指定概率获取随机元素/" title="上一篇: Python指定概率获取随机元素">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/07/13/babydriver-writeup/" title="下一篇: babydriver writeup">
+            <a href="/2019/04/20/CVE-2017-2547-分析/" title="下一篇: CVE-2017-2547 分析">
                 <i class="fa fa-angle-right"></i>
             </a>
         
