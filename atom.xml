@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-05-09T16:22:53.541Z</updated>
+  <updated>2019-05-09T16:24:39.572Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,13 +20,12 @@
     <link href="http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/"/>
     <id>http://o0xmuhe.me/2019/05/10/macOS-on-ESXi/</id>
     <published>2019-05-09T16:11:34.000Z</published>
-    <updated>2019-05-09T16:22:53.541Z</updated>
+    <updated>2019-05-09T16:24:39.572Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="VMWare-ESXI-配置macOS虚拟机"><a href="#VMWare-ESXI-配置macOS虚拟机" class="headerlink" title="VMWare ESXI 配置macOS虚拟机"></a>VMWare ESXI 配置macOS虚拟机</h1><p>[TOC]</p>
+    <content type="html"><![CDATA[<h1 id="VMWare-ESXI-配置macOS虚拟机"><a href="#VMWare-ESXI-配置macOS虚拟机" class="headerlink" title="VMWare ESXI 配置macOS虚拟机"></a>VMWare ESXI 配置macOS虚拟机</h1><a id="more"></a>
 <h2 id="需要的工具-ISO"><a href="#需要的工具-ISO" class="headerlink" title="需要的工具/ISO"></a>需要的工具/ISO</h2><p><a href="https://github.com/DrDonk/esxi-unlocker" target="_blank" rel="noopener">unlocker3.0</a></p>
 <p>或者 <a href="https://github.com/o0xmuhe/macOS_on_ESXi" target="_blank" rel="noopener">unlocker</a></p>
 <p>macOS的ISO自行下载</p>
-<a id="more"></a>
 <h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="给esxi打补丁"><a href="#给esxi打补丁" class="headerlink" title="给esxi打补丁"></a>给esxi打补丁</h3><h4 id="1-unlocker3-0"><a href="#1-unlocker3-0" class="headerlink" title="1. unlocker3.0"></a>1. unlocker3.0</h4><ul>
 <li><p>登陆网页端esxi管理，打开服务器的ssh服务。</p>
 </li>
@@ -54,10 +53,7 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;VMWare-ESXI-配置macOS虚拟机&quot;&gt;&lt;a href=&quot;#VMWare-ESXI-配置macOS虚拟机&quot; class=&quot;headerlink&quot; title=&quot;VMWare ESXI 配置macOS虚拟机&quot;&gt;&lt;/a&gt;VMWare ESXI 配置macOS虚拟机&lt;/h1&gt;&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&quot;需要的工具-ISO&quot;&gt;&lt;a href=&quot;#需要的工具-ISO&quot; class=&quot;headerlink&quot; title=&quot;需要的工具/ISO&quot;&gt;&lt;/a&gt;需要的工具/ISO&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/DrDonk/esxi-unlocker&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;unlocker3.0&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;或者 &lt;a href=&quot;https://github.com/o0xmuhe/macOS_on_ESXi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;unlocker&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;macOS的ISO自行下载&lt;/p&gt;
+      &lt;h1 id=&quot;VMWare-ESXI-配置macOS虚拟机&quot;&gt;&lt;a href=&quot;#VMWare-ESXI-配置macOS虚拟机&quot; class=&quot;headerlink&quot; title=&quot;VMWare ESXI 配置macOS虚拟机&quot;&gt;&lt;/a&gt;VMWare ESXI 配置macOS虚拟机&lt;/h1&gt;
     
     </summary>
     
