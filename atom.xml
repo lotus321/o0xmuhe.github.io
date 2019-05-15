@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-05-09T16:24:39.572Z</updated>
+  <updated>2019-05-15T10:31:52.367Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Adobe Acrobat DC Pro OOB(CVE-2019-7813)</title>
+    <link href="http://o0xmuhe.me/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/"/>
+    <id>http://o0xmuhe.me/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/</id>
+    <published>2019-05-15T10:23:36.000Z</published>
+    <updated>2019-05-15T10:31:52.367Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h4><p>Out-of-Bounds Read </p>
+<a id="more"></a>
+<h4 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">%PDF-1.7</span><br><span class="line"></span><br><span class="line">1 0 obj</span><br><span class="line">&lt;&lt;&gt;&gt;</span><br><span class="line">%endobj</span><br><span class="line"></span><br><span class="line">trailer</span><br><span class="line">&lt;&lt;</span><br><span class="line">/Root&lt;&lt;/Pages 1 0 R&gt;&gt;</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>click <code>File</code>–&gt;<code>Properties</code></p>
+<p>boring bug :(</p>
+<h4 id="Patch-amp-amp-Bulletin"><a href="#Patch-amp-amp-Bulletin" class="headerlink" title="Patch &amp;&amp; Bulletin"></a>Patch &amp;&amp; Bulletin</h4><p><a href="https://helpx.adobe.com/security/products/acrobat/apsb19-18.html" target="_blank" rel="noopener">adobe psirt</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;Info&quot;&gt;&lt;a href=&quot;#Info&quot; class=&quot;headerlink&quot; title=&quot;Info&quot;&gt;&lt;/a&gt;Info&lt;/h4&gt;&lt;p&gt;Out-of-Bounds Read &lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Adobe" scheme="http://o0xmuhe.me/tags/Adobe/"/>
+    
+      <category term="PoC" scheme="http://o0xmuhe.me/tags/PoC/"/>
+    
+  </entry>
   
   <entry>
     <title>macOS on ESXi</title>
@@ -108,9 +136,9 @@
     </summary>
     
     
-      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
       <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
+    
+      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
@@ -158,9 +186,9 @@
     </summary>
     
     
-      <category term="Adobe Reader" scheme="http://o0xmuhe.me/tags/Adobe-Reader/"/>
-    
       <category term="PoC" scheme="http://o0xmuhe.me/tags/PoC/"/>
+    
+      <category term="Adobe Reader" scheme="http://o0xmuhe.me/tags/Adobe-Reader/"/>
     
   </entry>
   
@@ -258,9 +286,9 @@
     </summary>
     
     
-      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
       <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
+    
+      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
@@ -311,9 +339,9 @@
     </summary>
     
     
-      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
       <category term="webkit" scheme="http://o0xmuhe.me/tags/webkit/"/>
+    
+      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
@@ -796,45 +824,6 @@
     
     
       <category term="ctf" scheme="http://o0xmuhe.me/tags/ctf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;</title>
-    <link href="http://o0xmuhe.me/2018/06/09/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/"/>
-    <id>http://o0xmuhe.me/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/</id>
-    <published>2018-06-08T16:29:42.000Z</published>
-    <updated>2018-06-09T03:45:27.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00-关于"><a href="#0x00-关于" class="headerlink" title="0x00:关于"></a>0x00:关于</h4><p>最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。<br>这篇论文是<code>IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming</code>。<br>主要是介绍<a href="https://github.com/vspandan/IFuzzer" target="_blank" rel="noopener">IFuzzer</a>的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。<br><a id="more"></a></p>
-<h4 id="0x01-论文阅读"><a href="#0x01-论文阅读" class="headerlink" title="0x01:论文阅读"></a>0x01:论文阅读</h4><p>该论文主要是针对脚本引擎的fuzz，只是文中使用了js engine作为目标。</p>
-<p>核心思想就是：收集大量的测试代码，使用antlr4编写好的语法解析器解析出<code>非终结符片段</code>，把输入解析成AST后，在AST上进行变异。</p>
-<p>变异的方式主要是利用收集的“片段”去替换解析树中相同非终结符，由于采用了遗传算法，通过对每个个体的评估，筛选优秀的个体进行“杂交”产生新的个体进入下一轮fuzz，“杂交”的方法是交换两个个体中相同的非终结符节点，产生两棵新的输。</p>
-<p>采用遗传算法必须面对膨胀控制的问题。这里论文作者对每个个体评估时，采用了如下的公式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fb(x) = score_structure + score_feedback</span><br><span class="line">ffinal(x) = fb(x) − c ∗ (l(x))</span><br></pre></td></tr></table></figure>
-<p>即：</p>
-<p>基础得分=结构得分+(解释器)回馈得分<br>最终得分=基础的分-膨胀控制</p>
-<p>这样的话的确有效的控制了遗传算法在迭代中的膨胀问题。</p>
-<p>论文中测试部分没仔细看，我只关注了核心的算法和一些问题的解决，剩下的工作就是去阅读IFuzzer代码去体会了。</p>
-<h4 id="0x02-个人想法"><a href="#0x02-个人想法" class="headerlink" title="0x02:个人想法"></a>0x02:个人想法</h4><p>首先感觉这个东西没那么完善，或者说没放全。</p>
-<p>变异的策略其实可以更多的，这种替换的方式感觉还是有局限性，其实就是类似于用一大堆积木，去组合，是从现有的东西生成一些组合性的东西；如果可以加入创造性的东西就好了，比如积木的形状、材质改变，然后去创造新的组合。</p>
-<p>记得几个月前看过韩国一个大佬（BoB计划的导师）的slide，他做的类似的事情，但是不一样的是：他把收集的测试代码、poc解析后到AST然后到IR，直接在IR上操作，之后从IR再生成js代码，效果也不错，但是那个没放出源码所以也不好与IFuzzer比较。</p>
-<p>从身边的大佬的说法来看，IFuzzer很有限，需要改进的地方很多- 。- 不过我个人认为，这样的思路值得借鉴，虽然很好想，但是难做啊。。去年就想这么搞了，然而一些基础知识跟不上，现如今可以试一试啦～</p>
-<h4 id="0x03-引用"><a href="#0x03-引用" class="headerlink" title="0x03:引用"></a>0x03:引用</h4><p><a href="https://link.springer.com/chapter/10.1007/978-3-319-45744-4_29" target="_blank" rel="noopener">IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00-关于&quot;&gt;&lt;a href=&quot;#0x00-关于&quot; class=&quot;headerlink&quot; title=&quot;0x00:关于&quot;&gt;&lt;/a&gt;0x00:关于&lt;/h4&gt;&lt;p&gt;最近在阅读一些漏洞挖掘相关技术的论文，正好读到这篇，做个记录。&lt;br&gt;这篇论文是&lt;code&gt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&lt;/code&gt;。&lt;br&gt;主要是介绍&lt;a href=&quot;https://github.com/vspandan/IFuzzer&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;IFuzzer&lt;/a&gt;的一篇论文，主要是利用antlr4+遗传算法搞js fuzz。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="fuzz" scheme="http://o0xmuhe.me/tags/fuzz/"/>
-    
-      <category term="study" scheme="http://o0xmuhe.me/tags/study/"/>
-    
-      <category term="paper" scheme="http://o0xmuhe.me/tags/paper/"/>
     
   </entry>
   
