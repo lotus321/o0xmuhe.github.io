@@ -3,20 +3,22 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Adobe Acrobat DC Pro OOB(CVE-2019-7813) | o0xmuhe&#39;s blog</title>
+  <title>Apple IPC : DO Basic | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="InfoOut-of-Bounds Read">
-<meta name="keywords" content="Adobe,PoC">
+  <meta name="description" content="MacOS IPC 之 DO">
+<meta name="keywords" content="Apple,MacOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Adobe Acrobat DC Pro OOB(CVE-2019-7813)">
-<meta property="og:url" content="http://o0xmuhe.me/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/index.html">
+<meta property="og:title" content="Apple IPC : DO Basic">
+<meta property="og:url" content="http://o0xmuhe.me/2019/08/10/Apple-IPC-DO-Basic/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="InfoOut-of-Bounds Read">
+<meta property="og:description" content="MacOS IPC 之 DO">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-15T10:31:52.367Z">
+<meta property="og:image" content="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/ipc_do/15654470622725.jpg">
+<meta property="og:updated_time" content="2019-08-10T15:24:12.141Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Adobe Acrobat DC Pro OOB(CVE-2019-7813)">
-<meta name="twitter:description" content="InfoOut-of-Bounds Read">
+<meta name="twitter:title" content="Apple IPC : DO Basic">
+<meta name="twitter:description" content="MacOS IPC 之 DO">
+<meta name="twitter:image" content="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/ipc_do/15654470622725.jpg">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -290,11 +292,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Apple-IPC-DO-Basic" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/" class="article-date">
-      <time datetime="2019-05-15T10:23:36.000Z" itemprop="datePublished">2019-05-15</time>
+      <a href="/2019/08/10/Apple-IPC-DO-Basic/" class="article-date">
+      <time datetime="2019-08-10T15:16:33.000Z" itemprop="datePublished">2019-08-10</time>
 </a>
     </div>
   
@@ -307,7 +309,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Adobe Acrobat DC Pro OOB(CVE-2019-7813)
+      Apple IPC : DO Basic
     </h1>
   
 
@@ -318,7 +320,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Adobe/">Adobe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PoC/">PoC</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Apple/">Apple</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MacOS/">MacOS</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -328,12 +330,42 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h4><p>Out-of-Bounds Read </p>
-<a id="more"></a>
-<h4 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">%PDF-1.7</span><br><span class="line"></span><br><span class="line">1 0 obj</span><br><span class="line">&lt;&lt;&gt;&gt;</span><br><span class="line">%endobj</span><br><span class="line"></span><br><span class="line">trailer</span><br><span class="line">&lt;&lt;</span><br><span class="line">/Root&lt;&lt;/Pages 1 0 R&gt;&gt;</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
-<p>click <code>File</code>–&gt;<code>Properties</code></p>
-<p>boring bug :(</p>
-<h4 id="Patch-amp-amp-Bulletin"><a href="#Patch-amp-amp-Bulletin" class="headerlink" title="Patch &amp;&amp; Bulletin"></a>Patch &amp;&amp; Bulletin</h4><p><a href="https://helpx.adobe.com/security/products/acrobat/apsb19-18.html" target="_blank" rel="noopener">adobe psirt</a></p>
+        <h1 id="MacOS-IPC-之-DO"><a href="#MacOS-IPC-之-DO" class="headerlink" title="MacOS IPC 之 DO"></a>MacOS IPC 之 DO</h1><a id="more"></a>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>DO全称是<code>Distributed Objects</code>，从字面上来看意思很好理解，分发对象。这是一种IPC方式，简单易用，实现的效果就是：通过launchd和一个proxy object，任何的进程都可以访问到server中的DO对象，也可以调用这个对象的方法，从而实现IPC。下面是一个流程图：</p>
+<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/ipc_do/15654470622725.jpg" alt=""></p>
+<p>(图来自pj0的博客，ianbeer的文章)</p>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p>server.m<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;objc/Object.h&gt;</span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface VendMe : NSObject</span><br><span class="line">- (oneway void) foo: (int) value;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation VendMe</span><br><span class="line">- (oneway void) foo: (int) value;</span><br><span class="line">&#123;</span><br><span class="line">NSLog(@&quot;%d&quot;, value);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main (int argc, const char * argv[]) &#123;</span><br><span class="line"> VendMe* toVend = [[VendMe alloc] init];</span><br><span class="line"> NSConnection *conn = [NSConnection defaultConnection];</span><br><span class="line"> [conn setRootObject:toVend];</span><br><span class="line"> [conn registerName:@&quot;com.foo.my_test_service&quot;];</span><br><span class="line"> [[NSRunLoop currentRunLoop] run];</span><br><span class="line"> return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>client.m<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Cocoa/Cocoa.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv)&#123;</span><br><span class="line"> id theProxy = [[NSConnection</span><br><span class="line">   rootProxyForConnectionWithRegisteredName:@&quot;com.foo.my_test_service&quot;</span><br><span class="line"> host:nil] retain];</span><br><span class="line"> [theProxy foo:123];</span><br><span class="line"> return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Makefile<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">all:</span></span><br><span class="line">44clang client.m -o client -framework Foundation</span><br><span class="line">44clang server.m -o server -framework Foundation</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">4    rm server client</span><br></pre></td></tr></table></figure></p>
+<p>运行效果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run server</span></span><br><span class="line">╰─$ ./server</span><br><span class="line">2019-08-10 22:27:07.545 server[28274:2677291] 123</span><br><span class="line">2019-08-10 22:27:08.897 server[28274:2677291] 123</span><br><span class="line">2019-08-10 22:27:09.662 server[28274:2677291] 123</span><br><span class="line">2019-08-10 22:27:10.172 server[28274:2677291] 123</span><br><span class="line"></span><br><span class="line"><span class="comment"># run client times...</span></span><br><span class="line">╭─muhe@muheMacBookPro ~/Downloads/DO_Study</span><br><span class="line">╰─$ ./client</span><br><span class="line">╭─muhe@muheMacBookPro ~/Downloads/DO_Study</span><br><span class="line">╰─$ ./client</span><br><span class="line">╭─muhe@muheMacBookPro ~/Downloads/DO_Study</span><br><span class="line">╰─$ ./client</span><br><span class="line">╭─muhe@muheMacBookPro ~/Downloads/DO_Study</span><br><span class="line">╰─$ ./client</span><br><span class="line">╭─muhe@muheMacBookPro ~/Downloads/DO_Study</span><br><span class="line">╰─$</span><br></pre></td></tr></table></figure>
+<p>效果看起来很简单，类似socket通信那种效果，server跑起来等待连接，client连上去，然后通过launchd和proxy obj调用了server里的方法，参数是client传递的，看起来像是client执行了一个函数，其实真正代码执行的是server。</p>
+<p>OC的语法虽然很奇怪，但是问题不大，还是能看懂：</p>
+<ul>
+<li>server:</li>
+</ul>
+<p>通过<code>NSConnection</code>注册了一个用于DO的对象，设置的对象是<code>VendMe</code>，注册名是<code>com.foo.my_test_service</code>，用来标示这个服务。随后使用<code>Runloop</code>使得server能随时处理事件但并不退出,关于<code>Runloop</code>的分析本文不会涉及。</p>
+<ul>
+<li>client</li>
+</ul>
+<p>client的逻辑很简单，通过<code>NSConnection</code>连接目标服务，然后通过proxy obj调用他的foo方法，并传递一个123的参数给他。</p>
+<p>大概逻辑就这个样子。</p>
+<h2 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h2><p>为什么要提及这部分，apple大部分服务都不开源，而且用的IPC方式都不确定，逆向的时候需要想办法确定，并且找到关键函数，比如上例中的foo函数，找到处理函数，方便代码审计。</p>
+<p>这里只需要关注服务端（废话），所以直接贴F5后的代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  VendMe *v3; <span class="comment">// rax</span></span><br><span class="line">  VendMe *v4; <span class="comment">// ST28_8</span></span><br><span class="line">  <span class="keyword">void</span> *v5; <span class="comment">// ST20_8</span></span><br><span class="line">  <span class="keyword">void</span> *v6; <span class="comment">// rax</span></span><br><span class="line"></span><br><span class="line">  v3 = objc_msgSend(&amp;OBJC_CLASS___VendMe, <span class="string">"alloc"</span>, envp);</span><br><span class="line">  v4 = objc_msgSend(v3, <span class="string">"init"</span>);</span><br><span class="line">  v5 = objc_msgSend(&amp;OBJC_CLASS___NSConnection, <span class="string">"defaultConnection"</span>);</span><br><span class="line">  objc_msgSend(v5, <span class="string">"setRootObject:"</span>, v4);</span><br><span class="line">  objc_msgSend(v5, <span class="string">"registerName:"</span>, CFSTR(<span class="string">"com.foo.my_test_service"</span>));</span><br><span class="line">  v6 = objc_msgSend(&amp;OBJC_CLASS___NSRunLoop, <span class="string">"currentRunLoop"</span>);</span><br><span class="line">  objc_msgSend(v6, <span class="string">"run"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>oc这些函数调用基本都变成<code>objec_msgSend(a,b,xxx)</code>了，不过不太影响看，我的理解就是<br><code>a.b(xxx)</code>，大概这个样子，知道这行代码在做什么，对于逆向已经够了。</p>
+<p>关键点在于找DO的对象以及和他绑定的方法。通过上面的方法，能找到:<code>v4--&gt;v3--&gt;OBJC_CLASS___VendMe</code>,那么就是<code>OBJC_CLASS___VendMe</code>这个对象了，下面是找和他绑定的方法。</p>
+<p>直接找到的是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">__objc_data:0000000100001198 _OBJC_CLASS_$_VendMe __objc2_class &lt;offset _OBJC_METACLASS_$_VendMe, \</span><br><span class="line">__objc_data:0000000100001198                                         ; DATA XREF: __objc_classlist:0000000100001060↑o</span><br><span class="line">__objc_data:0000000100001198                                         ; __objc_classrefs:classRef_VendMe↑o</span><br><span class="line">__objc_data:0000000100001198                                offset _OBJC_CLASS_$_NSObject, \</span><br><span class="line">__objc_data:0000000100001198                                offset __objc_empty_cache, 0, offset VendMe_$classData&gt;</span><br></pre></td></tr></table></figure>
+<p>然后根据classData找到 ： <br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">__objc_const:00000001000010D8 VendMe_$classData __objc2_class_ro &lt;0, 8, 8, 0, 0, offset aVendme, \</span><br><span class="line">__objc_const:00000001000010D8                                         ; DATA XREF: __objc_data:_OBJC_CLASS_$_VendMe↓o</span><br><span class="line">__objc_const:00000001000010D8                                   offset _OBJC_INSTANCE_METHODS_VendMe, 0, 0, 0, 0&gt; ; &quot;VendMe&quot;</span><br><span class="line">__objc_const:00000001000010D8 __objc_const    ends</span><br><span class="line">__objc_const:00000001000010D8</span><br></pre></td></tr></table></figure></p>
+<p>最后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__objc_const:00000001000010B8 _OBJC_INSTANCE_METHODS_VendMe __objc2_meth_list &lt;18h, 1&gt;</span><br><span class="line">__objc_const:00000001000010B8                                         ; DATA XREF: __objc_const:VendMe_$classData↓o</span><br><span class="line">__objc_const:00000001000010C0                 __objc2_meth &lt;offset sel_foo_, offset aVv2008i16, \ ; -[VendMe foo:] ...</span><br><span class="line">__objc_const:00000001000010C0                               offset __VendMe_foo__&gt;</span><br></pre></td></tr></table></figure></p>
+<p>依靠对<code>classData</code>的引用看。</p>
+<p>其实也可以的知道了DO对象的对象名之后直接搜函数列表，比如:<code>VendeMe:</code>。 这个是在有符号的情况下，不过符号这个看运气了，不一定有 符号。</p>
+<p>VendeMe:foo<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> __cdecl -[VendMe foo:](VendMe *self, SEL a2, <span class="keyword">int</span> a3)</span><br><span class="line">&#123;</span><br><span class="line">  NSLog(CFSTR(<span class="string">"%d"</span>), (<span class="keyword">unsigned</span> <span class="keyword">int</span>)a3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用户的参数从a3开始算。</p>
+<h2 id="这类服务漏洞挖掘"><a href="#这类服务漏洞挖掘" class="headerlink" title="这类服务漏洞挖掘"></a>这类服务漏洞挖掘</h2><p>主动fuzz：找到处理函数，确定类型，然后主动写客户端fuzz。</p>
+<p>被动fuzz：hook处理点，但是要一个一个hook，然后修改数据。</p>
+<p>代码审计：找处理函数，人肉看逻辑。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://googleprojectzero.blogspot.com/2015/09/revisiting-apple-ipc-1-distributed_28.html" target="_blank" rel="noopener">revisiting-apple-ipc</a></p>
 
       
     </div>
@@ -342,13 +374,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/">Adobe Acrobat DC Pro OOB(CVE-2019-7813)</a></p>
+        <p><span>本文标题:</span><a href="/2019/08/10/Apple-IPC-DO-Basic/">Apple IPC : DO Basic</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2019年05月15日 - 18时23分</p>
-        <p><span>最后更新:</span>2019年05月15日 - 18时31分</p>
+        <p><span>发布时间:</span>2019年08月10日 - 23时16分</p>
+        <p><span>最后更新:</span>2019年08月10日 - 23时24分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/" title="Adobe Acrobat DC Pro OOB(CVE-2019-7813)">http://o0xmuhe.me/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/05/15/Adobe-Acrobat-DC-Pro-OOB-CVE-2019-7813/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/08/10/Apple-IPC-DO-Basic/" title="Apple IPC : DO Basic">http://o0xmuhe.me/2019/08/10/Apple-IPC-DO-Basic/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/08/10/Apple-IPC-DO-Basic/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -361,18 +393,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2019/06/14/find-macOS-service-and-it-s-plist-file/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          find macOS service and it&#39;s plist file
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/05/10/macOS-on-ESXi/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">macOS on ESXi</div>
+    <a href="/2019/07/16/Adobe-Acrobat-DC-Pro-touchup-UaF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Adobe Acrobat DC Pro touchup UaF</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -383,7 +406,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Info"><span class="toc-number">1.</span> <span class="toc-text">Info</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PoC"><span class="toc-number">2.</span> <span class="toc-text">PoC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Patch-amp-amp-Bulletin"><span class="toc-number">3.</span> <span class="toc-text">Patch &amp;&amp; Bulletin</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MacOS-IPC-之-DO"><span class="toc-number">1.</span> <span class="toc-text">MacOS IPC 之 DO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例代码"><span class="toc-number">1.2.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逆向分析"><span class="toc-number">1.3.</span> <span class="toc-text">逆向分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#这类服务漏洞挖掘"><span class="toc-number">1.4.</span> <span class="toc-text">这类服务漏洞挖掘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-number">1.5.</span> <span class="toc-text">引用</span></a></li></ol></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -450,13 +473,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/06/14/find-macOS-service-and-it-s-plist-file/" title="上一篇: find macOS service and it&#39;s plist file">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2019/05/10/macOS-on-ESXi/" title="下一篇: macOS on ESXi">
+            <a href="/2019/07/16/Adobe-Acrobat-DC-Pro-touchup-UaF/" title="下一篇: Adobe Acrobat DC Pro touchup UaF">
                 <i class="fa fa-angle-right"></i>
             </a>
         
