@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-08-10T15:24:12.141Z</updated>
+  <updated>2019-08-10T15:55:40.796Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://o0xmuhe.me/2019/08/10/Apple-IPC-DO-Basic/"/>
     <id>http://o0xmuhe.me/2019/08/10/Apple-IPC-DO-Basic/</id>
     <published>2019-08-10T15:16:33.000Z</published>
-    <updated>2019-08-10T15:24:12.141Z</updated>
+    <updated>2019-08-10T15:55:40.796Z</updated>
     
     <content type="html"><![CDATA[<h1 id="MacOS-IPC-之-DO"><a href="#MacOS-IPC-之-DO" class="headerlink" title="MacOS IPC 之 DO"></a>MacOS IPC 之 DO</h1><a id="more"></a>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>DO全称是<code>Distributed Objects</code>，从字面上来看意思很好理解，分发对象。这是一种IPC方式，简单易用，实现的效果就是：通过launchd和一个proxy object，任何的进程都可以访问到server中的DO对象，也可以调用这个对象的方法，从而实现IPC。下面是一个流程图：</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>DO全称是<code>Distributed Objects</code>，从字面上来看意思很好理解，分布式对象。这是一种IPC方式，简单易用，实现的效果就是：通过launchd和一个proxy object，任何的进程都可以访问到server中的DO对象，也可以调用这个对象的方法，从而实现IPC。下面是一个流程图：</p>
 <p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/ipc_do/15654470622725.jpg" alt=""></p>
 <p>(图来自pj0的博客，ianbeer的文章)</p>
 <h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p>server.m<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;objc/Object.h&gt;</span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface VendMe : NSObject</span><br><span class="line">- (oneway void) foo: (int) value;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation VendMe</span><br><span class="line">- (oneway void) foo: (int) value;</span><br><span class="line">&#123;</span><br><span class="line">NSLog(@&quot;%d&quot;, value);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main (int argc, const char * argv[]) &#123;</span><br><span class="line"> VendMe* toVend = [[VendMe alloc] init];</span><br><span class="line"> NSConnection *conn = [NSConnection defaultConnection];</span><br><span class="line"> [conn setRootObject:toVend];</span><br><span class="line"> [conn registerName:@&quot;com.foo.my_test_service&quot;];</span><br><span class="line"> [[NSRunLoop currentRunLoop] run];</span><br><span class="line"> return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -95,9 +95,9 @@
     </summary>
     
     
-      <category term="UaF" scheme="http://o0xmuhe.me/tags/UaF/"/>
-    
       <category term="Adobe" scheme="http://o0xmuhe.me/tags/Adobe/"/>
+    
+      <category term="UaF" scheme="http://o0xmuhe.me/tags/UaF/"/>
     
   </entry>
   
