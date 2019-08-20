@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-08-20T09:11:48.735Z</updated>
+  <updated>2019-08-20T09:15:29.187Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/"/>
     <id>http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/</id>
     <published>2019-08-20T09:04:05.000Z</published>
-    <updated>2019-08-20T09:11:48.735Z</updated>
+    <updated>2019-08-20T09:15:29.187Z</updated>
     
     <content type="html"><![CDATA[<p>算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。</p>
 <a id="more"></a>
@@ -55,7 +55,7 @@
 <li>bootstrap server会对这个申请的port(此时Bob是它唯一的拥有者)创建 <code>SEND right</code>，然后发送给Alice</li>
 <li>至此，两人可以通信了</li>
 </ol>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>*OS Internals Volume I User Mode – Jonathan Levind</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>*OS Internals Volume I User Mode – Jonathan Levin</p>
 ]]></content>
     
     <summary type="html">
