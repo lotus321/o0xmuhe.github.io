@@ -3,20 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>比赛运维杂记 | o0xmuhe&#39;s blog</title>
+  <title>macOS IPC Study basic | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 : 前言又是一届校赛了。学弟在配环境的时候一直问我相关的问题，然而我以前的笔记找不到了，今天偶然找到了，索性直接发出来吧。这是第一次参加校赛时候配环境的记录了，两年前吧，比较naive，有很多地方不全面。">
-<meta name="keywords" content="ctf">
+  <meta name="description" content="算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。">
+<meta name="keywords" content="macOS,IPC">
 <meta property="og:type" content="article">
-<meta property="og:title" content="比赛运维杂记">
-<meta property="og:url" content="http://o0xmuhe.me/2018/06/16/比赛运维杂记/index.html">
+<meta property="og:title" content="macOS IPC Study basic">
+<meta property="og:url" content="http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00 : 前言又是一届校赛了。学弟在配环境的时候一直问我相关的问题，然而我以前的笔记找不到了，今天偶然找到了，索性直接发出来吧。这是第一次参加校赛时候配环境的记录了，两年前吧，比较naive，有很多地方不全面。">
+<meta property="og:description" content="算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-16T07:19:41.000Z">
+<meta property="og:updated_time" content="2019-08-20T09:11:48.735Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="比赛运维杂记">
-<meta name="twitter:description" content="0x00 : 前言又是一届校赛了。学弟在配环境的时候一直问我相关的问题，然而我以前的笔记找不到了，今天偶然找到了，索性直接发出来吧。这是第一次参加校赛时候配环境的记录了，两年前吧，比较naive，有很多地方不全面。">
+<meta name="twitter:title" content="macOS IPC Study basic">
+<meta name="twitter:description" content="算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -290,11 +290,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-比赛运维杂记" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-macOS-IPC-Study-basic" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/06/16/比赛运维杂记/" class="article-date">
-      <time datetime="2018-06-16T07:12:09.000Z" itemprop="datePublished">2018-06-16</time>
+      <a href="/2019/08/20/macOS-IPC-Study-basic/" class="article-date">
+      <time datetime="2019-08-20T09:04:05.000Z" itemprop="datePublished">2019-08-20</time>
 </a>
     </div>
   
@@ -307,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      比赛运维杂记
+      macOS IPC Study basic
     </h1>
   
 
@@ -318,7 +318,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IPC/">IPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -328,28 +328,40 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 : 前言"></a>0x00 : 前言</h2><p>又是一届校赛了。学弟在配环境的时候一直问我相关的问题，然而我以前的笔记找不到了，今天偶然找到了，索性直接发出来吧。这是第一次参加校赛时候配环境的记录了，两年前吧，比较naive，有很多地方不全面。</p>
+        <p>算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。</p>
 <a id="more"></a>
-<h2 id="0x01-基本信息"><a href="#0x01-基本信息" class="headerlink" title="0x01 基本信息"></a>0x01 基本信息</h2><p>查看基本信息<code>uname -a</code> 或者 <code>cat /proc/version</code><br>查看<code>centOS</code> 系统版本 <code>rpm -q centos-release</code></p>
-<h2 id="0x02-更新-centOS为例"><a href="#0x02-更新-centOS为例" class="headerlink" title="0x02 更新(centOS为例)"></a>0x02 更新(centOS为例)</h2><h3 id="1-备份"><a href="#1-备份" class="headerlink" title="1.备份"></a>1.备份</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure>
-<h3 id="2-下载yum配置文件"><a href="#2-下载yum配置文件" class="headerlink" title="2.下载yum配置文件"></a>2.下载yum配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d/ </span><br><span class="line">wget http://mirrors.163.com/.help/CentOS6-Base-163.repo</span><br></pre></td></tr></table></figure>
-<h3 id="3-生成缓存"><a href="#3-生成缓存" class="headerlink" title="3.生成缓存"></a>3.生成缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
-<h3 id="4-更新"><a href="#4-更新" class="headerlink" title="4.更新"></a>4.更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
-<p>安装32位库 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install xulrunner.i686</span><br></pre></td></tr></table></figure>
-<h2 id="0x03-守护进程的配置"><a href="#0x03-守护进程的配置" class="headerlink" title="0x03 守护进程的配置"></a>0x03 守护进程的配置</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install xinetd</span><br></pre></td></tr></table></figure>
-<h3 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h3><p><code>/etc/services</code> 下先添加自己的服务端口信息<br><code>/etc/xinetd.d/</code> 下添加自己的服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">service pwn_test</span><br><span class="line">&#123;</span><br><span class="line">    disable = no //打开</span><br><span class="line">    port = 50001 </span><br><span class="line">    socket_type = stream</span><br><span class="line">    server = /home/pwn100/pwn100</span><br><span class="line">    wait = no </span><br><span class="line">    user = pwn_user</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>之后重启服务就好了<code>service xinetd restart</code></p>
-<h2 id="0x04-socat"><a href="#0x04-socat" class="headerlink" title="0x04 socat"></a>0x04 socat</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget –no-cache http://www.convirture.com/repos/definitions/rhel/6.x/convirt.repo -O /etc/yum.repos.d/convirt.repo </span><br><span class="line">yum makecache</span><br><span class="line">yum install socat</span><br></pre></td></tr></table></figure>
-<h3 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h3><p>如果要socat去配置pwn服务，写一个bash脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup socat TCP4-LISTEN:10001,fork EXEC:./pwn100 &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-<p>给x权限后运行即可</p>
-<h2 id="0x05-其他杂项配置"><a href="#0x05-其他杂项配置" class="headerlink" title="0x05 其他杂项配置"></a>0x05 其他杂项配置</h2><p>安装32bit库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libstdc++-devel.i686 glibc.i686 libgcc.i686 libstdc++.i686 glibc-devel.i686</span><br></pre></td></tr></table></figure>
-<h2 id="0x06-抓流量"><a href="#0x06-抓流量" class="headerlink" title="0x06 抓流量"></a>0x06 抓流量</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh </span></span><br><span class="line">file_path=<span class="string">"/home/sycfiles/pwn_log/"</span></span><br><span class="line">file_name=`date <span class="string">"+%H%M"</span>`</span><br><span class="line">path=<span class="variable">$file_path</span><span class="variable">$file_name</span></span><br><span class="line">killall  tcpdump233</span><br><span class="line">nohup tcpdump233 -i eth1 tcp port 50001 -w <span class="variable">$path</span>  &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#0 */1 * * * 用户 脚本路径</span></span><br><span class="line">0 */1 * * *  root   /root/pwn_log.sh</span><br></pre></td></tr></table></figure>
-<h2 id="0x07-其他"><a href="#0x07-其他" class="headerlink" title="0x07 其他"></a>0x07 其他</h2><p>主要是注意目录、文件权限以及fork炸弹之类的搅屎棍行为的限制，最好还是docker吧，比较方便。</p>
+<h2 id="Scenario-1-Alice-amp-amp-Bob"><a href="#Scenario-1-Alice-amp-amp-Bob" class="headerlink" title="Scenario 1 : Alice &amp;&amp; Bob"></a>Scenario 1 : Alice &amp;&amp; Bob</h2><p>Alice 提前知道Bob，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alice processes a `SEND` right to a port whose `RECEIVE` right is held by Bob.</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Alice 创建一个临时port，她对这个port有 <code>RECEIVE</code>right</li>
+<li>Alice 对创建的port添加 <code>SEND</code>right</li>
+<li>Alice 使用提前知晓的对其有 <code>SEND</code>right的port，把她刚创建的临时port向Bob发过去</li>
+<li>Bob接收到这个Alice创建的port之后，Bob可以利用这个port和Alice通信，因为这个临时port有 <code>SEND</code>right 和 <code>RECEIVE</code>right</li>
+</ol>
+<h2 id="Scenario-2-Bootstrap-server-regstrain"><a href="#Scenario-2-Bootstrap-server-regstrain" class="headerlink" title="Scenario 2 : Bootstrap server (regstrain)"></a>Scenario 2 : Bootstrap server (regstrain)</h2><p>场景1有点类似先有鸡和先有蛋的问题，即最开始Alice咋知道Bob的(最开始 <code>SEND</code>right 的port哪里来的？)，所以这里引入了一个中间人— <code>bootstrap</code></p>
+<p>Bob:</p>
+<ol>
+<li>Bob 对 <code>bootstrap</code>server 持有 <code>SEND right</code>port</li>
+<li>Bob 创建另外的port，对其有 <code>RECEIV right</code>, 并且对其创建 <code>SEND right</code>，然后利用最开始对 <code>bootstrap</code>持有的 <code>SEND RIGHT</code>port，把新创建的这个 <code>SEND right</code>发过去。</li>
+<li>同时，发送过去的 <code>SEND right</code>有一个别名，可以方便索引到这个 <code>SEND right</code>，这里叫 <code>com.apple.Bob</code></li>
+</ol>
+<p>Alice:</p>
+<ol>
+<li>同样的，Alice对 <code>bootstrap server</code>，持有 <code>SEND right</code>port</li>
+<li>Alice发送消息给 <code>bootstrap server</code>，查询 <code>com.apple.Bob</code>，想要获取对Bob的 <code>SEND right</code></li>
+<li><code>bootstrap server</code>接收到之后，根据Alice提供的别名查询，找到之后，返回对应的 <code>SEND right</code>给Alice</li>
+<li>至此，Alice可以使用获得的这个 <code>SEND right</code>和Bob通信了(别忘了上面说的，Bob对这个port有 <code>RECEIVE right</code>)</li>
+</ol>
+<h2 id="Scenario-3-Bootstrap-server-check-in"><a href="#Scenario-3-Bootstrap-server-check-in" class="headerlink" title="Scenario 3: Bootstrap server (check-in)"></a>Scenario 3: Bootstrap server (check-in)</h2><p>这种比较麻烦，出于安全考虑的设计 ： bootstrap server 怎么确定这个服务的确就是真的服务呢？而不是某个别有用心的程序冒充的呢？</p>
+<ol>
+<li>系统初始化的时候，bootstrap server 初始化所有的服务，对这些服务有 <code>RECEIVE right</code></li>
+<li>Alice通过 <code>bootstrap_lookup()</code>想要获取想要的服务(com.apple.Bob)的 <code>SEND right</code></li>
+<li>此时，bootstrap server拿到了这个请求，此时Bob这个服务还不存在，这个时候需要bootstrap server 使用 <code>fork()``exec()</code>等api产生这个服务（当然权限也要设计好）</li>
+<li>此时Bob存在了，醒来了，他使用 <code>bootstrap_check_in()</code>向 <code>bootstrap server</code>申请对自己服务的port的 <code>RECEIVE right</code></li>
+<li>bootstrap server会对这个申请的port(此时Bob是它唯一的拥有者)创建 <code>SEND right</code>，然后发送给Alice</li>
+<li>至此，两人可以通信了</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>*OS Internals Volume I User Mode – Jonathan Levind</p>
 
       
     </div>
@@ -358,13 +370,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/06/16/比赛运维杂记/">比赛运维杂记</a></p>
+        <p><span>本文标题:</span><a href="/2019/08/20/macOS-IPC-Study-basic/">macOS IPC Study basic</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2018年06月16日 - 15时12分</p>
-        <p><span>最后更新:</span>2018年06月16日 - 15时19分</p>
+        <p><span>发布时间:</span>2019年08月20日 - 17时04分</p>
+        <p><span>最后更新:</span>2019年08月20日 - 17时11分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/06/16/比赛运维杂记/" title="比赛运维杂记">http://o0xmuhe.me/2018/06/16/比赛运维杂记/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2018/06/16/比赛运维杂记/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/08/20/macOS-IPC-Study-basic/" title="macOS IPC Study basic">http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -377,18 +389,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2018/06/16/linux-code-inject/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          linux code inject
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;</div>
+    <a href="/2019/08/14/Adobe-Acrobat-Reader-getUIPerms-setUIPerms-Unicode-String-Out-of-bound-Read/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Adobe Acrobat Reader getUIPerms/setUIPerms  Unicode String Out-of-bound Read</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -399,7 +402,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 : 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-基本信息"><span class="toc-number">2.</span> <span class="toc-text">0x01 基本信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-更新-centOS为例"><span class="toc-number">3.</span> <span class="toc-text">0x02 更新(centOS为例)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-备份"><span class="toc-number">3.1.</span> <span class="toc-text">1.备份</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-下载yum配置文件"><span class="toc-number">3.2.</span> <span class="toc-text">2.下载yum配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-生成缓存"><span class="toc-number">3.3.</span> <span class="toc-text">3.生成缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-更新"><span class="toc-number">3.4.</span> <span class="toc-text">4.更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-守护进程的配置"><span class="toc-number">4.</span> <span class="toc-text">0x03 守护进程的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装"><span class="toc-number">4.1.</span> <span class="toc-text">1.安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-配置"><span class="toc-number">4.2.</span> <span class="toc-text">2.配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-socat"><span class="toc-number">5.</span> <span class="toc-text">0x04 socat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1"><span class="toc-number">5.1.</span> <span class="toc-text">1.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2"><span class="toc-number">5.2.</span> <span class="toc-text">2.</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-其他杂项配置"><span class="toc-number">6.</span> <span class="toc-text">0x05 其他杂项配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-抓流量"><span class="toc-number">7.</span> <span class="toc-text">0x06 抓流量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-其他"><span class="toc-number">8.</span> <span class="toc-text">0x07 其他</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scenario-1-Alice-amp-amp-Bob"><span class="toc-number">1.</span> <span class="toc-text">Scenario 1 : Alice &amp;&amp; Bob</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scenario-2-Bootstrap-server-regstrain"><span class="toc-number">2.</span> <span class="toc-text">Scenario 2 : Bootstrap server (regstrain)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scenario-3-Bootstrap-server-check-in"><span class="toc-number">3.</span> <span class="toc-text">Scenario 3: Bootstrap server (check-in)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -466,13 +469,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/06/16/linux-code-inject/" title="上一篇: linux code inject">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2018/06/09/论文阅读-IFuzzer-An-Evolutionary-Interpreter-Fuzzer-using-Genetic-Programming/" title="下一篇: 论文阅读&lt;IFuzzer: An Evolutionary Interpreter Fuzzer using Genetic Programming&gt;">
+            <a href="/2019/08/14/Adobe-Acrobat-Reader-getUIPerms-setUIPerms-Unicode-String-Out-of-bound-Read/" title="下一篇: Adobe Acrobat Reader getUIPerms/setUIPerms  Unicode String Out-of-bound Read">
                 <i class="fa fa-angle-right"></i>
             </a>
         

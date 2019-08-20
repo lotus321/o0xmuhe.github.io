@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-08-20T08:54:12.225Z</updated>
+  <updated>2019-08-20T09:11:48.735Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>macOS IPC Study basic</title>
+    <link href="http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/"/>
+    <id>http://o0xmuhe.me/2019/08/20/macOS-IPC-Study-basic/</id>
+    <published>2019-08-20T09:04:05.000Z</published>
+    <updated>2019-08-20T09:11:48.735Z</updated>
+    
+    <content type="html"><![CDATA[<p>算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。</p>
+<a id="more"></a>
+<h2 id="Scenario-1-Alice-amp-amp-Bob"><a href="#Scenario-1-Alice-amp-amp-Bob" class="headerlink" title="Scenario 1 : Alice &amp;&amp; Bob"></a>Scenario 1 : Alice &amp;&amp; Bob</h2><p>Alice 提前知道Bob，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alice processes a `SEND` right to a port whose `RECEIVE` right is held by Bob.</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Alice 创建一个临时port，她对这个port有 <code>RECEIVE</code>right</li>
+<li>Alice 对创建的port添加 <code>SEND</code>right</li>
+<li>Alice 使用提前知晓的对其有 <code>SEND</code>right的port，把她刚创建的临时port向Bob发过去</li>
+<li>Bob接收到这个Alice创建的port之后，Bob可以利用这个port和Alice通信，因为这个临时port有 <code>SEND</code>right 和 <code>RECEIVE</code>right</li>
+</ol>
+<h2 id="Scenario-2-Bootstrap-server-regstrain"><a href="#Scenario-2-Bootstrap-server-regstrain" class="headerlink" title="Scenario 2 : Bootstrap server (regstrain)"></a>Scenario 2 : Bootstrap server (regstrain)</h2><p>场景1有点类似先有鸡和先有蛋的问题，即最开始Alice咋知道Bob的(最开始 <code>SEND</code>right 的port哪里来的？)，所以这里引入了一个中间人— <code>bootstrap</code></p>
+<p>Bob:</p>
+<ol>
+<li>Bob 对 <code>bootstrap</code>server 持有 <code>SEND right</code>port</li>
+<li>Bob 创建另外的port，对其有 <code>RECEIV right</code>, 并且对其创建 <code>SEND right</code>，然后利用最开始对 <code>bootstrap</code>持有的 <code>SEND RIGHT</code>port，把新创建的这个 <code>SEND right</code>发过去。</li>
+<li>同时，发送过去的 <code>SEND right</code>有一个别名，可以方便索引到这个 <code>SEND right</code>，这里叫 <code>com.apple.Bob</code></li>
+</ol>
+<p>Alice:</p>
+<ol>
+<li>同样的，Alice对 <code>bootstrap server</code>，持有 <code>SEND right</code>port</li>
+<li>Alice发送消息给 <code>bootstrap server</code>，查询 <code>com.apple.Bob</code>，想要获取对Bob的 <code>SEND right</code></li>
+<li><code>bootstrap server</code>接收到之后，根据Alice提供的别名查询，找到之后，返回对应的 <code>SEND right</code>给Alice</li>
+<li>至此，Alice可以使用获得的这个 <code>SEND right</code>和Bob通信了(别忘了上面说的，Bob对这个port有 <code>RECEIVE right</code>)</li>
+</ol>
+<h2 id="Scenario-3-Bootstrap-server-check-in"><a href="#Scenario-3-Bootstrap-server-check-in" class="headerlink" title="Scenario 3: Bootstrap server (check-in)"></a>Scenario 3: Bootstrap server (check-in)</h2><p>这种比较麻烦，出于安全考虑的设计 ： bootstrap server 怎么确定这个服务的确就是真的服务呢？而不是某个别有用心的程序冒充的呢？</p>
+<ol>
+<li>系统初始化的时候，bootstrap server 初始化所有的服务，对这些服务有 <code>RECEIVE right</code></li>
+<li>Alice通过 <code>bootstrap_lookup()</code>想要获取想要的服务(com.apple.Bob)的 <code>SEND right</code></li>
+<li>此时，bootstrap server拿到了这个请求，此时Bob这个服务还不存在，这个时候需要bootstrap server 使用 <code>fork()``exec()</code>等api产生这个服务（当然权限也要设计好）</li>
+<li>此时Bob存在了，醒来了，他使用 <code>bootstrap_check_in()</code>向 <code>bootstrap server</code>申请对自己服务的port的 <code>RECEIVE right</code></li>
+<li>bootstrap server会对这个申请的port(此时Bob是它唯一的拥有者)创建 <code>SEND right</code>，然后发送给Alice</li>
+<li>至此，两人可以通信了</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>*OS Internals Volume I User Mode – Jonathan Levind</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;算是个读书笔记吧，把利用Port进行IPC的这个过程转成自己的理解。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="macOS" scheme="http://o0xmuhe.me/tags/macOS/"/>
+    
+      <category term="IPC" scheme="http://o0xmuhe.me/tags/IPC/"/>
+    
+  </entry>
   
   <entry>
     <title>Adobe Acrobat Reader getUIPerms/setUIPerms  Unicode String Out-of-bound Read</title>
@@ -161,9 +217,9 @@
     </summary>
     
     
-      <category term="UaF" scheme="http://o0xmuhe.me/tags/UaF/"/>
-    
       <category term="Adobe" scheme="http://o0xmuhe.me/tags/Adobe/"/>
+    
+      <category term="UaF" scheme="http://o0xmuhe.me/tags/UaF/"/>
     
   </entry>
   
@@ -783,52 +839,6 @@
       <category term="IDA" scheme="http://o0xmuhe.me/tags/IDA/"/>
     
       <category term="Tools" scheme="http://o0xmuhe.me/tags/Tools/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>由CVE-2018-12831引发的一些思考</title>
-    <link href="http://o0xmuhe.me/2018/12/13/%E7%94%B1CVE-2018-12831%E5%BC%95%E5%8F%91%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/"/>
-    <id>http://o0xmuhe.me/2018/12/13/由CVE-2018-12831引发的一些思考/</id>
-    <published>2018-12-13T04:23:09.000Z</published>
-    <updated>2018-12-20T06:06:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 : 前言"></a>0x00 : 前言</h4><p>这是一个很奇怪的case，在我还在学校的时候对Adobe Reader日常逆向的时候意外发现的一个UAF漏洞，很不幸的是无法利用；但是有趣的是他的触发方式，在后面的工作中，我在Foxit中意外发现了类似的问题，就在昨天，Adobe更新最新补丁之后，也发现了一个类似的UAF(0day,已提交给厂商)，这个0day不在本文讨论范围之内。</p>
-<a id="more"></a>
-<h4 id="0x01-漏洞情况"><a href="#0x01-漏洞情况" class="headerlink" title="0x01 : 漏洞情况"></a>0x01 : 漏洞情况</h4><h5 id="漏洞的基本信息如下"><a href="#漏洞的基本信息如下" class="headerlink" title="漏洞的基本信息如下:"></a>漏洞的<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-12831" target="_blank" rel="noopener">基本信息</a>如下:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Adobe Acrobat and Reader versions 2018.011.20063 and earlier, 2017.011.30102 and earlier, and 2015.006.30452 and earlier have an use after free vulnerability. Successful exploitation could lead to arbitrary code execution.</span><br></pre></td></tr></table></figure>
-<p>是一个很鸡肋的UseAfterFree的鸡肋漏洞，我个人认为无法利用 :(</p>
-<p>这个漏洞发现的很意外，算是无心插柳，我们都知道可以使用<code>vbs</code>脚本调用一些windows的api，然后去完成一些窗口操作，下面来看一下这段vbs脚本：</p>
-<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REM</span>: Save a Pdf as JPEG.</span><br><span class="line"> <span class="keyword">REM</span>:Also Multipage PDF will can be changed. <span class="keyword">Then</span> every page will be saved as single JPEG</span><br><span class="line"> <span class="keyword">REM</span>: The Filename you can change <span class="keyword">to</span> your needs.</span><br><span class="line"> <span class="keyword">REM</span>: <span class="keyword">If</span> you use Drag&amp;drop <span class="keyword">or</span> Filename as command</span><br><span class="line"> <span class="keyword">REM</span>: line argument the script will work <span class="keyword">with</span> this file.</span><br><span class="line"></span><br><span class="line"><span class="comment">'*********Settings in File**************************</span></span><br><span class="line">FileNM = <span class="string">"C:\Users\muhe\Desktop\x.pdf"</span> <span class="comment">'//Filename for File to transfer if NO argument is given</span></span><br><span class="line"><span class="comment">'****************************************************</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> WshShell = <span class="built_in">CreateObject</span> (<span class="string">"Wscript.Shell"</span>)</span><br><span class="line"><span class="keyword">set</span> fs = <span class="built_in">CreateObject</span>(<span class="string">"Scripting.FileSystemObject"</span>)</span><br><span class="line"><span class="keyword">Set</span> objArgs = WScript.Arguments</span><br><span class="line"><span class="keyword">if</span> objArgs.Count = <span class="number">1</span> <span class="keyword">then</span> FileNM = ObjArgs(<span class="number">0</span>)</span><br><span class="line">Info = <span class="string">"Save as JPEG"</span>&amp;VbCr&amp;_</span><br><span class="line">       <span class="string">"File Name: "</span>&amp;FileNM &amp;vbCr&amp;<span class="string">" Delete existing JPEG FILES with the same Name before!"</span>&amp;vbcr&amp;<span class="string">" Start now?"</span></span><br><span class="line">OK = <span class="built_in">MsgBox</span>(Info, vbQuestion+vbYesNo,<span class="string">"Insert Files"</span>) : <span class="keyword">if</span> OK = vbNo <span class="keyword">then</span> WScript.quit</span><br><span class="line"></span><br><span class="line"><span class="comment">'//Start or switch to Acrobat</span></span><br><span class="line">WshShell.run <span class="string">"Acrobat.exe"</span></span><br><span class="line"><span class="keyword">While</span> <span class="keyword">not</span> WshShell.AppActivate(<span class="string">"Adobe Acrobat"</span>) : Wscript.Sleep <span class="number">1000</span> : <span class="keyword">Wend</span></span><br><span class="line"><span class="keyword">Set</span> gApp = <span class="built_in">CreateObject</span>(<span class="string">"AcroExch.App"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> fs.FileExists(FILENM) <span class="keyword">then</span></span><br><span class="line">     <span class="built_in">MsgBox</span> <span class="string">"Ups! "</span> &amp; FileNM &amp; <span class="string">" doesn't exist? "</span> &amp; <span class="string">"Try new!"</span>, vbExclamation</span><br><span class="line">     WScript.quit</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">if</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">Set</span> BASFL = <span class="built_in">CreateObject</span>(<span class="string">"AcroExch.pdDoc"</span>)</span><br><span class="line">OK = BASFL.Open(FileNM) <span class="comment">'//Open the PDF-File</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> OK <span class="keyword">Then</span> <span class="keyword">if</span> <span class="built_in">MsgBox</span>(<span class="string">"Error open Basic File"</span>) <span class="keyword">then</span> Wscript.quit</span><br><span class="line">BASFL.OpenAVDoc(<span class="built_in">mid</span>(FileNM,<span class="built_in">InstrRev</span>(FileNM,<span class="string">"\")+1)) '// get the PDF-File into view</span></span><br><span class="line"><span class="string">WScript.Sleep 1000</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">'// to get this part working reliable(!) use WinAPI, WMI, or AutoITX.dll to check the forground window</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">WshShell.SendKeys "</span>^+s<span class="string">" '// send keys for SaveAs</span></span><br><span class="line"><span class="string">WScript.Sleep 1000</span></span><br><span class="line"><span class="string">WshShell.SendKeys "</span>&#123;tab&#125;<span class="string">" '// goto Filetype</span></span><br><span class="line"><span class="string">WScript.Sleep 500</span></span><br><span class="line"><span class="string">WshShell.SendKeys "</span>J<span class="string">" '// switch filetype zu JPEG</span></span><br><span class="line"><span class="string">WScript.Sleep 500</span></span><br><span class="line"><span class="string">WshShell.SendKeys "</span>&#123;tab&#125;&#123;Enter&#125;<span class="string">" '// switsch to "</span>Save<span class="string">" and save</span></span><br><span class="line"><span class="string">WScript.Sleep 1000</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Set BASFL = nothing : set gApp = nothing</span></span><br></pre></td></tr></table></figure>
-<p>脚本来自网上，当时晚上随便看reader攻击面的时候随手找到的一个转换脚本，这个脚本的功能的调用<code>Adobe Acrobat DC Pro</code>的转换模块，把pdf转成图片。</p>
-<p>其实脚本看起来没有任何问题，而且我使用的<code>x.pdf</code>也没有什么特殊支持，随便一个pdf文件都可以触发这个洞。问题不在于内存，在于逻辑。</p>
-<h5 id="触发漏洞"><a href="#触发漏洞" class="headerlink" title="触发漏洞"></a>触发漏洞</h5><ol>
-<li>第一次运行<code>vbs</code>脚本启动转换，此时没有任何问题，这时候不要kill掉<code>Acrobat.exe</code>。</li>
-<li>然后再次运行<code>vbs</code>脚本，因为<code>Reader</code>是单进程的，多的tab标签会以单独的线程体现，所以这个时候你不会看到第二次被打开的文件。</li>
-<li>关闭已打开的pdf标签</li>
-<li>crash</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0:029&gt; g</span><br><span class="line">(874.74c): Access violation - code c0000005 (first chance)</span><br><span class="line">First chance exceptions are reported before any exception handling.</span><br><span class="line">This exception may be expected and handled.</span><br><span class="line">*** ERROR: Symbol file could not be found. Defaulted to <span class="built_in">export</span> symbols <span class="keyword">for</span> Acrobat.dll -</span><br><span class="line">Acrobat_6c400000!DllCanUnloadNow+0x591d3:</span><br><span class="line">6c4d7318 8b4118 mov eax,dword ptr [ecx+18h] ds:002b:2b208bb0=?? ??????</span><br><span class="line">0:000:x86&gt; r</span><br><span class="line">eax=2b208b98 ebx=00000001 ecx=2b208b98 edx=03c51138 esi=2b96edb0 edi=0000000 1</span><br><span class="line">eip=6c4d7318 esp=0021f308 ebp=0021f308 iopl=0</span><br><span class="line">c</span><br><span class="line">cs=0023 ss=002b ds=002b es=002b fs=0053 gs=002b</span><br><span class="line">2</span><br><span class="line">Acrobat_6c400000!DllCanUnloadNow+0x591d3:</span><br><span class="line">6c4d7318 8b4118 mov eax,dword ptr [ecx+18h] ds:002b:2b208bb0=??</span><br><span class="line">??????</span><br><span class="line">0:000:x86&gt; dd ecx</span><br><span class="line">2b208b98  ???????? ???????? ???????? ????????</span><br><span class="line">2b208ba8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208bb8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208bc8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208bd8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208be8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208bf8  ???????? ???????? ???????? ????????</span><br><span class="line">2b208c08  ???????? ???????? ???????? ????????</span><br></pre></td></tr></table></figure>
-<p>具体的漏洞分析的细节不再细述，逆向的工作量比较大，主要是管理PDDoc对象的问题。当时厂商也说这个问题好像有点复杂，他们需要做更多的测试工作，所以差不多从五月报告，到修复，我等了差不多四五个月的样子:( </p>
-<h4 id="0x02-类似的情况"><a href="#0x02-类似的情况" class="headerlink" title="0x02 : 类似的情况"></a>0x02 : 类似的情况</h4><p>很有意思的是，我在<code>Adobe Reader</code>系列、<code>Foxit</code>都发现过类似的情况，正常的文件，但是操作逻辑不正常，导致下层代码产生崩溃，比如一些数据不同步的情况(Foixt的一个洞)。</p>
-<p>还有就是SourceTree的Windows版也有这样的问题，但是是个空指针，没人理吧估计。 就是在进行配置的时候，不按照他指示的逻辑向下进行，就会触发这个空指针。(依然没有修复，发了邮件也不理 T_T)</p>
-<p>本月(2018.12)我又交了一个<code>Adobe Acrobat DC Pro</code>的越界读，也是这种类似的漏洞(鸡肋又没用)，完全正常的代码、文件，只是因为操作逻辑不对导致了程序崩溃。说实话我也不是很明白为什么会出现这么奇怪的<code>bug</code>，我每次都是在找攻击面、测试自己写的东西的时候发现的这些奇怪的bug。</p>
-<h4 id="0x03-引发的一点思考"><a href="#0x03-引发的一点思考" class="headerlink" title="0x03 : 引发的一点思考"></a>0x03 : 引发的一点思考</h4><p>在程序的复杂度剧增的现在，用了很多设计模式、框架糅合的程序的确很难保证没有类似的bug出现，比如Adobe这种支持很多功能、插件的PDF阅读器，在逆向的时候就发现了一层又一层的封装以及一些设计模式，搞得人一个头两个大。</p>
-<p>上层的操作逻辑对下层代码的影响有时候真的很难考虑周全，或者说测试的时候也没往这个方向想，所以导致一些bug的出现，不过我估计除了安全研究员也没人去往这个方向搞 :(   我个人也没有什么开发相关的经验，就存在一个疑问:这部分问题怎么避免or及早发现? </p>
-<p>最近也看到James的几个本地提权的洞，不由感叹逻辑洞是真牛逼，以后还是要多往这个方向想想。不过像Reader这种思路逻辑洞就只在穿sanbox的时候有见过？ 至今还记得zdi之前一波利用 <code>__defGetter__</code>和<code>__defSetter__</code>调用到特权api的那套骚操作…不过也被封的差不多了，基本gg :( </p>
-<p>最后吐槽一下，洞好难挖…</p>
-<h4 id="0x04-其他人的工作"><a href="#0x04-其他人的工作" class="headerlink" title="0x04 : 其他人的工作"></a>0x04 : 其他人的工作</h4><p><code>QuBo</code> &amp;&amp; <code>heige</code> 在kcon2018上的议题涉及到了一小部分这样的，只是他们做的更完善，在fuzz内存破坏漏洞、加入了操作逻辑的fuzz，就产生了一些很奇怪的case，比如点击xx下崩溃，以xx分辨率打开然后xxx崩溃…</p>
-<p>很有意思的分享，虽然这类洞利用的可能性微乎其微（个人认为没有），但是很有趣，也是枯燥的漏洞挖掘生活中的一丝乐趣。</p>
-<h4 id="0x05-致谢信息"><a href="#0x05-致谢信息" class="headerlink" title="0x05 : 致谢信息"></a>0x05 : 致谢信息</h4><p><a href="https://helpx.adobe.com/security/products/acrobat/apsb18-30.html" target="_blank" rel="noopener">Zhenjie Jia of Qihoo 360 Vulcan Team (CVE-2018-12831) </a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 前言&quot;&gt;&lt;/a&gt;0x00 : 前言&lt;/h4&gt;&lt;p&gt;这是一个很奇怪的case，在我还在学校的时候对Adobe Reader日常逆向的时候意外发现的一个UAF漏洞，很不幸的是无法利用；但是有趣的是他的触发方式，在后面的工作中，我在Foxit中意外发现了类似的问题，就在昨天，Adobe更新最新补丁之后，也发现了一个类似的UAF(0day,已提交给厂商)，这个0day不在本文讨论范围之内。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="CVE" scheme="http://o0xmuhe.me/tags/CVE/"/>
     
   </entry>
   
