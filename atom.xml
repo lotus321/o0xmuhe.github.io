@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-10-17T08:52:32.513Z</updated>
+  <updated>2019-10-17T08:59:17.759Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://o0xmuhe.me/2019/10/17/Debug-macOS-Kernel/"/>
     <id>http://o0xmuhe.me/2019/10/17/Debug-macOS-Kernel/</id>
     <published>2019-10-17T08:30:05.000Z</published>
-    <updated>2019-10-17T08:52:32.513Z</updated>
+    <updated>2019-10-17T08:59:17.759Z</updated>
     
     <content type="html"><![CDATA[<h2 id="0x00-环境配置"><a href="#0x00-环境配置" class="headerlink" title="0x00 : 环境配置"></a>0x00 : 环境配置</h2><p>基本分为两种情况，虚拟机调试或者双机调试。</p>
 <p>虚拟机 ： <code>vmfusion</code>,<code>` KDK</code></p>
@@ -33,7 +33,7 @@
 </li>
 </ol>
 <ol>
-<li><p>安装当前版本系统的KDK，<a href="[https://developer.apple.com/download/more/?q=Kernel%20Debug%20Kit](https://developer.apple.com/download/more/?q=Kernel Debug Kit">Apple Develop KDK download</a>)</p>
+<li><p>安装当前版本系统的KDK，<a href="https://developer.apple.com/download/more/?q=Kernel Debug Kit" target="_blank" rel="noopener">Apple Develop KDK download</a></p>
 </li>
 <li><p>设置启动参数</p>
 <p><code>sudo nvram boot-args=&quot;debug=0x14e kext-dev-mode=1 kcsuffix=development pmuflags=1 -v&quot;</code></p>
