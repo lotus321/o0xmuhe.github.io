@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2020-06-20T11:07:18.075Z</updated>
+  <updated>2020-08-07T04:56:04.470Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>make-script-to-macOS App</title>
+    <link href="http://o0xmuhe.me/2020/08/07/make-script-to-macOS-App/"/>
+    <id>http://o0xmuhe.me/2020/08/07/make-script-to-macOS-App/</id>
+    <published>2020-08-07T04:46:24.000Z</published>
+    <updated>2020-08-07T04:56:04.470Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="0x00-需求"><a href="#0x00-需求" class="headerlink" title="0x00 : 需求"></a>0x00 : 需求</h2><p>主要是Ghidra这个东西，每次启动都要命令行 <code>GhidraRun</code>，太麻烦了，所以就想把这个启动脚本封装成一个macOS的APP，方便使用。</p><a id="more"></a><h2 id="0x01-过程"><a href="#0x01-过程" class="headerlink" title="0x01 : 过程"></a>0x01 : 过程</h2><p>直接使用了 <a href="https://gist.github.com/mathiasbynens/674099">别人写好的appfiy.sh</a> ，我用的是原作者的，链接里的是二次开发的，其实本质是一样的。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">APPNAME=<span class="variable">$&#123;2:-$(basename "$&#123;1&#125;</span><span class="string">" '.sh')&#125;;</span></span><br><span class="line"><span class="string">DIR="</span><span class="variable">$&#123;APPNAME&#125;</span>.app/Contents/MacOS<span class="string">";</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">if [ -a "</span><span class="variable">$&#123;APPNAME&#125;</span>.app<span class="string">" ]; then</span></span><br><span class="line"><span class="string">echo "</span><span class="variable">$&#123;PWD&#125;</span>/<span class="variable">$&#123;APPNAME&#125;</span>.app already exists :(<span class="string">";</span></span><br><span class="line"><span class="string">exit 1;</span></span><br><span class="line"><span class="string">fi;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mkdir -p "</span><span class="variable">$&#123;DIR&#125;</span><span class="string">";</span></span><br><span class="line"><span class="string">cp "</span><span class="variable">$&#123;1&#125;</span><span class="string">" "</span><span class="variable">$&#123;DIR&#125;</span>/<span class="variable">$&#123;APPNAME&#125;</span><span class="string">";</span></span><br><span class="line"><span class="string">chmod +x "</span><span class="variable">$&#123;DIR&#125;</span>/<span class="variable">$&#123;APPNAME&#125;</span><span class="string">";</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">echo "</span><span class="variable">$&#123;PWD&#125;</span>/<span class="variable">$APPNAME</span>.app<span class="string">";</span></span><br></pre></td></tr></table></figure><p>因为macOS下app本质是一个目录，所以只需要按照特定的格式构建这个目录即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">❯ <span class="built_in">cd</span> /Applications/Ghidra.app</span><br><span class="line">╭─    /Applications/Ghidra.app ·· ✔  at 12:51:35 </span><br><span class="line">╰─</span><br><span class="line">❯ ls</span><br><span class="line">Contents Icon?</span><br><span class="line">❯ tree .</span><br><span class="line">.</span><br><span class="line">├── Contents</span><br><span class="line">│   └── MacOS</span><br><span class="line">│       └── Ghidra</span><br><span class="line">└── Icon\r</span><br></pre></td></tr></table></figure><p>本来我是把ghrida的启动脚本直接放进来的，但是发现有一些目录的问题，索性直接绝对路径启动这个脚本好了(懒省事儿啊 hhh)</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#----------------------------------------</span></span><br><span class="line"><span class="comment"># Ghidra launch</span></span><br><span class="line"><span class="comment">#----------------------------------------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/Users/muhe/Tools/ghidra/ghidraRun</span><br></pre></td></tr></table></figure><p>最后，图标可以先复制你想用的图片，然后对app右键，get info，点击信息栏上面的小图标，之后cmd+v就行了，也挺方便。</p><p>最后，就可以很舒服的启动了。</p><h2 id="0x02-参考"><a href="#0x02-参考" class="headerlink" title="0x02 : 参考"></a>0x02 : 参考</h2><p><a href="https://mathiasbynens.be/notes/shell-script-mac-apps">shell-script-mac-apps</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;0x00-需求&quot;&gt;&lt;a href=&quot;#0x00-需求&quot; class=&quot;headerlink&quot; title=&quot;0x00 : 需求&quot;&gt;&lt;/a&gt;0x00 : 需求&lt;/h2&gt;&lt;p&gt;主要是Ghidra这个东西，每次启动都要命令行 &lt;code&gt;GhidraRun&lt;/code&gt;，太麻烦了，所以就想把这个启动脚本封装成一个macOS的APP，方便使用。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="环境配置" scheme="http://o0xmuhe.me/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    
+      <category term="tools" scheme="http://o0xmuhe.me/tags/tools/"/>
+    
+  </entry>
   
   <entry>
     <title>Chrome M73 issue 941743</title>
@@ -485,30 +508,6 @@
     
     
       <category term="漏洞分析" scheme="http://o0xmuhe.me/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
-    
-      <category term="macOS" scheme="http://o0xmuhe.me/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>find macOS service and it&#39;s plist file</title>
-    <link href="http://o0xmuhe.me/2019/06/14/find-macOS-service-and-it-s-plist-file/"/>
-    <id>http://o0xmuhe.me/2019/06/14/find-macOS-service-and-it-s-plist-file/</id>
-    <published>2019-06-14T10:17:33.000Z</published>
-    <updated>2020-06-20T11:04:50.914Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="0x00"><a href="#0x00" class="headerlink" title="0x00:"></a>0x00:</h2><p>find macOS service ‘s plist file.</p><p><code>com.apple.xxxx</code> —&gt; <code>xxxx.plist</code></p><a id="more"></a><h2 id="0x01"><a href="#0x01" class="headerlink" title="0x01 :"></a>0x01 :</h2><p>find all <code>*.plist</code> file and use <code>grep</code> to find target service, not the best way.</p><h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02 :"></a>0x02 :</h2><p>use <code>procexp</code>.  </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./procexp.universal all ports | service_name</span><br></pre></td></tr></table></figure><h2 id="0x03"><a href="#0x03" class="headerlink" title="0x03 :"></a>0x03 :</h2><p>this way is more complex than others, thx to <a href="https://brightiup.me">brightiup</a> :)</p><ol><li><p>step 1</p><p>write a simple gadget, core logic as follow:</p></li></ol><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bootstrap_look_up(bs_port, render_service_name, &amp;p);</span><br><span class="line">...</span><br><span class="line">mach_msg(&amp;m.header, MACH_SEND_MSG | MACH_MSG_OPTION_NONE, <span class="keyword">sizeof</span>(message), <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">...</span><br><span class="line">getchar(); <span class="comment">//do not exit untill we finish</span></span><br></pre></td></tr></table></figure><ol start="2"><li><p>step 2</p><p>get the pid of your gadget</p></li></ol><ol start="3"><li><p>Step 3</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo lsmp -p pid</span><br></pre></td></tr></table></figure></li></ol><p>now, you can get the service name according to mach port, then find the plist file by service name you found.</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;0x00&quot;&gt;&lt;a href=&quot;#0x00&quot; class=&quot;headerlink&quot; title=&quot;0x00:&quot;&gt;&lt;/a&gt;0x00:&lt;/h2&gt;&lt;p&gt;find macOS service ‘s plist file.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;com.apple.xxxx&lt;/code&gt; —&amp;gt; &lt;code&gt;xxxx.plist&lt;/code&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="学习记录" scheme="http://o0xmuhe.me/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
     
     
       <category term="macOS" scheme="http://o0xmuhe.me/tags/macOS/"/>
