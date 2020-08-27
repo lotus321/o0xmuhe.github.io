@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://o0xmuhe.me/"/>
-  <updated>2020-08-27T07:22:33.935Z</updated>
+  <updated>2020-08-27T07:25:27.155Z</updated>
   <id>http://o0xmuhe.me/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://o0xmuhe.me/2020/08/27/exploit-for-crbug1086890/"/>
     <id>http://o0xmuhe.me/2020/08/27/exploit-for-crbug1086890/</id>
     <published>2020-08-27T07:07:08.000Z</published>
-    <updated>2020-08-27T07:22:33.935Z</updated>
+    <updated>2020-08-27T07:25:27.155Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="bug-info"><a href="#bug-info" class="headerlink" title="bug info"></a>bug info</h2><p>来自pj0的<a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=2046">glazunov</a>的洞，一个JIT优化中的洞，缺少边界检查最终导致oob r/w。</p><a id="more"></a><h2 id="exploit"><a href="#exploit" class="headerlink" title="exploit"></a>exploit</h2><p>比较不好的地方就是需要大概猜一下那个oobarray的elements的地址，使得我们想用来aar/w的array或者arraybuffer落在这后面，大概调整个偏移使得能够正常读写到就行。</p><p>测试版本:83.0.4103.61 </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Commit: 88bff78e26dbd25dcbb342d4b07c7e66c0f048be</span><br><span class="line">Branch Base Commit: 8ad47e8d21f6866e4a37f47d83a860d41debf514</span><br><span class="line">Branch Base Position: 756066</span><br><span class="line">V8 Commit: 3b627511511f00c552ced504c1f182bdcc3480af</span><br><span class="line">V8 Version: 8.3.110.9</span><br><span class="line">V8 Position: 19</span><br><span class="line">Skia Commit: c3d05a789930913af94174961bc6f90894196f62</span><br></pre></td></tr></table></figure><ul><li>调试会比较麻烦点，gdb 直接起触发有问题（我这里是），我是开了coredump，然后触发crash看看内存啥的调的。</li><li>biguint64 还是 arraybuffer都行，喜欢啥用啥。</li><li>想成功率高，要用web worker（我觉得），要么死猜几个地址，要么随机撞大运。</li></ul><p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/crbug1086890/CleanShot%202020-08-27%20at%2011.26.03.png" alt="exploit linux d8"></p><p><a href="https://github.com/o0xmuhe/RealWorldPwn/tree/master/chrome_M83_crbug1086890_RCE">完整利用代码</a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="bug-info"><a href="#bug-info" class="headerlink" title="bug info"></a>bug info</h2><p>来自pj0的<a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=2046">glazunov</a>的洞，一个JIT优化中的洞，缺少边界检查最终导致oob r/w。</p><a id="more"></a><h2 id="exploit"><a href="#exploit" class="headerlink" title="exploit"></a>exploit</h2><p>比较不好的地方就是需要大概猜一下那个oobarray的elements的地址，使得我们想用来aar/w的array或者arraybuffer落在这后面，大概调整个偏移使得能够正常读写到就行。</p><p>测试版本:83.0.4103.61 </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Commit: 88bff78e26dbd25dcbb342d4b07c7e66c0f048be</span><br><span class="line">Branch Base Commit: 8ad47e8d21f6866e4a37f47d83a860d41debf514</span><br><span class="line">Branch Base Position: 756066</span><br><span class="line">V8 Commit: 3b627511511f00c552ced504c1f182bdcc3480af</span><br><span class="line">V8 Version: 8.3.110.9</span><br><span class="line">V8 Position: 19</span><br><span class="line">Skia Commit: c3d05a789930913af94174961bc6f90894196f62</span><br></pre></td></tr></table></figure><ul><li>调试会比较麻烦点，gdb 直接起触发有问题（我这里是），我是开了coredump，然后触发crash看看内存啥的调的。</li><li>biguint64 还是 arraybuffer都行，喜欢啥用啥。</li><li>想成功率高，要用web worker（我觉得），要么死猜几个地址，要么随机撞大运。</li></ul><p><img src="https://blogimg-10065924.cos.ap-shanghai.myqcloud.com/crbug1086890/CleanShot%202020-08-27%20at%2011.26.03.png" alt="exploit linux d8"></p><p><a href="https://github.com/o0xmuhe/RealWorldPwn/tree/master/chrome_M83_crbug1086890_RCE">完整利用代码</a></p><hr><p>觉得有用的朋友可以打赏一杯☕️ :)</p>]]></content>
     
     <summary type="html">
     
